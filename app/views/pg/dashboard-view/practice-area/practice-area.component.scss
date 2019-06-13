@@ -1,0 +1,148 @@
+.paLeftMainDivDashboard {
+    background-color: rgba(255,255,255,1);
+    height: 100%;
+    width: 100%;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.browsehisfav {
+    text-align: center;
+}
+
+.browse_hist_fav_tabs {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.browsePractiseArea {
+    background-color: rgb(210, 30, 22);
+    text-align: center;
+    padding-top: 17px;
+    padding-bottom: 20px;
+    color: white;
+    border-right-color: #474748;
+    border-right-style: solid;
+    border-right-width: 1px;
+}
+
+.activeTab {
+    background-color: white !important;
+    border-right: 10px !important;
+    padding-bottom: 20px !important;
+    text-align: center !important;
+    padding-top: 17px !important;
+    font-weight: bold !important;
+    color: black !important;
+}
+
+.history {
+    background: rgb(210, 30, 22);
+    text-align: center;
+    padding-top: 17px;
+    padding-bottom: 20px;
+    color: white;
+    border-right-color: #474748;
+    border-right-style: solid;
+    border-right-width: 1px;
+}
+
+.calender {
+    background-color: rgb(210, 30, 22);
+    border-right-style: solid;
+    border-right-width: 1pt;
+    border-right-color: #C8C8DB;
+    text-align: center;
+    padding-top: 17px;
+    padding-bottom: 20px;
+    color: white;
+}
+
+.downloadsSearchInput {
+    font-size: 8pt;
+    height: 25px;
+    padding: 5px 10px;
+}
+
+.downloadsSearchInput {
+    height: 30px;
+}
+
+
+
+
+/*xs*/
+@media only screen and (max-width: 767px) {
+    /*.browsePractiseArea {
+    background-color: white;
+  }*/
+
+    .history {
+        background-color: white;
+        color: gray !important;
+        font-weight: bold;
+        border-right: none;
+    }
+
+    .calender {
+        background-color: white;
+        color: gray !important;
+        font-weight: bold;
+    }
+
+    .paLeftMainDivDashboard {
+        box-shadow: none;
+    }
+
+    /*.browsehisfavContentMainDiv {
+    background-color: transparent !important;
+    padding-left: 3%;
+    padding-right: 3%;
+    -webkit-box-shadow: none;
+  }*/
+
+    .browsehisfavContent {
+        /*background-color: white;
+        padding-left: 2%;*/
+        text-align: center;
+    }
+
+    /*.browsehisfavContent > div > div > div {
+    padding-top: 6px;
+    padding-right: 13%;
+    padding-left: 13%;
+  }*/
+
+
+}
+/*sm*/
+@media only screen and (max-width: 992px) and (min-width: 768px) {
+    .dashBoardSearchMobileView {
+        display: none;
+    }
+
+    .browsehisfavContentMainDiv {
+        /*padding-top: 3%;*/
+    }
+
+    /*.browsehisfavContent > div > div > div {
+        padding-left: 14%;
+        padding-right: 14%;
+    }*/
+}
+/*md*/
+@media only screen and (max-width: 1200px) and (min-width: 993px) {
+    .dashBoardSearchMobileView {
+        display: none;
+    }
+}
+/*lg*/ @media only screen and (min-width: 1201px) {
+    .dashBoardSearchMobileView {
+        display: none;
+    }
+
+    .browsehisfavContent {
+        /*padding-left:2%;*/
+    }
+}

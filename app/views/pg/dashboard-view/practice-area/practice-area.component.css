@@ -1,0 +1,246 @@
+.body {
+  background-color: rgba(156,164,171,0.2);
+  font-family: Lato;
+  font-size: 8pt;
+}
+.mainDivContainer > div {
+  /* padding-bottom:200px; */
+  /* padding-top:20px; */
+}
+.mainDivContainer {
+  margin-left: 8%;
+  margin-right: 8%;
+  margin-top: 7%;
+}
+.paLeftMainDivDashboard {
+  background-color: rgba(255,255,255,1);
+  height: 100%;
+  width: 100%;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.browsehisfav {
+  text-align: center;
+}
+.browse_hist_fav_tabs {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.browsePractiseArea {
+  background-color: rgb(210, 30, 22);
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 20px;
+  color: white;
+  border-right-color: #474748;
+  border-right-style: solid;
+  border-right-width: 1px;
+}
+.activeTab {
+  background-color: white !important;
+  border-right: 10px !important;
+  padding-bottom: 20px !important;
+  text-align: center !important;
+  padding-top: 17px !important;
+  font-weight: bold !important;
+  color: black !important;
+}
+.history {
+  background: rgb(210, 30, 22);
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 20px;
+  color: white;
+  border-right-color: #474748;
+  border-right-style: solid;
+  border-right-width: 1px;
+}
+.calender {
+  background-color: rgb(210, 30, 22);
+  border-right-style: solid;
+  border-right-width: 1pt;
+  border-right-color: #C8C8DB;
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 20px;
+  color: white;
+}
+.downloadsSearchInput {
+  font-size: 8pt;
+  height: 25px;
+  padding: 5px 10px;
+}
+.downloadsSearchInput {
+  height: 30px;
+}
+.browsehisfavContentMainDiv {
+  width: 100%;
+  background-color: rgba(255,255,255,1);
+  font-family: Lato;
+  overflow: hidden;
+}
+.browsehisfavContent {
+  /*padding-left: 3%;*/
+}
+  .browsehisfavContent > div > div > div {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-weight: bold;
+    color: #053C71;
+    padding-right: 13%;
+    padding-left: 13%;
+    font-size: 14px;
+  }
+
+
+.pas {
+  color: #053C71;
+}
+  /*xs*/
+  @media only screen and (max-width: 767px) {
+    .browsePractiseArea{
+    background-color:white;
+  }
+  .history {
+    background-color: white;
+    color:gray!important;
+    font-weight:bold;
+    border-right:none;
+  }
+  .calender {
+    background-color: white;
+    color: gray !important;
+    font-weight: bold;
+  }
+  .paLeftMainDivDashboard{
+    box-shadow:none;
+  }
+  .browsehisfavContentMainDiv {
+    background-color: transparent !important;
+    padding-left: 3%;
+    padding-right: 3%;
+    -webkit-box-shadow:none;
+  }
+  .browsehisfavContent {
+    background-color: white;
+    /*padding-left: 2%;*/
+    text-align: center;
+  }
+  .browsehisfavContent > div > div > div {
+    padding-top: 6px;
+    padding-right:13%;
+    padding-left:13%;
+  }
+  .xsView{
+    padding-left:4px;
+    padding-right:4px;
+    height:50px;
+  }
+}
+/*sm*/
+@media only screen and (max-width: 992px) and (min-width: 768px) {
+  .dashBoardSearchMobileView {
+    display: none;
+  }
+  .browsehisfavContentMainDiv{
+    padding-top:3%;
+  }
+
+  .browsehisfavContent > div > div > div{
+    padding-left:14%;
+    padding-right:14%;
+  }
+}
+/*md*/
+@media only screen and (max-width: 1200px) and (min-width: 993px) {
+  .dashBoardSearchMobileView {
+    display: none;
+  }
+
+}
+/*lg*/ @media only screen and (min-width: 1201px) {
+  .dashBoardSearchMobileView {
+    display: none;
+  }
+  .browsehisfavContent{
+    /*padding-left:2%;*/
+  }
+
+}
+
+
+@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 991px) {
+
+  /* Force table to not be like tables anymore */
+  table.bpareas, table.bpareas thead, table.bpareas tbody, table.bpareas th, table.bpareas td, table.bpareas tr {
+    display: block;
+  }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+  table.bpareas thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  table.bpareas tr {
+    margin: 0 0 1rem 0;
+  }
+
+    tr:nth-child(odd) {
+      background: #ccc;
+    }
+
+  table.bpareas td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 10%;
+
+  }
+
+  table.bpareas td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+  /*
+		Label the data
+    You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+		*/
+
+}
+
+table.bpareas {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  /* border: 1px solid #ddd;*/
+}
+
+  table.bpareas th, table.bpareas td {
+    text-align: left;
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+
+  table.bpareas tr:nth-child(even) {
+    background-color: #f0f5ff;
+  }
+
+.paBlock:nth-child(2n) {
+  background: #f0f5ff;
+}
+
+.paBlock {
+  min-height: 55px;
+}

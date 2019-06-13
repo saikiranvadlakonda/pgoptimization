@@ -1,0 +1,72 @@
+.subitemCard {
+  padding: 10px 10px 10px 10px;
+  font-weight: 500;
+  color: #3c5a7e;
+}
+@media only screen and (max-width: 767px) {
+ 
+  .subitemCard {
+    border-bottom: 1px;
+    border-bottom-color: #80808052;
+    border-bottom-style: solid;
+    margin-left: 11%;
+    margin-right: 2%;
+  }
+  .mobileViewBack {
+    padding-left: 14%;
+    padding-bottom: 27px;
+    color: #8080809e;
+    font-weight: bold;
+    float:right;
+  }
+  . backButtonMobileView {
+    padding-left: 11%;
+    float: left;
+    cursor: pointer;
+  }
+  .mobileViewBackButtonMain{
+    float:left;
+    padding-left:11%;
+  }
+  .mobileViewAll {
+    float: right;
+    color: #053C71;
+    font-weight: bold;
+    padding-right: 22%;
+  }
+}
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .mobileViewBack {
+    display: none;
+  }
+
+  .backButtonMobileView {
+    display: none;
+  }
+  .mobileViewAll {
+    display: none;
+  }
+}
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+  .mobileViewBack {
+    display: none;
+  }
+  .mobileViewAll {
+    display: none;
+  }
+  .backButtonMobileView {
+    display: none;
+  }
+}
+@media only screen and (min-width: 1201px) {
+  .mobileViewBack {
+    display: none;
+  }
+  .mobileViewAll {
+    display: none;
+  }
+  .backButtonMobileView {
+    display: none;
+  }
+}
+

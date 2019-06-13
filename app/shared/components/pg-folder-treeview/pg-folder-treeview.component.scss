@@ -1,0 +1,36 @@
+.pointerCursor {
+    cursor: pointer !important;
+}
+
+.selectedRow {
+    background-color: #e9e9e9;
+}
+
+
+.disableCursor {
+    cursor: none;
+    pointer-events: none !important;
+}
+
+.editfolders {
+    padding: 0 10px;
+
+    .button-list {
+        margin-bottom: 10px;
+    }
+}
+
+.folderTrees {
+    font-size: 16px;
+    font-weight: bold;
+
+    i {
+        margin-right: 10px;
+    }
+}
+
+.form-control {
+    width: auto;
+    display: inline-block;
+    margin-right: 10px;
+}

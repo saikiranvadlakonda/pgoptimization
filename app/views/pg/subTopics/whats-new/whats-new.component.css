@@ -1,0 +1,81 @@
+﻿.paRecentlyViewedMainDiv {
+  
+}
+
+.paRecentlyViewedHead {
+  /*margin-left: 5%;
+  margin-right: 8%;*/
+  padding-left: 20px;
+  padding-top: 32px;
+  padding-bottom: 10px;
+}
+.paRecentlyViewedDate {
+  padding-top: 7px;
+  color: rgba(128, 128, 128, 0.6901960784313725);
+  font-size: 11px;
+}
+
+.paRecentlyViewTxtSub {
+  color: #666;
+  letter-spacing: 1px;
+  font-weight: 100;
+  font-size:18px;
+}
+.breakingNewsRecentCases {
+  padding-top: 7px;
+  font-weight: bold;
+  color: #343434;
+  padding-left: 13%;
+  font-size:12px;
+}
+
+.subTopicWhatsNew {
+  /*border-bottom-style: solid;
+  border-bottom-width: 1pt;
+  border-bottom-color: rgba(158, 156, 156, 0.18);*/
+  padding-top: 10px;
+  padding-bottom: 20px;
+  min-height: 120px;
+  padding-left: 20px;
+}
+
+.paRecentlyViewedContent {
+  color: #053C71;
+  font-weight: bold;
+  padding-top: 2px;
+  font-size:16px;
+}
+/*xs*/
+@media only screen and (max-width: 767px) {
+}
+/*sm*/
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .paRecentlyViewedHead{
+    padding-left:26px;
+  }
+  .paRecentlyViewTxtSub{
+  }
+  .breakingNewsRecentCases {
+  }
+  .paRecentlyViewedContent {
+  }
+  .paRecentlyViewedDate{
+  }
+}
+/*md*/
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+  .breakingNewsRecentCases {
+  }
+  .paRecentlyViewedContent {
+  }
+
+  .paRecentlyViewedDate {
+
+  }
+}
+/*lg*/ @media only screen and (min-width: 1201px) {
+}
+.row.breakingNews {
+  background: #f9f9f9;
+  padding: 20px 0;
+}

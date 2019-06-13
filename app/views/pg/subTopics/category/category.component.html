@@ -1,0 +1,149 @@
+<div *ngIf="paModules && paModules?.length > 0 && !isSubTopicViewEnabled">
+    <h4 class="header-title m-t-0 m-b-20">MODULES</h4>
+    <ng-container *ngFor="let paModule of paModules|slice: 0: modulesLength;let i=index">
+        <div class="row topics-cat" *ngIf="i%3==0">
+            <div class="col-sm-4 col-xs-12">
+                <div class="card card-block border-0">
+                    <h6 class="card-title" (click)="showSubTopicsOfModule(paModules[i])" *ngIf="paModules[i]">{{paModules[i].title}}</h6>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <div class="card card-block border-0">
+                    <h6 class="card-title" (click)="showSubTopicsOfModule(paModules[i+1])" *ngIf="paModules[i+1]">{{paModules[i+1].title}}</h6>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <div class="card card-block border-0">
+                    <h6 class="card-title" (click)="showSubTopicsOfModule(paModules[i+2])" *ngIf="paModules[i+2]">{{paModules[i+2].title}}</h6>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <div class="paShowMore" *ngIf="paModules?.length > 15">
+        <div class="showMoreTxt pointer" (click)="showMoreSubtopic()">SHOW MORE</div>
+    </div>
+    <div class="paShowMore" *ngIf="modulesLength == paModules?.length">
+        <div class="showMoreTxt pointer" (click)="showLessSubtopic()">SHOW LESS</div>
+    </div>
+</div>
+
+<div class="topic-section" *ngIf="(paSubTopics && paSubTopics?.length > 0 && isSubTopicViewEnabled) || paModules?.length == 0">
+    <div class="row topic-section-header">
+        <div class="col-md-12 col-in-topic-header">
+            <span *ngIf="paModules?.length > 0" class="folderBackMain pull-left" (click)="isSubTopicViewEnabled = !isSubTopicViewEnabled">
+                <i class="fa fa-angle-left angleLeft leftarrowBackButton"></i>
+            </span>
+            <span class="expand-collapse-text pointer" (click)="expandOrCollpaseAll()">{{ activeIds.length > 0 ? 'Collapse all topics' : 'Expand all topics'}} <span class="expand-collapse-icon">{{ activeIds.length > 0 ? '-' : '+' }}</span></span>
+        </div>
+    </div>
+    <div class="row topic-section-body">
+        <div class="col-xs-12 md-topic-body-content">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="paSubTopics" *ngFor="let paSubTopic of paSubTopics; let i = index">
+                        <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)" *ngIf="i % 3 == 0 && i < subTopicLength">
+                            <ngb-panel id="mainpanel-{{i}}">
+                                <ng-template ngbPanelTitle>
+                                    <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ paSubTopic.title }}</span></span>
+                                </ng-template>
+                                <ng-template ngbPanelContent>
+                                    <ul class="subtopic-links">
+                                        <ng-container *ngFor="let subTopic of paSubTopic.subTocItem">
+                                            <li class="pointer" (click)="navigateToGuidance(subTopic)">{{ subTopic.title }}</li>
+                                        </ng-container>
+                                    </ul>
+                                </ng-template>
+                            </ngb-panel>
+                        </ngb-accordion>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="paSubTopics" *ngFor="let paSubTopic of paSubTopics; let i = index">
+                        <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)" *ngIf="i % 3 == 1 && i < subTopicLength">
+                            <ngb-panel id="mainpanel-{{i}}">
+                                <ng-template ngbPanelTitle>
+                                    <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ paSubTopic.title }}</span></span>
+                                </ng-template>
+                                <ng-template ngbPanelContent>
+                                    <ul class="subtopic-links">
+                                        <ng-container *ngFor="let subTopic of paSubTopic.subTocItem">
+                                            <li class="pointer" (click)="navigateToGuidance(subTopic)">{{ subTopic.title }}</li>
+                                        </ng-container>
+                                    </ul>
+                                </ng-template>
+                            </ngb-panel>
+                        </ngb-accordion>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="paSubTopics" *ngFor="let paSubTopic of paSubTopics; let i = index">
+                        <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)" *ngIf="i % 3 == 2 && i < subTopicLength">
+                            <ngb-panel id="mainpanel-{{i}}">
+                                <ng-template ngbPanelTitle>
+                                    <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ paSubTopic.title }}</span></span>
+                                </ng-template>
+                                <ng-template ngbPanelContent>
+                                    <ul class="subtopic-links">
+                                        <ng-container *ngFor="let subTopic of paSubTopic.subTocItem">
+                                            <li class="pointer" (click)="navigateToGuidance(subTopic)">{{ subTopic.title }}</li>
+                                        </ng-container>
+                                    </ul>
+                                </ng-template>
+                            </ngb-panel>
+                        </ngb-accordion>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xs-12 sm-topic-body-content">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="paSubTopics" *ngFor="let paSubTopic of paSubTopics; let i = index">
+                        <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)" *ngIf="i % 2 == 0 && i < subTopicLength">
+                            <ngb-panel id="mainpanel-{{i}}">
+                                <ng-template ngbPanelTitle>
+                                    <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ paSubTopic.title }}</span></span>
+                                </ng-template>
+                                <ng-template ngbPanelContent>
+                                    <ul class="subtopic-links">
+                                        <ng-container *ngFor="let subTopic of paSubTopic.subTocItem">
+                                            <li class="pointer" (click)="navigateToGuidance(subTopic)">{{ subTopic.title }}</li>
+                                        </ng-container>
+                                    </ul>
+                                </ng-template>
+                            </ngb-panel>
+                        </ngb-accordion>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="paSubTopics" *ngFor="let paSubTopic of paSubTopics; let i = index">
+                        <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)" *ngIf="i % 2 == 1 && i < (subTopicLength + 1)">
+                            <ngb-panel id="mainpanel-{{i}}">
+                                <ng-template ngbPanelTitle>
+                                    <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ paSubTopic.title }}</span></span>
+                                </ng-template>
+                                <ng-template ngbPanelContent>
+                                    <ul class="subtopic-links">
+                                        <ng-container *ngFor="let subTopic of paSubTopic.subTocItem">
+                                            <li class="pointer" (click)="navigateToGuidance(subTopic)">{{ subTopic.title }}</li>
+                                        </ng-container>
+                                    </ul>
+                                </ng-template>
+                            </ngb-panel>
+                        </ngb-accordion>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row show-more-container" *ngIf="paSubTopics?.length > 9">
+        <div class="col-md-12 text-center">
+            <span class="show-more-subtopic-btn m-hide" (click)="toggleShowMoreSubTopics()">Show {{ subTopicLength > 9 ? 'less' : 'more' }}</span>
+            <span class="mobi-show-more-subtopic-btn d-hide" (click)="toggleShowMoreSubTopics()">Show {{ subTopicLength > 9 ? 'less' : 'more' }}</span>
+        </div>
+    </div>
+</div>

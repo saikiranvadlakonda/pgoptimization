@@ -1,0 +1,10 @@
+
+  <ul class="nav nav-tabs m-b-10 dasboardtabs" id="myTab" role="tablist">
+    <li *ngFor="let tab of tabs;let i=index" style="cursor:pointer"
+        class="nav-item">
+      <a class="nav-link" id="tabid{{i+1}}" data-toggle="tab" href="#tebcontent{{i+1}}"
+        role="tab" aria-controls="profile" [ngClass]="(i === activeTab) ? 'active' : ''"  (click)="_tabClicked(i)">{{tab}}</a>
+           
+    </li>
+  </ul>
+    

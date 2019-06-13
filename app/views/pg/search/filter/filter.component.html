@@ -1,0 +1,362 @@
+<div class="filterMainDiv m-hide">
+    <div class="tilebox-two eventHeader">
+        <h4 class="m-b-10"><span data-plugin="counterup">FILTER</span></h4>
+        <hr class="hrline" />
+    </div>
+    <div class="filtersearchHeadDiv m-hide">
+        <div class="searchwithinresult"><p>Search within results</p></div>
+        <div id="custom-search-input-top" class="FilterSearch">
+            <input type="text" class="form-control input-lg downloadsSearchInput img-responsive" placeholder="Enter your search here" [(ngModel)]="searchText" />
+            <a class="practiceAreaCrossMark filter-clear ng-star-inserted" style="display:table-cell;padding-right:9px;cursor:pointer;color:#EA1C2C;vertical-align:middle" *ngIf="searchText?.length>0" (click)="clearWithinSearch()">
+                X
+            </a>
+            <span class="input-group-btn pointer" (click)="searchWithinResults()">
+                <button class="btn btn-info btn-lg searchbutton" type="button">
+                    <i class="fa fa-search Filtersearchbutton"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+    <!--Applied Filters By Saikiran-->
+    <div class="filterpracticearea" *ngIf="appliedFilters?.selectedpracticeAreas?.length>0 || appliedFilters?.selectedsubTopics?.length>0 || appliedFilters?.selecteddocumentTypes?.length>0">
+        <p>Applied Filters <!--<i class="far fa-eye-slash"></i>- <span class="subTopicsSelectAll pull-right" (click)="clearAllFilters()"> Clear all</span></p>-->
+    </div>
+    <div class="paNameSubDiv" *ngIf="appliedFilters?.selectedpracticeAreas?.length>0 || appliedFilters?.selectedsubTopics?.length>0 || appliedFilters?.selecteddocumentTypes?.length>0">
+        <ul class="list-group">
+            <ng-container *ngFor="let topic of appliedFilters?.selectedpracticeAreas">
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="topic?.displayName">
+                    <div class="checkbox">
+                        <input type="checkbox" cid="checkbox100" checked="checked" value={{topic?.displayName}} [(ngModel)]="topic.isSelected" (click)="practiceAreaClickFilter($event.currentTarget.checked,topic)">
+                        <label for="checkbox2">
+                            <!--<span class="badge badge-primary badge-pill pull-right">({{topic}})</span>-->
+                            {{topic?.displayName}}
+                        </label>
+
+                    </div>
+                </li>
+            </ng-container>
+            <ng-container *ngFor="let topic of appliedFilters?.selectedsubTopics">
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="topic?.displayName">
+                    <div class="checkbox">
+                        <input type="checkbox" cid="checkbox100" checked="checked" value={{topic?.displayName}} [(ngModel)]="topic.isSelected" (click)="subTopicClick($event.currentTarget.checked,topic)">
+                        <label for="checkbox2">
+                            <!--<span class="badge badge-primary badge-pill pull-right">({{topic}})</span>-->
+                            {{topic?.displayName}}
+                        </label>
+
+                    </div>
+                </li>
+            </ng-container>
+
+            <ng-container *ngFor="let topic of appliedFilters?.selecteddocumentTypes">
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="topic?.displayName">
+                    <div class="checkbox">
+                        <input type="checkbox" cid="checkbox100" checked="checked" value={{topic?.displayName}} [(ngModel)]="topic.isSelected" (click)="documentTypeClick($event.currentTarget.checked,topic)">
+                        <label for="checkbox2">
+                            <!--<span class="badge badge-primary badge-pill pull-right">({{topic}})</span>-->
+                            {{topic?.displayName}}
+                        </label>
+
+                    </div>
+                </li>
+            </ng-container>
+
+        </ul>
+    </div>
+    <hr *ngIf="appliedFilters?.selectedpracticeAreas?.length>0 || appliedFilters?.selectedsubTopics?.length>0 || appliedFilters?.selecteddocumentTypes?.length>0" />
+    <!--End of Applied Filters-->
+    <div class="filterpracticearea">
+        <!--<p>Practice Area <span class="subTopicsSelectAll pull-right" (click)="selectAllPracticeAreas()"> SELECT ALL</span></p>-->
+        <p>
+            Practice Area <span class="subTopicsSelectAll pull-right" (click)="clearAllFilters()" *ngIf="selectedpracticeAreas?.length>0 || selectedsubTopics?.length>0 || selecteddocumentTypes?.length>0 || selectedtopics?.length>0">CLEAR ALL</span><span class="subTopicsSelectAll pull-right ng-star-inserted" style="padding:0px 5px;" *ngIf="selectedpracticeAreas?.length>0 || selectedsubTopics?.length>0 || selecteddocumentTypes?.length>0 || selectedtopics?.length>0">/</span>
+            <span class="subTopicsSelectAll pull-right" (click)="practiceAreaClickSearch()">APPLY</span>&nbsp;
+        </p>
+    </div>
+    <!--<div class="paNameSubDiv" *ngIf="!(appliedFilters?.selectedpracticeAreas?.length>0)">-->
+    <div class="paNameSubDiv">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let practicearea of practiceAreas | slice: 0:practiceAreaLength">
+                <div class="checkbox">
+                    <input type="checkbox" cid="checkbox100" checked="checked" value={{practicearea?.displayName}} [(ngModel)]="practicearea.isSelected" (click)="practiceAreaClick($event.currentTarget.checked,practicearea)">
+                    <label for="checkbox2">
+                        <span class="badge badge-primary badge-pill pull-right">({{practicearea?.count}})</span>
+                        {{practicearea?.displayName}}
+                    </label>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!--<div class="ShowMoreMainDiv" *ngIf="practiceAreas?.length>practiceAreaLength && !(appliedFilters?.selectedpracticeAreas?.length>0)">-->
+    <div class="ShowMoreMainDiv" *ngIf="practiceAreas?.length>5">
+        <div class="showmore" (click)="showMorePracticeArea()" *ngIf="!showLessPracticeAreas">
+            <p>
+                <span class="showmore"> SHOW MORE PRACTICE AREAS </span>
+                <span class="PlusDiv pull-right"> +</span>
+            </p>
+        </div>
+        <div class="showmore" (click)="showLessPracticeArea()" *ngIf="showLessPracticeAreas">
+            <p>
+                <span class="showmore"> SHOW LESS PRACTICE AREAS </span>
+                <span class="PlusDiv pull-right"> -</span>
+            </p>
+        </div>
+    </div>
+    <!--<hr *ngIf="!(appliedFilters?.selectedpracticeAreas?.length>0)" />-->
+    <hr />
+    <div class="filterpracticearea">
+        <p>
+            Topics <!--<i class="far fa-eye-slash"></i>--> <span class="subTopicsSelectAll pull-right" (click)="selectAllsubTopics()" style="display:none;">SELECT ALL</span>
+            <!--<span class="subTopicsSelectAll pull-right" (click)="clearAllFilters()" *ngIf="selectedsubTopics?.length>0">CLEAR ALL</span><span class="subTopicsSelectAll pull-right ng-star-inserted" style="padding:0px 5px;" *ngIf="selectedsubTopics?.length>0">/</span>
+            <span class="subTopicsSelectAll pull-right" (click)="topicsClickSearch()">APPLY</span>&nbsp;-->
+        </p>
+    </div>
+    <div class="paNameSubDiv">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let topic of topics|slice:0:topicLength">
+                <div class="checkbox">
+                    <input type="checkbox" cid="checkbox100" checked="checked" value={{topic?.displayName}} [(ngModel)]="topic.isSelected" (click)="topicClick($event.currentTarget.checked,topic)">
+                    <label for="checkbox2">
+                        <span class="badge badge-primary badge-pill pull-right">({{topic?.count}})</span>
+                        {{topic?.displayName}}
+                    </label>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="ShowMoreMainDiv" *ngIf="topics?.length>topicLength">
+        <div class="showmore" (click)="showMoreTopic()">
+            <p>
+                <span class="showmore"> SHOW MORE TOPICS </span>
+                <span class="PlusDiv pull-right"> +</span>
+            </p>
+        </div>
+    </div>
+    <hr />
+    <div class="filterpracticearea">
+        <p>Sub Topics <span class="subTopicsSelectAll pull-right" (click)="selectAllsubTopics()"> SELECT ALL</span></p>
+    </div>
+    <div class="paNameSubDiv">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let subtopic of subTopics|slice:0:subTopicLength">
+                <div class="checkbox">
+                    <input type="checkbox" cid="checkbox100" checked="checked" value={{subtopic?.displayName}} [(ngModel)]="subtopic.isSelected" (click)="subTopicClick($event.currentTarget.checked,subtopic)">
+                    <!--<input type="checkbox" cid="checkbox100" checked="checked" value={{subtopic?.displayName}} [(ngModel)]="subtopic.isSelected">-->
+                    <label for="checkbox2">
+                        <span class="badge badge-primary badge-pill pull-right">({{subtopic?.count}})</span>
+                        {{subtopic?.displayName}}
+                    </label>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="ShowMoreMainDiv" *ngIf="subTopics?.length>5">
+        <div class="showmore" (click)="showMoreSubTopic()" *ngIf="!showLessSubTopics">
+            <p>
+                <span class="showmore"> SHOW MORE </span>
+                <span class="PlusDiv pull-right"> +</span>
+            </p>
+        </div>
+        <div class="showmore" (click)="showLessSubTopic()" *ngIf="showLessSubTopics">
+            <p>
+                <span class="showmore"> SHOW LESS </span>
+                <span class="PlusDiv pull-right"> -</span>
+            </p>
+        </div>
+    </div>
+    <hr />
+
+    <div class="filterpracticearea">
+        <p>Document Type <span class="subTopicsSelectAll pull-right" style="display:none;">SELECT ALL</span></p>
+    </div>
+    <div class="paNameSubDiv">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let documenttype of documentTypes|slice : 0:documentTypeLength">
+                <div class="checkbox">
+                    <input type="checkbox" cid="checkbox100" checked="checked" value={{documenttype?.displayName}} [(ngModel)]="documenttype.isSelected" (click)="documentTypeClick($event.currentTarget.checked,documenttype)">
+                    <label for="checkbox2">
+                        <span class="badge badge-primary badge-pill pull-right">({{documenttype?.count}})</span>
+                        {{documenttype?.displayName}}
+                    </label>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="ShowMoreMainDiv" *ngIf="documentTypes?.length>5">
+        <div class="showmore" (click)="showMoreDocumentType()" *ngIf="!showLessDocuments">
+            <p>
+                <span class="showmore"> SHOW MORE </span>
+                <span class="PlusDiv pull-right"> +</span>
+            </p>
+        </div>
+        <div class="showmore" (click)="showLessDocumentType()" *ngIf="showLessDocuments">
+            <p>
+                <span class="showmore"> SHOW LESS </span>
+                <span class="PlusDiv pull-right"> -</span>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="filterMainDivForMob hidden-lg-up">
+    <div class="filterpracticearea hidden-lg-up">
+        <div class="showmore filterSR" (click)="collapseSearch()">
+            <p>
+                <span class="showmore filterSRTitle"> Filter search results </span>
+                <span class="PlusDiv pull-right cross-icon"> X</span>
+            </p>
+        </div>
+    </div>
+    <hr />
+    <div class="filterpracticearea">
+        <!--<p>Practice Area <span class="subTopicsSelectAll pull-right" (click)="selectAllPracticeAreas()"> SELECT ALL</span></p>-->
+        <p class="hidden-lg-up filterTypeTitle" (click)="expandOrMinimizeSWinSR()">
+            Search within search results
+            <!--<span class="subTopicsSelectAll pull-right" (click)="clearAllFilters()" *ngIf="selectedpracticeAreas?.length>0 || selectedsubTopics?.length>0 || selecteddocumentTypes?.length>0">CLEAR ALL</span><span class="subTopicsSelectAll pull-right ng-star-inserted" style="padding:0px 5px;" *ngIf="selectedpracticeAreas?.length>0 || selectedsubTopics?.length>0 || selecteddocumentTypes?.length>0">/</span>
+            <span class="subTopicsSelectAll pull-right" (click)="practiceAreaClickSearch()">APPLY</span>&nbsp;-->
+            <span class="PlusDiv pull-right" *ngIf="filterBySWINSR==false"> +</span>
+            <span class="PlusDiv pull-right" *ngIf="filterBySWINSR==true"> -</span>
+        </p>
+    </div>
+
+    <div class="filtersearchHeadDiv" *ngIf="filterBySWINSR==true">
+        <div id="custom-search-input-top" class="FilterSearch">
+            <input type="text" class="form-control input-lg downloadsSearchInput img-responsive" placeholder="Enter your search here" [(ngModel)]="searchText" />
+            <a class="practiceAreaCrossMark filter-clear ng-star-inserted" style="display:table-cell;padding-right:9px;cursor:pointer;color:#000;vertical-align:middle" *ngIf="searchText?.length>0" (click)="clearWithinSearch()">
+                X
+            </a>
+            <span class="input-group-btn">
+                <button class="btn btn-info btn-lg searchbutton" type="button" (click)="searchWithinResults()">
+                    <i class="fa fa-search Filtersearchbutton"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+    <hr />
+
+    <div class="filterpracticearea">
+        <!--<p>Practice Area <span class="subTopicsSelectAll pull-right" (click)="selectAllPracticeAreas()"> SELECT ALL</span></p>-->
+        <p class="hidden-lg-up filterTypeTitle" (click)="expandOrMinimizeFbyPA()">
+            Filter by Practice Area
+            <!--<span class="subTopicsSelectAll pull-right" (click)="clearAllFilters()" *ngIf="selectedpracticeAreas?.length>0 || selectedsubTopics?.length>0 || selecteddocumentTypes?.length>0">CLEAR ALL</span><span class="subTopicsSelectAll pull-right ng-star-inserted" style="padding:0px 5px;" *ngIf="selectedpracticeAreas?.length>0 || selectedsubTopics?.length>0 || selecteddocumentTypes?.length>0">/</span>
+            <span class="subTopicsSelectAll pull-right" (click)="practiceAreaClickSearch()">APPLY</span>&nbsp;-->
+            <span class="PlusDiv pull-right" *ngIf="filterByPA==false"> +</span>
+            <span class="PlusDiv pull-right" *ngIf="filterByPA==true"> -</span>
+        </p>
+        <p class="m-hide">
+            Practice Area <span class="subTopicsSelectAll pull-right" (click)="clearAllFilters()" *ngIf="selectedpracticeAreas?.length>0 || selectedsubTopics?.length>0 || selecteddocumentTypes?.length>0">CLEAR ALL</span><span class="subTopicsSelectAll pull-right ng-star-inserted" style="padding:0px 5px;" *ngIf="selectedpracticeAreas?.length>0 || selectedsubTopics?.length>0 || selecteddocumentTypes?.length>0">/</span>
+            <span class="subTopicsSelectAll pull-right" (click)="practiceAreaClickSearch()">APPLY</span>&nbsp;
+        </p>
+    </div>
+    <!--<div class="paNameSubDiv" *ngIf="!(appliedFilters?.selectedpracticeAreas?.length>0)">-->
+    <div class="paNameSubDiv" *ngIf="filterByPA==true">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let practicearea of practiceAreas | slice: 0:practiceAreaLength">
+                <div class="checkbox">
+                    <input type="checkbox" cid="checkbox100" checked="checked" value={{practicearea?.displayName}} [(ngModel)]="practicearea.isSelected" (click)="practiceAreaClick($event.currentTarget.checked,practicearea)">
+                    <label for="checkbox2">
+                        <span class="badge badge-primary badge-pill pull-right">({{practicearea?.count}})</span>
+                        {{practicearea?.displayName}}
+                    </label>
+                </div>
+            </li>
+        </ul>
+        <div class="ShowMoreMainDiv hidden-lg-up" *ngIf="practiceAreas?.length>5">
+            <div class="showmore" (click)="showMorePracticeArea()" *ngIf="!showLessPracticeAreas">
+                <p>
+                    <span class="showmore"> SHOW MORE PRACTICE AREAS </span>
+                    <span class="PlusDiv pull-right showMorePlus"> +</span>
+                </p>
+            </div>
+            <div class="showmore" (click)="showLessPracticeArea()" *ngIf="showLessPracticeAreas">
+                <p>
+                    <span class="showmore"> SHOW LESS PRACTICE AREAS </span>
+                    <span class="PlusDiv pull-right showMorePlus"> -</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="filterpracticearea">
+        <p class="hidden-lg-up filterTypeTitle" (click)="expandOrMinimizeFbyT()">
+            Filter by Topics <span class="PlusDiv pull-right" *ngIf="filterByTopics==false"> +</span>
+            <span class="PlusDiv pull-right" *ngIf="filterByTopics==true"> -</span>
+        </p>
+    </div>
+    <div class="paNameSubDiv" *ngIf="filterByTopics">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let topic of topics|slice:0:topicLength">
+                <div class="checkbox">
+                    <input type="checkbox" cid="checkbox100" checked="checked" value={{topic?.displayName}} [(ngModel)]="topic.isSelected" (click)="topicClick($event.currentTarget.checked,topic)">
+                    <label for="checkbox2">
+                        <span class="badge badge-primary badge-pill pull-right">({{topic?.count}})</span>
+                        {{topic?.displayName}}
+                    </label>
+
+                </div>
+            </li>
+        </ul>
+        <div class="ShowMoreMainDiv hidden-lg-up" *ngIf="subTopics?.length>5">
+            <div class="showmore" (click)="showMoreSubTopic()" *ngIf="!showLessSubTopics">
+                <p>
+                    <span class="showmore hidden-lg-up"> SHOW MORE TOPICS</span>
+                    <span class="showmore m-hide"> SHOW MORE</span>
+                    <span class="PlusDiv pull-right showMorePlus"> +</span>
+                </p>
+            </div>
+            <div class="showmore" (click)="showLessSubTopic()" *ngIf="showLessSubTopics">
+                <p>
+                    <span class="showmore hidden-lg-up"> SHOW LESS TOPICS</span>
+                    <span class="showmore m-hide"> SHOW LESS</span>
+                    <span class="PlusDiv pull-right showMorePlus"> -</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="filterpracticearea">
+        <p class="m-hide">Document Type <span class="subTopicsSelectAll pull-right" style="display:none;">SELECT ALL</span></p>
+        <p class="hidden-lg-up filterTypeTitle" (click)="expandOrMinimizeFbyDOCT()">
+            Filter by Document Type <span class="PlusDiv pull-right" *ngIf="filterByDOCT==false"> +</span>
+            <span class="PlusDiv pull-right" *ngIf="filterByDOCT==true"> -</span><span class="subTopicsSelectAll pull-right" style="display:none;">SELECT ALL</span>
+        </p>
+
+    </div>
+    <div class="paNameSubDiv" *ngIf="filterByDOCT==true">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let documenttype of documentTypes|slice : 0:documentTypeLength">
+                <div class="checkbox">
+                    <input type="checkbox" cid="checkbox100" checked="checked" value={{documenttype?.displayName}} [(ngModel)]="documenttype.isSelected" (click)="documentTypeClick($event.currentTarget.checked,documenttype)">
+                    <label for="checkbox2">
+                        <span class="badge badge-primary badge-pill pull-right">({{documenttype?.count}})</span>
+                        {{documenttype?.displayName}}
+                    </label>
+
+                </div>
+            </li>
+        </ul>
+        <div class="ShowMoreMainDiv hidden-lg-up" *ngIf="documentTypes?.length>5">
+            <div class="showmore" (click)="showMoreDocumentType()" *ngIf="!showLessDocuments">
+                <p>
+                    <span class="showmore hidden-lg-up"> SHOW MORE DOCUMENT TYPE</span>
+                    <span class="showmore m-hide"> SHOW MORE </span>
+
+                    <span class="PlusDiv pull-right showMorePlus"> +</span>
+                </p>
+            </div>
+            <div class="showmore" (click)="showLessDocumentType()" *ngIf="showLessDocuments">
+                <p>
+                    <span class="showmore hidden-lg-up"> SHOW LESS DOCUEMN TYPE</span>
+                    <span class="showmore m-hide"> SHOW LESS</span>
+
+                    <span class="PlusDiv pull-right showMorePlus"> -</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="ShowMoreMainDiv afbtn hidden-lg-up">
+        <button type="button" class="btn btn-primary mfiltrsApplyBtn" (click)="collapseSearch()">Apply Filters</button>
+    </div>
+</div>

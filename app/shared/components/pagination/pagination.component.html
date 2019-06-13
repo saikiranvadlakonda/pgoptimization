@@ -1,0 +1,12 @@
+﻿<pre>{{totalPages() | json}}</pre>
+<pre>{{pageSize | json}}</pre>
+<div *ngIf="totalPages() > 1" class="pagination PaginationMainDiv">
+    <a class="icons8-left-arrow PaginationPrev"></a>
+    <div *ngIf="pageSize != 1"><a (click)="pageClicked(prevPage())">Previous</a></div>
+    <a *ngFor="let p of pagesRange() |slice: 0 : pageSize"
+       (click)="pageClicked(p)">
+        {{p}}
+    </a>
+    <div *ngIf="totalPages() > pageSize"><a (click)="pageClicked(nextPage())">Next</a></div>
+    <a class="icons8-arrow-pointing-to-right PaginationNext"></a>
+</div>

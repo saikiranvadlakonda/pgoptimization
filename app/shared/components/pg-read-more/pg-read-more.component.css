@@ -1,0 +1,26 @@
+.readMoreContent {
+  color: rgb(70, 68, 68);
+}
+
+.readMorePlus {
+  font-size: 8px;
+  color: #a19e9e;
+  padding-left: 6px;
+  cursor: pointer;
+  vertical-align: text-top;
+}
+@media only screen and (max-width: 767px) {
+  .readMoreContent {
+    color: #232222;
+  }
+}
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .readMoreContent{
+  }
+}
+/*md*/
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+}
+/*lg*/ 
+@media only screen and (min-width: 1201px) {
+}

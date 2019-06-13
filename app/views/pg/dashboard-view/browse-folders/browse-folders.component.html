@@ -1,0 +1,147 @@
+<div class="p-20 tilebox-two foldersHeader">
+    <!--<a (click)="createFolder($event.event,modalContent)"
+       [ngClass]="(!newFolder)? 'btn btn-sm btn-custom waves-effect waves-light pull-xs-right folderbtn pointer' : 'btn btn-sm btn-custom waves-effect waves-light pull-xs-right folderbtn pointer disableCursor'">
+        <b class="pluse">+</b> New Folder
+    </a>-->
+
+    <a (click)="createFolder($event.event,modalContent)" [ngClass]="(!newFolder)? 'btn btn-sm btn-custom waves-effect waves-light pull-xs-right folderbtn pointer' : 'btn btn-sm btn-custom waves-effect waves-light pull-xs-right folderbtn pointer disableCursor'"
+      ><i class="zmdi zmdi-plus"></i> New Folder</a>
+    <h4 class="m-b-10"><span data-plugin="counterup">Browse Folders</span></h4>
+    <h6 class="text-muted  m-b-15">{{folderInfo?.length > 3 ? 3 : folderInfo?.length }} of {{folderInfo?.length}}</h6>
+    <hr class="hrline" />
+</div>
+
+<div class="table-rep-plugin">
+    <div class="table-responsive">
+        <table class="contentbrowsertble">
+            <tr>
+                <th>NAME</th>
+                <th>DATE CREATED</th>
+                <th>LAST UPDATED</th>
+                <!--<th>SHARING</th>-->
+                <!--<th>Edit Folder</th>-->
+            </tr>
+            <tr *ngIf="!folderInfo">
+                <td colspan="3">
+                    <div class="folderIconDetailMain">
+                        <div class="dateTimeContent">Loading...</div>
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="newFolder">
+                <td colspan="2">
+                    <div class="p-20 tilebox-three pointer">
+                        <div class="bg-icon pull-xs-left">
+                            <i class="ion-ios7-folder pull-xs-left"></i>
+                        </div>
+                        <div class="text-xs-left">
+                            <input type="text" name="name" value="" [(ngModel)]="newClientFolder.clientDescription" class="form-control" (keydown)="onKeyDown($event,newClientFolder,'New')" style="width: 80%;" />
+                            <div class="folder-name-req" *ngIf="newClientFolder.isValid == false" style="color:red;">Folder Name is required</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <i class="fa fa-save editPencilButton pointer" (click)="saveCreatFolder()" title="Create Folder" style="font-size:20px;"></i>
+                    <i class="fa fa-close cancel editPencilButton pointer" (click)="cancelCreateClient()" title="Cancel" style="font-size:20px;"></i>
+                </td>
+            </tr>
+            <tr *ngFor="let folder of folderInfo | slice: 0:3; let i = index">
+                <td>
+                    <div class="p-20 tilebox-three pointer" *ngIf="folderInfo[i]">
+                        <div class="bg-icon pull-xs-left">
+                            <i class="ion-ios7-folder pull-xs-left"></i>
+                        </div>
+                        <div class="text-xs-left" (click)="showFolderDetails(folder)">
+                            <h2 class="m-b-10"><span data-plugin="counterup">{{folderInfo[i].clientDescription}}</span></h2>
+                            <h6 class="m-b-10 m-t-10">{{folderInfo[i].fileCount}} File(s) , {{folderInfo[i].folderCount}} Folder(s)</h6>
+                        </div>
+                    </div>
+
+                </td>
+                <td><div class="dateTimeContent">{{folder?.dateCreated | date}}</div></td>
+                <td><div class="dateTimeContent">{{folder.lastAccessedDate | date}}</div></td>
+            </tr>
+            <tr *ngIf="folderInfo?.length == 0">
+                <td colspan="3">
+                    <div class="p-20 tilebox-three pointer">
+                        {{ error }}
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!--<ng-container *ngFor="let folder of folderInfo | slice: 0:folderInfolength; let i = index">
+  <div class="evBlock xsView row" *ngIf="i%2==0">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+      <div class="p-20 tilebox-three" *ngIf="folderInfo[i]">
+        <div class="bg-icon pull-xs-left">
+          <i class="ion-ios7-folder pull-xs-left"></i>
+        </div>
+        <div class="text-xs-left" (click)="showMore()">
+          <h6 class="m-b-10 m-t-10">{{getFilesMainFolderCount(folderInfo[i].subscriberClientId)}} Files , {{getFoldersMainFolderCount(folderInfo[i].subscriberClientId)}} Folders</h6>
+          <h2 class="m-b-10"><span data-plugin="counterup">{{folderInfo[i].clientDescription}}</span></h2>
+          <h6 class="m-b-15 m-t-10">Last updated: {{folderInfo[i].lastAccessedDate | date}}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+      <div class="p-20 tilebox-three" *ngIf="folderInfo[i+1]">
+        <div class="bg-icon pull-xs-left">
+          <i class="ion-ios7-folder pull-xs-left"></i>
+        </div>
+        <div class="text-xs-left">
+          <h6 class="m-b-10 m-t-10">{{getFilesMainFolderCount(folderInfo[i+1].subscriberClientId)}} Files ,{{getFoldersMainFolderCount(folderInfo[i+1].subscriberClientId)}} Folders</h6>
+          <h2 class="m-b-10"><span data-plugin="counterup">{{folderInfo[i+1].clientDescription}}</span></h2>
+          <h6 class="m-b-15 m-t-10">Last updated: {{folderInfo[i+1].lastAccessedDate | date}}</h6>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</ng-container>-->
+
+
+<div class="showMoreMainFolder" *ngIf="folderInfo?.length > 3">
+    <div class="showMoreTxtFolder" (click)="showMoreFolders()">Show More</div>
+</div>
+<div class="mobiShowMoreMainFolder text-center" *ngIf="folderInfo?.length > 3">
+    <p class="show-more-folders pointer" (click)="showMoreFolders()">Show more</p>
+</div>
+
+<ng-template #modalContent let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Create Folder <button type="button" class="close pull-right" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12"><input id="txtnotes" [value]="Createfoldertxt" #TextNotes placeholder="Enter folder name" class="form-control col-lg-12" /></div>
+            <!--<div class="col-md-8"><span>{{modalData?.event?.title}}</span></div>-->
+        </div>
+        <!--<div class="row">
+          <div class="col-md-4"><label>Start Date of Event:</label></div>
+          <div class="col-md-8"><span>{{modalData?.event.startDateDisplay}}</span></div>
+        </div>
+        <div class="row">
+          <div class="col-md-4"><label>End Date of Event:</label></div>
+          <div class="col-md-8"><span>{{modalData?.event.endDateDisplay}}</span></div>
+        </div>
+        <div class="row">
+          <div class="col-md-4"><label>Event Type:</label></div>
+          <div class="col-md-8"><span>{{modalData?.event.eventTypeDisplay}}</span></div>
+        </div>
+        <div class="row">
+          <div class="col-md-12"><span [innerHTML]="modalData.event.description"></span></div>
+        </div>-->
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-primary" (click)="saveCreatFolder(TextNotes.value)">Create</button>
+    </div>
+</ng-template>

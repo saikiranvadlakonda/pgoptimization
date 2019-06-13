@@ -1,0 +1,18 @@
+.footer > div {
+    height: 100%;
+    /*display: flex;*/
+    align-items: center
+}
+
+.footerRight {
+  float: right
+}
+.footerimg-responsive {
+  float: left;
+  height: 37px;
+}
+.footerimg-responsive1 {
+  height: 32px;
+  padding-left: 10px;
+}
+

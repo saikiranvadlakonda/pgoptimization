@@ -1,0 +1,23 @@
+<div class="container-fluid mainDivContainer">
+    <div class="row">
+        <div class="col-sm-8 col-md-8 col-lg-8 mainHeadDiv">
+            <i class="glyphicon glyphicon-menu-left paIndexWireWhatsnewArrows leftarrowPopularcontent" routerLink="/whats-new"></i>
+            <div class="h4Heading">{{title}}</div>
+        </div>
+        <div class="col-sm-4 col-md-4 col-lg-4 mainHeadDiv">
+            <i class="glyphicon glyphicon-star-empty paIndexWireWhatsnewArrows leftarrowPopularcontent"></i>
+            <i class="glyphicon glyphicon-folder-close paIndexWireWhatsnewArrows leftarrowPopularcontent"></i>
+            <i class="fa fa-envelope-open paIndexWireWhatsnewArrows leftarrowPopularcontent"></i>
+            <i class="glyphicon glyphicon-share-alt paIndexWireWhatsnewArrows leftarrowPopularcontent"></i>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="paLeftMainDivDashboard" *ngIf="contentHTML">
+                <div class="allContentMyNotesMainDiv">
+                    <div [innerHTML]="contentHTML | safe:'html'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

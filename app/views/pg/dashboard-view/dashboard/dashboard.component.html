@@ -1,0 +1,279 @@
+<div class="row">
+    <div class="col-lg-1"><p class="p-20 header-bottom"></p></div>
+</div>
+
+<div class="row dashboard-page-title">
+    <div class="col-xs-12">
+        <h5>Dashboard</h5>
+    </div>
+</div>
+
+<div class="row row-eq-height">
+    <div class="col-xs-12 col-lg-8 col-xl-8">
+        <div class="card-box dashboard-tabs border-radius-0 p-0">
+            <mat-tab-group (selectedTabChange)="changedTab($event)">
+                <mat-tab label="{{ getScreenSize() > 991 ? 'Browse Practice Areas' : 'Practice Areas' }}">
+                    <dashboard-practice-area [practiceAreas]="practiceAreas" [error]="practiceAreaError"
+                                             (domainPath)="navigateToSubTopics($event)" *ngIf="practiceAreas">
+                    </dashboard-practice-area>
+                    <div *ngIf="!practiceAreas" class="loading-pa-txt">Loading...</div>
+                </mat-tab>
+                <mat-tab label="History">
+                    <dashboard-history [historyItems]="historyList"
+                                       [timePeriods]="timePeriods"
+                                       [error]="historyError"
+                                       (showHistory)="navigateToHistoryList($event)">
+                    </dashboard-history>
+                </mat-tab>
+                <mat-tab label="Calendar">
+                    <div class="new-calendar">
+                        <div class="row calendar-page m-0 calendar-top-line">
+                            <!--Added by saikiran for month navigation at dashboard-->
+                            <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12 text-center calendar-header">
+                                <h4>
+                                    <span class="previousButton clarrows ft" mwlCalendarPreviousView
+                                          [view]="view"
+                                          [(viewDate)]="viewDate"
+                                          (viewDateChange)="viewDateChanged()">
+                                        <span class="leftArrowMain">
+                                            <i class="fa fa-angle-left  leftarrowBackButton"></i>
+                                        </span>
+                                    </span>
+                                    <span>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</span>
+                                    <span class="previousButton clarrows rt"
+                                          mwlCalendarNextView
+                                          [view]="view"
+                                          [(viewDate)]="viewDate"
+                                          (viewDateChange)="viewDateChanged()">
+                                        <span class="leftArrowMain">
+                                            <i class="fa fa-angle-right  leftarrowBackButton"></i>
+                                        </span>
+                                    </span>
+                                </h4>
+
+                            </div>
+                            <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12 mobi-calendar-header">
+                                <div class="row">
+                                    <div class="col-xs-2 text-right">
+                                        <span class="mobi-prev-button" mwlCalendarPreviousView
+                                              [view]="view"
+                                              [(viewDate)]="viewDate"
+                                              (viewDateChange)="viewDateChanged()">
+                                            <span class="left-caret">
+                                                <i class="fa fa-caret-left"></i>
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-8 text-center">
+                                        <span class="date-string">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }} <i class="fa fa-chevron-down"></i></span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span class="mobi-next-button"
+                                              mwlCalendarNextView
+                                              [view]="view"
+                                              [(viewDate)]="viewDate"
+                                              (viewDateChange)="viewDateChanged()">
+                                            <span class="right-caret">
+                                                <i class="fa fa-caret-right"></i>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-0 calendar-body">
+                            <div class="col-xl-12">
+
+                                <ng-template #customCellTemplate
+                                             let-day="day"
+                                             let-locale="locale"
+                                             let-openDay="openDay"
+                                             let-tooltipPlacement="tooltipPlacement"
+                                             highlightDay="highlightDay"
+                                             unhighlightDay="unhighlightDay"
+                                             eventClicked="eventClicked"
+                                             tooltipTemplate="tooltipTemplate"
+                                             tooltipAppendToBody="tooltipAppendToBody">
+                                    <div class="cal-cell-top">
+                                        <div class="cal-events" *ngIf="day.events.length > 0">
+                                            <div class="cal-event"
+                                                 *ngFor="let event of day.events"
+                                                 [style.backgroundColor]="event.color.primary"
+                                                 [ngClass]="event?.cssClass"
+                                                 [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
+                                                 [tooltipPlacement]="tooltipPlacement"
+                                                 [tooltipEvent]="event.title"
+                                                 [tooltipTemplate]="tooltipTemplate"
+                                                 [tooltipAppendToBody]="tooltipAppendToBody">
+                                            </div>
+                                        </div>
+
+                                        <div class="cal-day-number text-center">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</div>
+                                        <ng-container *ngFor="let event of day?.events | slice: 0:1">
+                                            <div class="cal-day-notes" [ngClass]="event?.eventCss" [style.width.%]="getCalDayWidth(day, event)" *ngIf="isStartDayOfEvent(day, event)">
+                                                <span class="event-notes">{{event.meta.notes}}</span>
+                                            </div>
+                                        </ng-container>
+                                        <!--<span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }} </span>-->
+                                    </div>
+
+                                </ng-template>
+
+
+                                <mwl-calendar-month-view [viewDate]="viewDate"
+                                                         [events]="events"
+                                                         (click)="navigateToCalendar()"
+                                                         [cellTemplate]="customCellTemplate">
+                                </mwl-calendar-month-view>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+
+
+        </div>
+    </div><!-- end col-->
+
+    <div class="col-xs-12 col-lg-4 col-xl-4">
+        <div class="card-box border-radius-0 whats-new-content">
+            <div class="p-20 tilebox-two foldersHeader">
+                <div class="pull-xs-right folderbtn">
+                    <!-- Carousel controls -->
+                    <!--<a class="carousel-control left carousel-control-prev" (click)="whatsNewCarouselNum = whatsNewCarouselNum == 1?3: whatsNewCarouselNum -1" href="#myCarousel" data-slide="prev">
+                      <i class="zmdi zmdi-chevron-left"></i>
+                    </a>
+                    <a class="carousel-control right carousel-control-next" href="#myCarousel" (click)="whatsNewCarouselNum = whatsNewCarouselNum == 3?1: whatsNewCarouselNum +1" data-slide="next">
+                      <i class="zmdi zmdi-chevron-right"></i>
+                    </a>-->
+                </div>
+                <h6 class="text-muted  m-b-15">
+                    {{whatsNewCarouselNum}} of 3
+                </h6>
+                <h4 class="m-b-10">
+                    <span data-plugin="counterup">What's new</span>
+                </h4>
+                <hr />
+            </div>
+
+            <carousel [noWrap]="noWrapSlides" (activeSlideChange)="updateSlideIndex($event)" *ngIf="newItems?.length > 0">
+                <!-- Wrapper for carousel items -->
+                <slide>
+                    <div class="whatNew-txt-content p-20" *ngFor="let newItem of newItems | slice: 0:2">
+                        <p><span class="label label-pill label-default">{{newItem.practiceAreaTitle}}</span></p>
+                        <h4 class="header-title m-t-0 m-b-20 pointer" *ngIf="newItem.isPdf =='True'" (click)="openWhatsNewPdf(newItem)">
+                            <span data-plugin="counterup" class="titles" mat-raised-button matTooltip="{{ newItem?.title }}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                                {{ newItem?.title.length > 83 ? newItem?.title.trim().slice(0, 80).trim().concat('...') : newItem?.title }}
+                            </span>
+                        </h4>
+                        <h4 class="header-title m-t-0 m-b-20 pointer" *ngIf="newItem.isPdf !=='True'" (click)="detailView(newItem)">
+                            <span data-plugin="counterup" class="titles" mat-raised-button matTooltip="{{ newItem?.title }}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                                {{ newItem?.title.length > 83 ? newItem?.title.trim().slice(0, 80).trim().concat('...') : newItem?.title }}
+                            </span>
+                        </h4>
+                        <!--<h4 class="header-title m-t-0 m-b-20 pointer" (click)="detailView(newItem)" *ngIf="newItem?.link == ''">{{newItem?.title}}</h4>-->
+                        <!--<h4 class="header-title m-t-0 m-b-20" (click)="detailView(newItem)" *ngIf="newItem?.link != ''"><a class="pointer" >{{newItem?.title}}</a></h4>-->
+                        <p class="font-600 m-b-5">&nbsp; <span class="text-secondary pull-right"><i class="zmdi zmdi-time"></i> {{newItem?.datePublished | date: 'd LLL, yyyy'}}</span></p>
+                        <hr />
+                    </div>
+                </slide>
+                <slide>
+                    <div class="whatNew-txt-content p-20" *ngFor="let newItem of newItems | slice:2:4">
+                        <p><span class="label label-pill label-default">{{newItem.practiceAreaTitle}}</span></p>
+                        <h4 class="header-title m-t-0 m-b-20 pointer" *ngIf="newItem.isPdf =='True'" (click)="openWhatsNewPdf(newItem)">
+                            <span data-plugin="counterup" class="titles" mat-raised-button matTooltip="{{ newItem?.title }}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                                {{ newItem?.title.length > 83 ? newItem?.title.trim().slice(0, 80).trim().concat('...') : newItem?.title }}
+                            </span>
+                        </h4>
+                        <h4 class="header-title m-t-0 m-b-20 pointer" *ngIf="newItem.isPdf !=='True'" (click)="detailView(newItem)">
+                            <span data-plugin="counterup" class="titles" mat-raised-button matTooltip="{{ newItem?.title }}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                                {{ newItem?.title.length > 83 ? newItem?.title.trim().slice(0, 80).trim().concat('...') : newItem?.title }}
+                            </span>
+                        </h4>
+                        <!--<h4 class="header-title m-t-0 m-b-20 pointer" (click)="detailView(newItem)" *ngIf="newItem?.link == ''">{{newItem?.title}}</h4>
+                        <h4 class="header-title m-t-0 m-b-20" (click)="detailView(newItem)" *ngIf="newItem?.link != ''"><a class="pointer" >{{newItem?.title}}</a></h4>-->
+                        <p class="font-600 m-b-5">&nbsp; <span class="text-secondary pull-right"><i class="zmdi zmdi-time"></i> {{newItem?.datePublished | date: 'd LLL, yyyy'}}</span></p>
+                        <hr />
+                    </div>
+                </slide>
+                <slide>
+                    <div class="whatNew-txt-content p-20" *ngFor="let newItem of newItems | slice:4:6">
+                        <p><span class="label label-pill label-default">{{newItem.practiceAreaTitle}}</span></p>
+                        <h4 class="header-title m-t-0 m-b-20 pointer" *ngIf="newItem.isPdf =='True'" (click)="openWhatsNewPdf(newItem)">
+                            <span data-plugin="counterup" class="titles" mat-raised-button matTooltip="{{ newItem?.title }}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                                {{ newItem?.title.length > 83 ? newItem?.title.trim().slice(0, 80).trim().concat('...') : newItem?.title }}
+                            </span>
+                        </h4>
+                        <h4 class="header-title m-t-0 m-b-20 pointer" *ngIf="newItem.isPdf !=='True'" (click)="detailView(newItem)">
+                            <span data-plugin="counterup" class="titles" mat-raised-button matTooltip="{{ newItem?.title }}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                                {{ newItem?.title.length > 83 ? newItem?.title.trim().slice(0, 80).trim().concat('...') : newItem?.title }}
+                            </span>
+                        </h4>
+                        <!--<h4 class="header-title m-t-0 m-b-20 pointer" (click)="detailView(newItem)" *ngIf="newItem?.link == ''">{{newItem?.title}}</h4>
+                        <h4 class="header-title m-t-0 m-b-20" (click)="detailView(newItem)" *ngIf="newItem?.link != ''"><a class="pointer" >{{newItem?.title}}</a></h4>-->
+                        <p class="font-600 m-b-5">&nbsp; <span class="text-secondary pull-right"><i class="zmdi zmdi-time"></i> {{newItem?.datePublished | date: 'd LLL, yyyy'}}</span></p>
+                        <hr />
+                    </div>
+                </slide>
+
+                
+
+            </carousel>
+            <div *ngIf="newItems?.length == 0">
+                <p>{{ whatsNewError }}</p>
+            </div>
+            <p class="showmore m-hide"><a class="pointer" (click)="showAllWhatsNew()" *ngIf="newItemsLoaded">show more</a></p>
+            <p class="mobi-showmore d-hide"><a class="pointer" (click)="showAllWhatsNew()" *ngIf="newItemsLoaded">Show more</a></p>
+        </div>
+    </div><!-- end col-->
+</div>
+<!-- end row -->
+<div class="clearfix m-hide"><p>&nbsp;</p></div>
+<div class="row row-eq-height" *ngIf="practiceAreas">
+    <div class="col-xs-12 col-md-12 col-lg-6 col-xl-6">
+
+        <div class="card-box border-radius-0 browseFolders-widget p-0">
+            <div class="inbox-widget nicescroll my-folders under-browse-folders" *ngIf="folderInfo">
+
+                <browse-folders [folderInfo]="folderInfo" [error]="foldersError" (reloadFolders)="getFolders()"
+                                (showMore)="navigateToMyFolders=true">
+
+                </browse-folders>
+
+            </div>
+
+
+        </div>
+
+    </div><!-- end col-->
+
+    <div class="col-xs-12 col-md-12 col-lg-6 col-xl-6">
+        <div class="card-box border-radius-0 eventsBlock">
+            <div class="p-20 tilebox-two eventHeader">
+                <!--<a routerLink="/calendar" class="btn btn-sm btn-custom waves-effect waves-light pull-xs-right folderbtn"><i class="zmdi zmdi-alarm-plus"></i><b class="pluse">+</b> New Event</a>-->
+                <h4 class="m-b-10"><span data-plugin="counterup">Events</span></h4>
+                <h6 class="text-muted text-uppercase m-b-15 m-hide">&nbsp;</h6>
+                <hr class="hrline" />
+            </div>
+            <ng-container *ngFor="let event of bEvents|slice: 0:3">
+                <div class="event-txt-content evBlock p-20">
+                    <p class="font-600 m-b-5">{{event.start | date: 'dd MMM. yyyy'}}</p>
+                    <h4 class="header-title m-t-0 m-b-20">{{event.title}} <span class="text-secondary pull-right"><span class="label label-pill label-default">{{event.eventType}}</span></span></h4>
+                </div>
+            </ng-container>
+            <p *ngIf="bEvents?.length==0" class="no-events-mgs">{{ eventsError }}</p>
+            <div class="showMoreMainFolder showmorebtn-m-t text-center mins">
+                <div class="showMoreTxtFolder pointer" routerLink="/calendar">Show More</div>
+            </div>
+            <div class="show-more-events text-center">
+                <p class="pointer" routerLink="/calendar">Show more</p>
+            </div>
+        </div>
+    </div><!-- end col-->
+
+
+</div>
+<!-- end row -->
+<div class="clearfix m-hide"><p>&nbsp;</p></div>
+
+

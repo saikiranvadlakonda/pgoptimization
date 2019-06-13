@@ -1,0 +1,141 @@
+<div class="history-container">
+    <div class="row whatsNewPage">
+        <div class="col-xs-12 col-lg-12 col-xl-12">
+            <div class="breadcrumb-text">
+                <div>You are here: <span><a routerLink="/dashboard">Dashboard</a></span> > History</div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
+            <h4 class="pageTitle">History</h4>
+        </div>
+    </div>
+    <div class="row whatsNewPage whatsNewFilters">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-5 col-xl-5 mobi-searchWhatsNew">
+            <div class="searchWhatsNew">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-search"></i></span><input class="form-control" type="text" placeholder="SEARCH HISTORY" [(ngModel)]="searchHistory" />
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-7 col-xl-7 text-right mobi-history-filters">
+            <div class="row">
+                <div class="col-sm-7 col-xs-6 text-right">
+                    <div class="form-group">
+                        <label>CATEGORY</label>
+                        <div class="btn-group" dropdown>
+                            <button id="button-basic" dropdownToggle type="button" class="btn btn-secondary dropdown-toggle category-toggle waves-effect waves-light" aria-controls="dropdown-basic">
+                                <span class="selected-pa-name">{{practiceArea==undefined?'All Practice Areas':practiceArea.title}}</span> <span class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu category-menu" role="menu" aria-labelledby="button-basic">
+                                <li role="menuitem"><a class="dropdown-item pointer" (click)="getAllHistory()">All Practice Areas</a></li>
+                                <li role="menuitem" *ngFor="let practiceArea of practiceAreas">
+                                    <a class="dropdown-item pointer" (click)="practiceAreaChange(practiceArea)">{{practiceArea?.title}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5 col-xs-6 text-right">
+                    <ul class="nav navbar-nav navbar-brand-dropdown pull-right">
+                        <li class="dropdown">
+                            <div class="form-group shortBy">
+                                <label>SORTY BY </label>
+                                <div class="btn-group" dropdown>
+                                    <button id="button-basic" dropdownToggle type="button" class="btn btn-secondary dropdown-toggle waves-effect waves-light"
+                                            aria-controls="dropdown-basic">
+                                        {{timePeriod==undefined?'Most Recent':timePeriod}} <span class="caret"></span>
+                                    </button>
+                                    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                                        role="menu" aria-labelledby="button-basic">
+                                        <li role="menuitem" *ngFor="let timePeriod of historySortBy">
+                                            <a class="dropdown-item pointer" (click)="sortByPeriod(timePeriod)">{{ timePeriod }}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row whatsNewPage">
+        <div class="col-xs-12 col-lg-12 col-xl-12">
+            <div class="card-box border-radius-0 historyPage-content p-0">
+                <ng-container *ngIf="sortedList?.length">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" *ngFor="let historyItem of sortedList | filterByProperty : searchHistory: 'name' ">
+                            <p class="card-text">
+                                <small class="text-muted">{{getPracticeAreaName(historyItem)}}</small>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">{{historyItem.dateBadge+" - "}}{{historyItem.date | date:'mediumTime'}}</small>
+                            </p>
+
+                            <h4 class="card-title pointer" (click)="navigateToHistory(historyItem)">{{historyItem?.name}}</h4>
+
+                        </li>
+                    </ul>
+                </ng-container>
+                <ng-container *ngIf="sortedList?.length==0 || (sortedList | filterByProperty : searchHistory: 'name')?.length == 0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-center">
+
+                            <p class="card-text no-records-error"> {{ historyError ? historyError : pgMessages.history.noHistory }}</p>
+
+                        </li>
+                    </ul>
+                </ng-container>
+            </div>
+        </div>
+        <div class="col-xl-12 morebtn text-center whatsNew-show-more">
+            <button type="button" class="btn btn-default" *ngIf="(sortedList | filterByProperty : searchHistory: 'name')?.length > 4 && showMore == true" (click)="loadMoreHistItems()">SHOW MORE</button>
+            <button type="button" class="btn btn-default" *ngIf="(sortedList | filterByProperty : searchHistory: 'name')?.length > 4 && showMore == false" (click)="showLessHistItems()">SHOW LESS</button>
+        </div>
+    </div>
+
+    <!--<div class="container-fluid " *ngIf="historyItems?.length>0">
+        <div class="mainDivContainer">
+
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="paLeftMainDiv">
+                        <ng-container *ngIf="sortedList?.length">
+                            <div class="whatsNewDiv" *ngFor="let historyItem of sortedList | filter : searchHistory">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="whatsnewTime">
+                                            {{historyItem?.dateBadge | uppercase}}
+                                        </div>
+                                        <div class="pointer whatsnewHead" (click)="navigateToHistory(historyItem)">
+                                            {{historyItem?.name}}
+                                        </div>
+                                        <div class="whatsnewContent">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="sortedList?.length==0">
+                            <div class="whatsNewDiv">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="whatsnewTime">
+                                        </div>
+                                        <div class="whatsnewHead">
+                                            No History found for selected Category
+                                        </div>
+                                        <div class="whatsnewContent">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+</div>

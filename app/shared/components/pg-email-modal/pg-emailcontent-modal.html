@@ -1,0 +1,55 @@
+<div mat-dialog-content>
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Email
+            <button type="button" class="close pull-right" mat-dialog-close>
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body ">
+        <div class="form-group">
+            <label for="textinput" class="control-label">To</label>
+            <input type="text" class="form-control" id="textinput" placeholder="email address" [(ngModel)]="data.Recipients">
+            <p *ngIf="showValidationMsg && !isRecepientValid" class="validate">Please enter a valid email address</p>
+        </div>
+        <div class="form-group">
+            <label for="textinput" class="control-label">Subject</label>
+            <input type="text" class="form-control" id="textinput" placeholder="subject" [(ngModel)]="data.Subject">
+            <p *ngIf="showValidationMsg && !isValidSubject">Please enter a subject</p>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="textarea">Notes</label>
+            <textarea class="form-control" id="textarea" name="textarea" rows="4" [(ngModel)]="data.Notes">notes</textarea>
+        </div>
+        <div class="form-group file-icon-img">
+            <label for="radios-inline" class="control-label">Format</label><br />
+            <mat-radio-group [(ngModel)]="data.Format">
+                <mat-radio-button value="pdf">PDF<img class="filesIconW" src="dist/assets/images/pdf.png" ></mat-radio-button>
+                <mat-radio-button value="rtf">RTF<img class="filesIconW" src="dist/assets/images/wordIcon.png" ></mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div class="form-group row">
+            <div class="col-lg-12">
+                <button class="btn btn-primary pull-left" *ngIf="IsValidForm" [mat-dialog-close]="true">Email</button>
+                <button class="btn btn-primary pull-left" *ngIf="!IsValidForm" (click)="validate()">Email</button>
+                <button class="btn btn-primary pull-right" mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-lg-12">
+                <hr />
+                <p>
+                    If you would like to send this document to more than one person, separate the recipients email addresses with a comma.
+                </p>
+                <hr />
+                <div class="pull-right">
+                    <a href="https://www.mylexisnexis.co.za/EmailNotice.aspx" target="_blank">View Important Notice</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

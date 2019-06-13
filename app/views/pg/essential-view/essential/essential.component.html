@@ -1,0 +1,654 @@
+<div class="row search-result-page essential-page" *ngIf="essentials">
+    <div class="col-xs-12 col-lg-4 col-xl-3 m-hide">
+
+    </div>
+    <div class="col-xs-12 col-md-12 col-lg-8 col-xl-9" *ngIf="!isPDF">
+        <div class="row essential-header">
+            <div class="col-xs-12 col-sm-12 col-md-12 filter-btn-col d-hide">
+                <button *ngIf="isCollapsedChange==true" type="button" class="btn btn-primary mfiltrsBtn d-hide" (click)="collapseSearch()" data-toggle="collapse" data-target="#mFilters"><i class="fa fa-sliders"></i> Filter essentials</button>
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-7 col-lg-7 col-xl-7 result-col">
+                <!--<div class="searchresultspa row" *ngIf="isCollapsedChange==true">
+                    <div class="col-sm-2">
+                        <span class="foldersButton pull-left">
+                            <a (click)="navigateToPracticeAreaSubTopics()" class="pointer"><i class="fa fa-angle-left leftArrowIcon"></i></a>
+                        </span>
+                        
+                    </div>
+                    <div class="col-sm-10">
+                        <span class="searchresultspaName"><strong>Essentials in {{selectedPracticeArea?.title}}</strong></span>
+                        <div class="searchresultcontent" *ngIf="essentials.length != 0 && displayingCount">Showing {{ displayingCount }} of {{filteredEssentials.length}}</div>
+                    </div>
+                </div>-->
+                <div class="essential-summary" *ngIf="isCollapsedChange==true">
+                    <ul class="essential-summary-box">
+                        <li>
+                            <span class="foldersButton">
+                                <a (click)="navigateToPracticeAreaSubTopics()" class="pointer"><i class="fa fa-angle-left leftArrowIcon"></i></a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="searchresultspaName"><strong>Essentials in {{selectedPracticeArea?.title}}</strong></span>
+                            <div class="searchresultcontent" *ngIf="essentials.length != 0 && displayingCount">Showing {{ displayingCount }} of {{filteredEssentials.length}}</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-5 col-lg-5 col-xl-5 download-col">
+                <div class="searchresultspa essential-summary text-right">
+                    <span class="foldersButton" *ngIf="!isPDF">
+                        <a (click)="openModalMultiEssentials(modalContent)" class="pointer download-files"><i class="ion-ios7-folder"></i><span *ngIf="checkedEssential?.length>0" class="download-count">{{checkedEssential?.length}}</span></a>
+                        <a (click)="openFileDownloadModal(downloadModal)" class="pointer download-files"><i class="zmdi zmdi-download"></i><span *ngIf="checkedEssential?.length>0" class="download-count">{{checkedEssential?.length}}</span></a>
+                        <!--<a (click)="openPermaLinkModal(permaLinkModal)" class="pointer"><i class="icon-action-redo icons"></i></a>-->
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12" *ngIf="isPDF">
+        <!--<div class="col-sm-2">
+            <span class="foldersButton pull-left">
+                <a (click)="isPDF = (!isPDF)" class="pointer"><i class="fa fa-angle-left leftArrowIcon"></i></a>
+            </span>
+        </div>-->
+        <div class="col-sm-12 guidance-note-page">
+            <div class="col-md-12 col-lg-12">
+                <h4 class="pageTitle p-l-0 m-t-10">
+                    <span class="folderBackMain pull-left" (click)="isPDF= !isPDF">
+                        <i class="fa fa-angle-left angleLeft leftarrowBackButton"></i>
+                    </span>
+                    <span class="folderName" title="{{pdfTitle}}">{{ pdfTitle?.length>45?(pdfTitle.substr(0, pdfTitle.substr(0,45).lastIndexOf(' ')))+'...':pdfTitle }}</span>
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row search-result-page essential-page m-hide" *ngIf="essentials">
+    <div class="col-xs-12 col-lg-4 col-xl-3">
+        <div class="card-box border-radius-0 searchfilters p-40 filter-top-p" *ngIf="!isPDF">
+            <div class="tilebox-two eventHeader">
+                <h4 class="m-b-10"><span>FILTER</span></h4>
+                <hr class="hrline" />
+            </div>
+
+            <div class="filtersearchHeadDiv">
+                <div class="searchwithinresult essentials-p"><p>Search within results </p></div>
+                <div id="custom-search-input-top" class="FilterSearch">
+                    <input type="text" class="form-control input-lg downloadsSearchInput img-responsive" placeholder="Enter your search here" [(ngModel)]="searchEssential" (keyup)="onSearchQueryEnter($event)" />
+                    <a *ngIf="searchEssential?.trim().length > 0" class="practiceAreaCrossMark filter-clear ng-star-inserted"
+                       style="display:table-cell;padding-right:9px;cursor:pointer;color:#EA1C2C;vertical-align:middle" (click)="clearSearch()">X</a>
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg searchbutton" type="button" (click)="updatePagination()">
+                            <i class="fa fa-search Filtersearchbutton"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="filterpracticearea">
+                <p *ngIf="isTopicSelected">
+                    Topics <span class="subTopicsSelectAll pull-right" (click)="clearAllTopics()">CLEAR ALL</span>
+                    <span class="subTopicsSelectAll pull-right ng-star-inserted" style="padding:0px 5px;">/</span>
+                    <span class="subTopicsSelectAll pull-right" (click)="getEssentialsForSelectedTopics()">APPLY</span>&nbsp;
+                </p>
+                <p *ngIf="!isTopicSelected">
+                    Topics <span class="subTopicsSelectAll pull-right" (click)="SelectAllTopics()">SELECT ALL</span>&nbsp;
+                </p>
+            </div>
+            <div class="paNameSubDiv">
+                <ul class="list-group">
+                    <ng-container *ngFor="let topic of topics">
+                        <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="topic.count > 0">
+                            <div class="checkbox">
+                                <input type="checkbox" id="checkbox100" [checked]="topic.isSelected" (change)="setSeletedTopic(topic.title,$event.currentTarget.checked)" />
+                                <label for="checkbox2">
+                                    <span class="badge badge-primary badge-pill pull-right">({{ topic.count }})</span>
+                                    {{topic.title}}
+                                </label>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+            <hr />
+
+
+            <div class="filterpracticearea">
+                <p>Document Type <span class="subTopicsSelectAll pull-right" (click)="setAllDocumentType()"> SELECT ALL</span></p>
+            </div>
+            <div class="paNameSubDiv">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of documentType">
+                        <div class="checkbox">
+                            <input type="checkbox" class="form-check-input filtercheckbox" id="checkbox100" [checked]="doc.isSelected" (change)="setDocumentType(doc.name,$event.currentTarget.checked)" />
+                            <label for="checkbox2">
+                                <span class="badge badge-primary badge-pill pull-right">({{doc.count}})</span>
+                                {{doc.displayName}}
+                            </label>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-lg-8 col-xl-9" *ngIf="!isPDF">
+        <div class="card-box border-radius-0 searchResults p-40" >
+            <div class="row" *ngIf="filteredEssentials?.length > 0">
+                <div class="col-xs-12 col-md-4 col-lg-4 col-xl-6">
+
+                </div>
+                <div class="col-xs-12 col-md-8 col-lg-8 col-xl-6 text-right">
+                    <div class="sortDivResultPerPage">
+                        <div class="sortresultDropDown">
+                            <span>RESULT PER PAGE</span>
+                            <select class="c-select" (change)="onPageSizeChange($event.target.value)">
+                                <option [attr.selected]="pageSize == 10 ? true : null" value="10">10</option>
+                                <option [attr.selected]="pageSize == 20 ? true : null" value="20">20</option>
+                                <option [attr.selected]="pageSize == 30 ? true : null" value="30">30</option>
+                                <option [attr.selected]="pageSize == 40 ? true : null" value="40">40</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--<div class="sortDiv">
+                        <div class="sortresultDropDown">
+                            <span>SORT BY</span>
+                            <select class="c-select">
+                                <option value="1">Relevance</option>
+                                <option value="2">Chronological</option>
+                            </select>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+            <div class="row" *ngIf="filteredEssentials?.length > 0">
+                <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12">
+                    <hr />
+                </div>
+            </div>
+            <ng-container>
+                <ng-container *ngFor="let essential of filteredEssentials | slice: ((curPage * pageSize) - pageSize) : (curPage * pageSize); let i = index">
+                    <div class="row essentials" *ngIf="i % 2 == 0">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="card-box tilebox-two border-radius-0" *ngIf="filteredEssentials[startEssentialIndex + i]">
+                                <div class="pull-xs-left essential-imgbox">
+                                    <div class="checkbox checkbox-success checkbox-circle essential-chekcbx">
+                                        <input id="checkbox-{{i}}" type="checkbox" [checked]="filteredEssentials[startEssentialIndex + i]?.isChecked" (change)="essentialChecked($event.currentTarget.checked, filteredEssentials[startEssentialIndex + i], false)" />
+                                        <label for="checkbox-{{i}}">&nbsp;</label>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <!--<input type="checkbox" (click)="essentialChecked($event.currentTarget.checked, startEssentialIndex + i)" />-->
+                                    <img src="dist/assets/images/wordIcon.png" *ngIf="filteredEssentials[startEssentialIndex + i]?.mimeType=='.doc' || filteredEssentials[startEssentialIndex + i]?.mimeType=='.docx'" />
+                                    <img src="dist/assets/images/pdf.png" *ngIf="filteredEssentials[startEssentialIndex + i]?.mimeType=='.pdf'" />
+                                    <img src="dist/assets/images/web-icon.png" *ngIf="filteredEssentials[startEssentialIndex + i]?.mimeType=='link'" />
+                                    <img src="dist/assets/images/spreadSheetIcon.svg" *ngIf="filteredEssentials[startEssentialIndex + i]?.mimeType=='.xls'" />
+                                    <img src="dist/assets/images/web-icon.png" *ngIf="filteredEssentials[startEssentialIndex + i]?.mimeType !='link' && filteredEssentials[startEssentialIndex + i]?.mimeType !='.pdf' && filteredEssentials[startEssentialIndex + i]?.mimeType !='.doc' && filteredEssentials[startEssentialIndex + i]?.mimeType !='.docx' && filteredEssentials[startEssentialIndex + i]?.mimeType !='.xls'" />
+                                </div>
+                                <!--<i class="far fa-file-word pull-xs-left filesIconW"></i>-->
+                                <p><span class="label label-pill label-default">{{filteredEssentials[startEssentialIndex + i].eType}}</span></p>
+                                <h2 class="m-b-10 pointer">
+                                    <span class="btn-group">
+                                        <button class="btn btn-purple dropdown-toggle waves-effect waves-light" mat-button [matMenuTriggerFor]="menu"><i class="fa fa-ellipsis-h"></i></button>
+                                        <mat-menu #menu="matMenu">
+                                            <!--<button mat-menu-item (click)="addToDownloadQueue('checkbox-' + i, filteredEssentials[startEssentialIndex + i])">Add to download queue</button>-->
+                                            <button mat-menu-item (click)="filteredEssentials[startEssentialIndex + i]?.mimeType=='link'?openTab(filteredEssentials[startEssentialIndex + i]):downLoadContent(filteredEssentials[startEssentialIndex + i].domainPath,filteredEssentials[startEssentialIndex + i].hasChildren, true)">Download</button>
+                                            <span class="dropdown-divider"></span>
+                                            <button mat-menu-item (click)="openModal(modalContent, filteredEssentials[startEssentialIndex + i])">Add to a folder</button>
+                                            <span class="dropdown-divider"></span>
+                                            <!--<button mat-menu-item>Share this item</button>-->
+                                        </mat-menu>
+                                    </span>
+                                    <span data-plugin="counterup" class="titles" (click)="filteredEssentials[startEssentialIndex + i]?.mimeType=='link'?openTab(filteredEssentials[startEssentialIndex + i]):downLoadContent(filteredEssentials[startEssentialIndex + i].domainPath,filteredEssentials[startEssentialIndex + i].hasChildren)" mat-raised-button matTooltip="{{filteredEssentials[startEssentialIndex + i]?.title.trim()}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                                        {{filteredEssentials[startEssentialIndex + i]?.title.length>33?filteredEssentials[startEssentialIndex + i]?.title.slice(0,30).trim().concat('...'):filteredEssentials[startEssentialIndex + i]?.title}}
+                                    </span>
+                                </h2>
+                                <h6 class="text-muted m-b-15 m-t-10">{{filteredEssentials[startEssentialIndex + i].guidance}}</h6>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="card-box tilebox-two border-radius-0" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]">
+                                <div class="pull-xs-left essential-imgbox">
+                                    <div class="checkbox checkbox-success checkbox-circle essential-chekcbx">
+                                        <input id="checkbox-{{i+1}}" type="checkbox" [checked]="filteredEssentials[startEssentialIndex + (i + 1)]?.isChecked" (change)="essentialChecked($event.currentTarget.checked, filteredEssentials[startEssentialIndex + (i + 1)], false)">
+                                        <label for="checkbox-{{i+1}}">&nbsp;</label>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <!--<input type="checkbox" (click)="essentialChecked($event.currentTarget.checked, startEssentialIndex + (i + 1))" />-->
+                                    <img src="dist/assets/images/wordIcon.png" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='.doc' || essential?.mimeType=='.docx'" />
+                                    <img src="dist/assets/images/pdf.png" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='.pdf'" />
+                                    <img src="dist/assets/images/web-icon.png" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='link'" />
+                                    <img src="dist/assets/images/spreadSheetIcon.svg" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='.xls'" />
+                                    <img src="dist/assets/images/web-icon.png" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType !='link' && filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType !='.pdf' && filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType !='.doc' && filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType !='.docx' && filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType !='.xls'" />
+                                </div>
+                                <!--<i class="far fa-file-word pull-xs-left filesIconW"></i>-->
+                                <p><span class="label label-pill label-default">{{filteredEssentials[startEssentialIndex + (i + 1)].eType}}</span></p>
+                                <h2 class="m-b-10 pointer">
+                                    <span class="btn-group">
+                                        <button class="btn btn-purple dropdown-toggle waves-effect waves-light" mat-button [matMenuTriggerFor]="menu"><i class="fa fa-ellipsis-h"></i></button>
+                                        <mat-menu #menu="matMenu">
+                                            <!--<button mat-menu-item (click)="addToDownloadQueue('checkbox-' + (i + 1), filteredEssentials[startEssentialIndex + (i + 1)])">Add to download queue</button>-->
+                                            <button mat-menu-item (click)="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='link'?openTab(filteredEssentials[startEssentialIndex + (i + 1)]):downLoadContent(filteredEssentials[startEssentialIndex + (i + 1)].domainPath,filteredEssentials[startEssentialIndex + (i + 1)].hasChildren, true)">Download</button>
+                                            <span class="dropdown-divider"></span>
+                                            <button mat-menu-item (click)="openModal(modalContent,filteredEssentials[startEssentialIndex + (i + 1)])">Add to a folder</button>
+                                            <span class="dropdown-divider"></span>
+                                            <!--<button mat-menu-item>Share this item</button>-->
+                                        </mat-menu>
+                                    </span>
+                                    <span data-plugin="counterup" class="titles" (click)="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='link'?openTab(filteredEssentials[startEssentialIndex + (i + 1)]):downLoadContent(filteredEssentials[startEssentialIndex + (i + 1)].domainPath,filteredEssentials[startEssentialIndex + (i + 1)].hasChildren)" mat-raised-button matTooltip="{{filteredEssentials[startEssentialIndex + (i + 1)]?.title.trim()}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                                        {{filteredEssentials[startEssentialIndex + (i + 1)]?.title.length>33?filteredEssentials[startEssentialIndex + (i + 1)]?.title.slice(0,30).concat('...'):filteredEssentials[startEssentialIndex + (i + 1)]?.title}}
+                                    </span>
+
+                                </h2>
+                                <h6 class="text-muted m-b-15 m-t-10">{{filteredEssentials[startEssentialIndex + (i + 1)].guidance}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+            <div class="row" *ngIf="!filteredEssentials || filteredEssentials?.length == 0">
+                <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12">
+                    <h4 class="no-essential-msg">{{ error ? error : pgMessages.essentials.noEssentials }}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12 text-center">
+                    <nav>
+                        <ul class="pagination essentials-pagination m-b-0 PaginationMainDiv" *ngIf="filteredEssentials?.length != 0">
+                            <li class="page-item" [ngClass]="curPage == 1 ? 'disabled':''">
+                                <a href="javascript:void(0);" class="page-link" (click)="loadPreviousPage()" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="zmdi zmdi-chevron-left"></i>&nbsp;&nbsp;&nbsp; Previous</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item" *ngFor="let page of pages; let pageIndex = index" [ngClass]="curPage -1 === pageIndex?'active':'pagerPadding'">
+                                <a href="javascript:void(0);" class="page-link" (click)="setToPage(page)">{{page}}</a>
+                            </li>
+                            <li class="page-item" [ngClass]="filteredEssentials?.length <= pageSize || curPage == getNumberOfPages()  ? 'disabled':''">
+                                <a href="javascript:void(0);" class="page-link" (click)="loadNextPage()" aria-label="Next">
+                                    <span aria-hidden="true">Next &nbsp;&nbsp;&nbsp;<i class="zmdi zmdi-chevron-right"></i></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12" *ngIf="isPDF">
+        <div class="card-box border-radius-0 searchContent">
+            <iframe [src]="pdfContent | safe: 'resourceUrl' " title="pdfTitle" width="100%" height="800px"></iframe>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="row search-result-page essential-page filterMainDivForMob hidden-lg-up" *ngIf="essentials">
+    <div class="col-xs-12 col-lg-4 col-xl-3" *ngIf="isCollapsedChange==false">
+        <div class="card-box border-radius-0 searchfilters p-40 filter-top-p" *ngIf="!isPDF">
+            <div class="filtersearchHeadDiv filterHeader">
+                <div class="searchwithinresult essentials-p">
+                    <p (click)="collapseSearch()">
+                        Filter Essentials
+                        <span class="PlusDiv pull-right cross-icon"> X</span>
+                    </p>
+                </div>
+
+            </div>
+            <hr />
+            <div class="filtersearchHeadDiv">
+                <div class="searchwithinresult essentials-p"><p  class="swsr">Search within results </p></div>
+                <div id="custom-search-input-top" class="FilterSearch">
+                    <input type="text" class="form-control input-lg downloadsSearchInput img-responsive" placeholder="Enter your search here" [(ngModel)]="searchEssential" (keyup)="onSearchQueryEnter($event)" />
+                    <a *ngIf="searchEssential?.trim().length > 0" class="practiceAreaCrossMark filter-clear ng-star-inserted"
+                       style="display:table-cell;padding-right:9px;cursor:pointer;color:#EA1C2C;vertical-align:middle" (click)="clearSearch()">X</a>
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg searchbutton" type="button" (click)="updatePagination()">
+                            <i class="fa fa-search Filtersearchbutton"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <hr />
+            <div class="filterpracticearea">
+                <p *ngIf="isTopicSelected">
+                    Topics <span class="subTopicsSelectAll pull-right" (click)="clearAllTopics()">CLEAR ALL</span>
+                    <span class="subTopicsSelectAll pull-right ng-star-inserted" style="padding:0px 5px;">/</span>
+                    <span class="subTopicsSelectAll pull-right" (click)="getEssentialsForSelectedTopics()">APPLY</span>&nbsp;
+                </p>
+                <p *ngIf="!isTopicSelected">
+                    Topics <span class="subTopicsSelectAll pull-right" (click)="SelectAllTopics()">SELECT ALL</span>&nbsp;
+                </p>
+            </div>
+            <div class="paNameSubDiv">
+                <ul class="list-group">
+                    <ng-container *ngFor="let topic of topics">
+                        <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="topic.count > 0">
+                            <div class="checkbox">
+                                <input type="checkbox" id="checkbox100" [checked]="topic.isSelected" (change)="setSeletedTopic(topic.title,$event.currentTarget.checked)" />
+                                <label for="checkbox2">
+                                    <span class="badge badge-primary badge-pill pull-right">({{ topic.count }})</span>
+                                    {{topic.title}}
+                                </label>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+            <hr />
+
+
+            <div class="filterpracticearea">
+                <p>Document Type <span class="subTopicsSelectAll pull-right" (click)="setAllDocumentType()"> SELECT ALL</span></p>
+            </div>
+            <div class="paNameSubDiv">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of documentType">
+                        <div class="checkbox">
+                            <input type="checkbox" class="form-check-input filtercheckbox" id="checkbox100" [checked]="doc.isSelected" (change)="setDocumentType(doc.name,$event.currentTarget.checked)" />
+                            <label for="checkbox2">
+                                <span class="badge badge-primary badge-pill pull-right">({{doc.count}})</span>
+                                {{doc.displayName}}
+                            </label>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-lg-8 col-xl-9 essentials-col" *ngIf="!isPDF">
+        <div class="card-box border-radius-0 searchResults p-40" *ngIf="isCollapsedChange==true">
+            <div class="row" *ngIf="filteredEssentials?.length > 0">
+                <div class="col-xs-12 col-md-4 col-lg-4 col-xl-6">
+
+                </div>
+                <div class="col-xs-12 col-md-8 col-lg-8 col-xl-6 text-right">
+                    <div class="sortDivResultPerPage">
+                        <div class="sortresultDropDown">
+                            <span>RESULT PER PAGE</span>
+                            <select class="c-select" (change)="onPageSizeChange($event.target.value)">
+                                <option [attr.selected]="pageSize == 10 ? true : null" value="10">10</option>
+                                <option [attr.selected]="pageSize == 20 ? true : null" value="20">20</option>
+                                <option [attr.selected]="pageSize == 30 ? true : null" value="30">30</option>
+                                <option [attr.selected]="pageSize == 40 ? true : null" value="40">40</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="sortDiv">
+                        <div class="sortresultDropDown">
+                            <span>SORT BY</span>
+                            <select class="c-select">
+                                <option value="1">Relevance</option>
+                                <option value="2">Chronological</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="filteredEssentials?.length > 0">
+                <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12">
+                    <hr />
+                </div>
+            </div>
+            <ng-container>
+                <ng-container *ngFor="let essential of filteredEssentials | slice: ((curPage * pageSize) - pageSize) : (curPage * pageSize); let i = index">
+                    <div class="row essentials" *ngIf="i % 2 == 0">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <div class="card-box tilebox-two border-radius-0" *ngIf="filteredEssentials[startEssentialIndex + i]">
+                                <div class="pull-xs-left essential-imgbox">
+                                    <div class="checkbox checkbox-success checkbox-circle essential-chekcbx">
+                                        <input id="checkbox-{{i}}" type="checkbox" [checked]="filteredEssentials[startEssentialIndex + i]?.isChecked" (change)="essentialChecked($event.currentTarget.checked, filteredEssentials[startEssentialIndex + i], false)" />
+                                        <label for="checkbox-{{i}}">&nbsp;</label>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <!--<input type="checkbox" (click)="essentialChecked($event.currentTarget.checked, startEssentialIndex + i)" />-->
+                                    <img src="dist/assets/images/wordIcon.png" *ngIf="filteredEssentials[startEssentialIndex + i]?.mimeType=='.doc' || filteredEssentials[startEssentialIndex + i]?.mimeType=='.docx'" />
+                                    <img src="dist/assets/images/pdf.png" *ngIf="filteredEssentials[startEssentialIndex + i]?.mimeType=='.pdf'" />
+                                    <img src="dist/assets/images/web-icon.png" *ngIf="filteredEssentials[startEssentialIndex + i]?.mimeType=='link' || filteredEssentials[startEssentialIndex + i]?.mimeType==null" />
+                                    <img src="dist/assets/images/spreadSheetIcon.svg" *ngIf="filteredEssentials[startEssentialIndex + i]?.mimeType=='.xls'" />
+                                    <img src="dist/assets/images/web-icon.png" *ngIf="filteredEssentials[startEssentialIndex + i]?.mimeType !='link' && filteredEssentials[startEssentialIndex + i]?.mimeType !='.pdf' && filteredEssentials[startEssentialIndex + i]?.mimeType !='.doc' && filteredEssentials[startEssentialIndex + i]?.mimeType !='.docx' && filteredEssentials[startEssentialIndex + i]?.mimeType !='.xls'" class="pull-xs-right filesIconW" />
+                                </div>
+                                <!--<i class="far fa-file-word pull-xs-left filesIconW"></i>-->
+                                <p><span class="label label-pill label-default">{{filteredEssentials[startEssentialIndex + i].eType}}</span></p>
+                                <h2 class="m-b-10 pointer">
+                                    <span class="btn-group">
+                                        <button class="btn btn-purple dropdown-toggle waves-effect waves-light" mat-button [matMenuTriggerFor]="menu"><i class="fa fa-ellipsis-h"></i></button>
+                                        <mat-menu #menu="matMenu">
+                                            <button mat-menu-item (click)="addToDownloadQueue('checkbox-' + i, filteredEssentials[startEssentialIndex + i])">Add to download queue</button>
+                                            <span class="dropdown-divider"></span>
+                                            <button mat-menu-item (click)="openModal(modalContent, filteredEssentials[startEssentialIndex + i])">Add to a folder</button>
+                                            <span class="dropdown-divider"></span>
+                                            <!--<button mat-menu-item>Share this item</button>-->
+                                        </mat-menu>
+                                    </span>
+                                    <span data-plugin="counterup" class="titles" (click)="filteredEssentials[startEssentialIndex + i]?.mimeType=='link'?openTab(filteredEssentials[startEssentialIndex + i]):downLoadContent(filteredEssentials[startEssentialIndex + i].domainPath,filteredEssentials[startEssentialIndex + i].hasChildren)" mat-raised-button matTooltip="{{filteredEssentials[startEssentialIndex + i]?.title.trim()}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                                        {{filteredEssentials[startEssentialIndex + i]?.title.length>33?filteredEssentials[startEssentialIndex + i]?.title.slice(0,30).trim().concat('...'):filteredEssentials[startEssentialIndex + i]?.title}}
+                                    </span>
+                                </h2>
+                                <h6 class="text-muted m-b-15 m-t-10">{{filteredEssentials[startEssentialIndex + i].guidance}}</h6>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <div class="card-box tilebox-two border-radius-0" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]">
+                                <div class="pull-xs-left essential-imgbox">
+                                    <div class="checkbox checkbox-success checkbox-circle essential-chekcbx">
+                                        <input id="checkbox-{{i+1}}" type="checkbox" [checked]="filteredEssentials[startEssentialIndex + (i + 1)]?.isChecked" (change)="essentialChecked($event.currentTarget.checked, filteredEssentials[startEssentialIndex + (i + 1)], false)">
+                                        <label for="checkbox-{{i+1}}">&nbsp;</label>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <!--<input type="checkbox" (click)="essentialChecked($event.currentTarget.checked, startEssentialIndex + (i + 1))" />-->
+                                    <img src="dist/assets/images/wordIcon.png" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='.doc' || essential?.mimeType=='.docx'" />
+                                    <img src="dist/assets/images/pdf.png" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='.pdf'" />
+                                    <img src="dist/assets/images/web-icon.png" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='link' || filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType==null" />
+                                    <img src="dist/assets/images/spreadSheetIcon.svg" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='.xls'" />
+                                    <img src="dist/assets/images/web-icon.png" *ngIf="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType !='link' && filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType !='.pdf' && filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType !='.doc' && filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType !='.docx' && filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType !='.xls'" class="pull-xs-right filesIconW" />
+                                </div>
+                                <!--<i class="far fa-file-word pull-xs-left filesIconW"></i>-->
+                                <p><span class="label label-pill label-default">{{filteredEssentials[startEssentialIndex + (i + 1)].eType}}</span></p>
+                                <h2 class="m-b-10 pointer">
+                                    <span class="btn-group">
+                                        <button class="btn btn-purple dropdown-toggle waves-effect waves-light" mat-button [matMenuTriggerFor]="menu"><i class="fa fa-ellipsis-h"></i></button>
+                                        <mat-menu #menu="matMenu">
+                                            <button mat-menu-item (click)="addToDownloadQueue('checkbox-' + (i + 1), filteredEssentials[startEssentialIndex + (i + 1)])">Add to download queue</button>
+                                            <span class="dropdown-divider"></span>
+                                            <button mat-menu-item (click)="openModal(modalContent,filteredEssentials[startEssentialIndex + (i + 1)])">Add to a folder</button>
+                                            <span class="dropdown-divider"></span>
+                                            <!--<button mat-menu-item>Share this item</button>-->
+                                        </mat-menu>
+                                    </span>
+                                    <span data-plugin="counterup" class="titles" (click)="filteredEssentials[startEssentialIndex + (i + 1)]?.mimeType=='link'?openTab(filteredEssentials[startEssentialIndex + (i + 1)]):downLoadContent(filteredEssentials[startEssentialIndex + (i + 1)].domainPath,filteredEssentials[startEssentialIndex + (i + 1)].hasChildren)" mat-raised-button matTooltip="{{filteredEssentials[startEssentialIndex + (i + 1)]?.title.trim()}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                                        {{filteredEssentials[startEssentialIndex + (i + 1)]?.title.length>33?filteredEssentials[startEssentialIndex + (i + 1)]?.title.slice(0,30).concat('...'):filteredEssentials[startEssentialIndex + (i + 1)]?.title}}
+                                    </span>
+
+                                </h2>
+                                <h6 class="text-muted m-b-15 m-t-10">{{filteredEssentials[startEssentialIndex + (i + 1)].guidance}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+            <div class="row" *ngIf="!filteredEssentials || filteredEssentials?.length == 0">
+                <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12">
+                    <h4 class="no-essential-msg">{{ error ? error : pgMessages.essentials.noEssentials }}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12 text-center">
+                    <nav>
+                        <ul class="pagination essentials-pagination m-b-0 PaginationMainDiv" *ngIf="filteredEssentials?.length != 0">
+                            <li class="page-item" [ngClass]="curPage == 1 ? 'disabled':''">
+                                <a href="javascript:void(0);" class="page-link" (click)="loadPreviousPage()" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="zmdi zmdi-chevron-left"></i>&nbsp;&nbsp;&nbsp; Previous</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item hidden-md-down" *ngFor="let page of pages; let pageIndex = index" [ngClass]="curPage -1 === pageIndex?'active':'pagerPadding'">
+                                <a href="javascript:void(0);" class="page-link" (click)="setToPage(page)">{{page}}</a>
+                            </li>
+                            <li class="page-item hidden-lg-up" *ngFor="let page of pages; let pageIndex = index" [ngClass]="curPage -1 === pageIndex?'active':'pagerPadding'">
+                                <a href="javascript:void(0);" class="page-link" (click)="setToPage(page)">{{page}}</a>
+                            </li>
+                            <li class="page-item" [ngClass]="filteredEssentials?.length <= pageSize || curPage == getNumberOfPages()  ? 'disabled':''">
+                                <a href="javascript:void(0);" class="page-link" (click)="loadNextPage()" aria-label="Next">
+                                    <span aria-hidden="true">Next &nbsp;&nbsp;&nbsp;<i class="zmdi zmdi-chevron-right"></i></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12" *ngIf="isPDF">
+        <div class="card-box border-radius-0 searchContent">
+            <iframe [src]="pdfContent | safe: 'resourceUrl' " title="pdfTitle" width="100%" height="800px"></iframe>
+        </div>
+    </div>
+
+</div>
+
+<ng-template #modalContent let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Save document reference to client folder
+            <button type="button" class="close pull-right" (click)="onPopUpCloseClick(false)">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body">
+        <app-folder-container *ngIf="loadFolders" [isSaveToFolder]="true"
+                              (popUpClose)="onPopUpCloseClick($event)" (selectedSaveToFolder)="onSaveToFolderClick()" [saveToFolderContent]="saveToFolderContent"></app-folder-container>
+    </div>
+</ng-template>
+
+
+<!--Download Modal-->
+<ng-template #downloadModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Download file to your computer
+            <button type="button" class="close pull-right" (click)="downloadModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body ">
+        <!--<pg-folder-container *ngIf="loadFolders" [isSaveToFolder]="true"
+                             (selectedSaveToFolder)="onSaveToFolderClick($event)" (popUpClose)="onPopUpCloseClick()" [saveToFolderContent]="saveToFolderContent"></pg-folder-container>-->
+        <div mat-dialog-content>
+            <div class="form-group">
+                <label for="textinput" class="control-label">Title</label>
+                <input type="text" class="form-control" id="textinput" placeholder="" [(ngModel)]="fileTitle" required>
+                <p *ngIf="!isValidFileTitle" style="color:red;">Please enter a title</p>
+            </div>
+
+            <div class="form-group">
+                <label for="radios-inline" class="control-label">Format</label><br />
+                <mat-radio-group [(ngModel)]="fileFormat">
+                    <div>
+                        <mat-radio-button value="pdf">PDF<img class="filesIconW" src="dist/assets/images/pdf.png" style="width: 25px;margin-right: 20px;margin-left:5px;"></mat-radio-button>
+                        &nbsp;
+                        <mat-radio-button value="rtf">RTF<img class="filesIconW" src="dist/assets/images/wordIcon.png" style="width: 25px;margin-left:5px;"></mat-radio-button>
+                    </div>
+
+                </mat-radio-group>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <!--<button class="btn btn-primary pull-left" *ngIf="IsValidForm" mat-button [mat-dialog-close]="true" cdkFocusInitial>Email</button>-->
+                <button class="btn btn-primary pull-left" (click)="validate()">Download</button>
+                <button class="btn btn-primary pull-right" (click)="closeFileDialog()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<!--permalink popup-->
+<ng-template #permaLinkModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Permalink Created
+            <button type="button" class="close pull-right" (click)="downloadModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body ">
+        <div id="permaLinkContent">
+            <div>
+                <style type="text/css">
+                    kbd {
+                        -moz-border-radius: 3px;
+                        -moz-box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+                        -webkit-border-radius: 3px;
+                        -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+                        background-color: #f7f7f7;
+                        border: 1px solid #ccc;
+                        border-radius: 3px;
+                        box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+                        color: #333;
+                        display: inline-block;
+                        font-family: Arial,Helvetica,sans-serif;
+                        font-size: 11px;
+                        line-height: 1.4;
+                        margin: 0 .1em;
+                        padding: .1em .6em;
+                        text-shadow: 0 1px 0 #fff;
+                    }
+                </style>
+                <div style="padding-bottom: 15px;">
+                    You can use the following URL to link directly to
+                    <div style="text-overflow: ellipsis; overflow: hidden;">
+                        <strong title="{{practiceArea}}">{{practiceArea}} </strong>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <input id="permalinkContent" [value]="permaLink" class="form-control">
+                    </div>
+                </div>
+                <div>
+                    <kbd>Ctrl</kbd> + <kbd>C</kbd> will copy this to your clipboard
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<!--Alert Modal-->
+<ng-template #modalContentAlert let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Alert <button type="button" class="close pull-right" (click)="modalAlertRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <span *ngIf="checkedEssential?.length==0">Please select atleast one essential.</span>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-primary" (click)="modalAlertRef.hide()">OK</button>
+    </div>
+</ng-template>

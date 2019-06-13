@@ -1,0 +1,36 @@
+<div class="editfolders" #mainDiv>
+    <div [ngClass]="(isAddEdit)? 'button-list' : 'button-list disableCursor'" >
+
+        <button type="button" (click)="addFolder()" [ngClass]="(isAddEdit)? 'btn btn-primary waves-effect waves-light' : 'btn disableCursor'" *ngIf="!showClientDropdown">
+            <span class="btn-label">
+                <i class="fa fa-plus-circle"></i>
+            </span> Create
+        </button>
+        <button type="button" (click)="reNameFolder()" [ngClass]="(isAddEdit)? 'btn btn-primary waves-effect waves-light' : 'btn disableCursor'" *ngIf="!showClientDropdown">
+            <span class="btn-label">
+                <i class="fa fa-pencil-square-o"></i>
+            </span> Rename
+        </button>
+        <button type="button" (click)="removeFolder()" [ngClass]="(isAddEdit)? 'btn btn-primary waves-effect waves-light' : 'btn disableCursor'" *ngIf="!showClientDropdown">
+            <span class="btn-label">
+                <i class="fa fa-trash-o"></i>
+            </span> Delete
+        </button>
+
+    </div>
+ 
+    <div [ngClass]="(mainFolder.isSelected) ? 'selectedRow pointerCursor folderTree':'pointerCursor folderTree'" (click)="mainFolderClicked()" *ngIf="!showClientDropdown">
+        <div *ngIf="!mainFolder.isEditEnabled" class="folderTrees"><i class="icon-folder-alt icons"></i>{{mainFolder.clientDescription}}</div>
+        <div *ngIf="mainFolder.isEditEnabled" class="folderTreeNew">
+            <i class="icon-folder-alt icons"></i>
+            <input type="text" name="name" class="form-control" [(ngModel)]="mainFolder.clientDescription" />
+            <i class="fa fa-floppy-o text-custom" aria-hidden="true" (click)="renameClient(mainFolder)"></i>
+            <i class="fa fa-times-circle text-danger" aria-hidden="true" (click)="undoMainFolderChanges()"></i>
+        </div>
+    </div>
+    <div class="folderTreeipt" style="padding-left:30px">
+        <pg-folder-treeview-child [subFolders]="folders" (nodeClicked)="nodeClicked($event)" (setNodeCollapsed)="setChildNodeCollapsed($event)"
+                                  (cancelClicked)="cancelClicked()" [mainFolderClick]="mainFolder.isSelected"
+                                  (editFolders)="emitEditFolder($event)" (newFolders)="emitNewFolder($event)" [showFiles]="!showClientDropdown"></pg-folder-treeview-child>
+    </div>
+</div>

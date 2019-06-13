@@ -1,0 +1,637 @@
+.eventHeader {
+    margin-top: 1rem;
+}
+
+.img-responsive {
+  height: 55px;
+}
+
+.navbar-listitem > li > a {
+  font-size: 12px;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+.SavedDocument {
+  /* width: 34%;*/
+  background-color: rgb(210, 30, 22);
+  /*padding-left: 86px;*/
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 14px;
+  color: black;
+  margin-right: 26%;
+}
+
+.browseclientsfoldersEventsMain {
+  /* padding-left: 30px;
+	padding-right: 30px; */
+  background-color: rgba(255,255,255,1);
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+}
+
+.popularcontentarrow {
+  background-color: rgba(156,164,171,0.5);
+  border-radius: 50%;
+  padding-left: 7%;
+  padding-right: 7%;
+}
+
+.history {
+  background: rgb(210, 30, 22);
+  /*width: 34%;*/
+  /* padding-left: 68px;*/
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 14px;
+  color: white;
+  border-right-color: #474748;
+  border-right-style: solid;
+  border-right-width: 1px;
+}
+
+.selectall {
+  background: rgb(210, 30, 22);
+  /*width: 34%;*/
+  /* padding-left: 68px;*/
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 14px;
+  color: white;
+  float: left;
+  padding-left: 37px;
+}
+
+.paFilterDiv > div {
+  color: #737272;
+  font-family: Lato;
+  font-size: 8pt;
+}
+
+.greetingsName {
+  font-size: 11pt;
+  color: rgba(0,0,0,0.9);
+}
+
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+
+.input-group-btn > .searchbutton {
+  font-size: 8pt;
+  padding: 0 10px;
+  vertical-align: middle;
+}
+
+.pa {
+  padding-left: 6%;
+  padding-bottom: 50px;
+  padding-top: 20px;
+}
+
+.paRightMainDiv {
+  background-color: transparent;
+  height: 100%;
+  width: 100%
+}
+
+.FilterHeadDiv {
+  /*margin-left:5%;
+  margin-right:5%;*/
+  padding-left: 20px;
+  padding-top: 30px;
+  padding-bottom: 10px;
+  border-bottom-style: solid;
+  border-bottom-width: 1pt;
+  border-bottom-color: #d7d7d7;
+  font-weight: bold;
+}
+
+.paFilterDiv {
+  padding-top: 25px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  /*margin-left: 5%;
+  margin-right: 5%;*/
+  border-bottom-style: solid;
+  border-bottom-width: 1pt;
+  border-bottom-color: #d7d7d7;
+  font-family: Lato;
+}
+
+.filtercheckbox {
+  padding-left: 5px;
+  margin-top: -2px;
+  font-weight: lighter;
+}
+
+.topicsMainDiv {
+  display: inline-table;
+  padding-bottom: 10px;
+}
+
+.paTopicsDiv {
+  padding-top: 25px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  /*margin-left: 2%;
+  margin-right: 5%;*/
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #d7d7d7;
+}
+
+.topicsname {
+  color: #737272;
+  font-family: Lato;
+  display: inline-flex;
+  padding-left: 5px;
+  vertical-align: middle;
+  font-size: 15px;
+}
+
+.selectallnumber {
+  font-size: 15px;
+  padding-left: 25%;
+  font-family: Lato;
+  color: #737272;
+}
+
+.filterpaselectall {
+  font-size: 15px;
+  padding-right: 40px;
+  font-family: Lato;
+  color: #b9b5b5;
+  float: right;
+  cursor: pointer;
+}
+
+.SavedDocumentSubDiv {
+  color: #737272;
+  font-family: Lato;
+  font-size: 8pt;
+}
+
+.SavedDocuments {
+  font-weight: bold;
+  color: black;
+  font-size: 15px;
+}
+
+.DocumentTypeDiv {
+  color: #737272;
+  font-family: Lato;
+  font-size: 8pt;
+}
+
+.filterdiv {
+  color: black;
+  font-family: Lato;
+  font-size: 16px;
+}
+
+.btn-circleRightarrow {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+  background-color: rgba(156,164,171,0.2);
+}
+
+
+
+/** Start of Readmore content styles **/
+.read-more-state {
+  display: none;
+}
+
+.read-more-target {
+  opacity: 0;
+  max-height: 0;
+  font-size: 0;
+  transition: .25s ease;
+}
+
+.read-more-state:checked ~ .read-more-wrap .read-more-target {
+  opacity: 1;
+  font-size: inherit;
+  max-height: 999em;
+}
+
+.read-more-state ~ .read-more-trigger:before {
+  content: '';
+}
+
+.read-more-state:checked ~ .read-more-trigger:before {
+  content: '';
+}
+
+.read-more-trigger {
+  cursor: pointer;
+  display: inline-block;
+  /** padding: 0 .5em;*/
+  color: #666;
+  font-size: .9em;
+  line-height: 2;
+  /**  border: 1px solid #ddd;*/
+  /**  border-radius: .25em;*/
+}
+/** End of Readmore content styles **/
+
+
+
+/**Downloads Search box end*/
+#custom-search-input {
+  padding: 0px;
+  border: solid 1px #E4E4E4;
+  border-radius: 0px;
+  background-color: #fff;
+}
+
+  #custom-search-input input {
+    border: 0;
+    box-shadow: none;
+  }
+
+  #custom-search-input button {
+    margin: 3px 0 0 0;
+    background: none;
+    box-shadow: none;
+    border: 0;
+    color: #fff;
+    padding: 0 12px 0 12px;
+    /*  border-left: solid 1px #ccc; */
+  }
+
+    #custom-search-input button:hover {
+      border: 0;
+      box-shadow: none;
+      /*  border-left: solid 0px #ccc;*/
+    }
+
+
+
+
+
+
+
+
+.downloadsSearchInput {
+  font-size: 11px;
+  height: 25px;
+  padding: 5px 10px;
+  height: 30px;
+}
+
+.downloadsSearchBtn {
+  font-size: 8pt;
+}
+
+.paFilterDiv > div {
+  padding-bottom: 19px;
+}
+
+.paTopicsDiv > div > div {
+  padding-bottom: 12px;
+}
+
+.TopicsMainDiv {
+  font-weight: bold;
+  font-family: Lato;
+  padding-right: 6px;
+  color: black;
+  font-size: 15px;
+}
+
+.PlusDiv {
+  font-size: 13px;
+  padding-left: 15px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.display-table-cell {
+  display: table-cell;
+  vertical-align: middle;
+  padding-right: 10px;
+}
+
+.extra-padding-right {
+  padding-right: 15px
+}
+
+.extra-padding-right-sm {
+  padding-right: 7px
+}
+
+.no-padding {
+  padding: 0;
+}
+
+@media only screen and (max-width: 767px) {
+  .FilterHeadDiv {
+    border-bottom: none;
+  }
+
+  .filterdiv {
+    display: none;
+  }
+
+  .mobileViewFilterSearch {
+    color: #ffffff;
+  }
+
+  .mobileViewCross {
+    float: right;
+    padding-right: 2%;
+    color: #ffffff;
+  }
+
+  .input-group-btn {
+    display: none;
+  }
+
+  #custom-search-input-to input {
+    display: none;
+  }
+
+  .mobileViewPlus {
+    float: right;
+    padding-right: 2%;
+    color: white;
+  }
+
+  .searchwithinresult {
+    float: left;
+    color: white;
+  }
+
+  .TopicsMainDiv {
+    display: none;
+  }
+
+  .mobileTopics {
+    float: left;
+    color: white;
+  }
+
+  .topicsEyeopen {
+    display: none;
+  }
+
+  .subTopicsSelectAll {
+    display: none;
+  }
+
+  .PlusDiv {
+    float: right;
+    color: #ffffff;
+  }
+
+  .filterpaselectall {
+    display: none;
+  }
+
+  .paLeftMainDiv {
+    background-color: #053C71;
+  }
+
+  .SavedDocuments {
+    color: white;
+  }
+
+  .topicsname {
+    color: white;
+  }
+
+  .checkmark {
+    border: 8px solid white;
+  }
+
+
+
+  .mobileViewApplyFilter {
+    padding-left: 23%;
+    padding-right: 23%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .applyFilter {
+    color: #053C71;
+    text-align: center;
+    background-color: white;
+    padding: 9px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+}
+
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .filterpaselectall {
+    padding-left: 0px;
+  }
+
+  .paFilterDiv {
+    /*padding-left:14px;*/
+  }
+
+  .PlusDiv {
+    padding-left: 17px;
+  }
+
+  .selectallnumber {
+    padding-left: 0px;
+  }
+
+  .mobileViewFilterSearch {
+    display: none;
+  }
+
+  .mobileViewCross {
+    display: none;
+  }
+
+  .mobileViewPlus {
+    display: none;
+  }
+
+  .mobileTopics {
+    display: none;
+  }
+
+  .mobileViewApplyFilter {
+    display: none;
+  }
+
+  .selectallnumber {
+  }
+}
+
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+  .topicsname {
+  }
+
+  .mobileViewFilterSearch {
+    display: none;
+  }
+
+  .mobileViewCross {
+    display: none;
+  }
+
+  .mobileViewPlus {
+    display: none;
+  }
+
+  .mobileTopics {
+    display: none;
+  }
+
+  .mobileViewApplyFilter {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1201px) {
+  .topicsname {
+  }
+
+  .selectallnumber {
+  }
+
+  .filterpracticearea {
+  }
+
+  .subTopicsSelectAll {
+  }
+
+  .TopicsMainDiv {
+  }
+
+  .SavedDocuments {
+  }
+
+  .filterdiv {
+  }
+
+  .searchwithinresult {
+  }
+
+  .downloadsSearchInput {
+  }
+
+  .mobileViewFilterSearch {
+    display: none;
+  }
+
+  .mobileViewCross {
+    display: none;
+  }
+
+  .mobileViewPlus {
+    display: none;
+  }
+
+  .mobileTopics {
+    display: none;
+  }
+
+  .mobileViewApplyFilter {
+    display: none;
+  }
+}
+
+.checkContainer {
+  display: block;
+  position: relative;
+  padding-left: 40px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+  /* Hide the browser's default checkbox */
+  .checkContainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 22px;
+  width: 23px;
+  border: 1px solid #b9b5b5;
+}
+
+/* On mouse-over, add a grey background color */
+.checkContainer:hover input ~ .checkmark {
+  /* background-color: #ccc;*/
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkContainer input:checked ~ .checkmark {
+  /* background-color: #2196F3;*/
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkContainer input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkContainer .checkmark:after {
+  left: 4px;
+  top: 2px;
+  width: 5px;
+  height: 8px;
+  border: solid #053C71;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.normalTxt {
+    font-weight: normal;
+    font-size: 13px;
+}

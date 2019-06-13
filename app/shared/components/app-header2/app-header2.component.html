@@ -1,0 +1,263 @@
+<div class="navbar-custom" id="myHeader2">
+    <div class="container">
+        <div class="row header-row">
+            <div class="col-xs-5 col-lg-4 col-xl-4 logo-pa-contianer">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-6 col-xl-6" style="cursor:pointer; outline: none">
+                        <div class="pgImage4 logo d-hide" (click)="closeMenu()" routerLink="/dashboard"><a><img src="dist/assets/images/LN.SVG" /></a></div>
+                        <div class="back-to-classic-container m-hide" id="backToClassicBtn" (click)="loadClassicView()" style="display:none;">
+                            <span class="backToClassicTxt">Back to old Practical Guidance</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-6 col-xl-6 m-hide practiceAreaBtn">
+                        <div class="navbar-toggle collapsed practiceAreasSubDiv" (click)="openPADropdown()" aria-expanded="false">
+                            <i class="zmdi zmdi-format-subject pointer breadcrumb-icon" style="outline: none"></i>
+                            <a class="routerClass pa-hamburger-link-text">
+                                <span class="practiceAreasTxt">Practice Areas</span>
+                            </a>
+                        </div>
+                        <div id="pa-dropdown" class="searchNavi collapse navbar-collapse navbarResponsive" [collapse]="isPaDropdownCollapsed" aria-expanded="false">
+                            <div class="row pa-dropdown-header">
+                                <div class="col-md-12">
+                                    <div class="pa-dropdown-header-content">
+                                        <span class="header-text">All Practice Area</span>
+                                        <span class="pull-right pa-dd-close-icon pointer" (click)="isPaDropdownCollapsed = !isPaDropdownCollapsed"><i class="fa fa-times"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pa-dropdown-body">
+                                <div class="col-md-12 pa-dropdown-body-content">
+                                    <div class="practiceAreas-container">
+                                        <ng-container *ngFor="let practiceArea of practiceAreas; let i = index">
+                                            <div class="row practiceAreaBlock" *ngIf="i % 4 == 0">
+                                                <div class="col-md-3">
+                                                    <span class="pointer" [ngClass]="{ 'notSubscribe' : !practiceArea.isSubscribed }" (click)="navigateToSubTopicPage(practiceArea)">{{ practiceArea.title }}</span>
+                                                </div>
+                                                <div class="col-md-3" *ngIf="practiceAreas[i + 1]">
+                                                    <span class="pointer" [ngClass]="{ 'notSubscribe' : !practiceAreas[i + 1].isSubscribed }" (click)="navigateToSubTopicPage(practiceAreas[i + 1])">{{ practiceAreas[i + 1].title }}</span>
+                                                </div>
+                                                <div class="col-md-3" *ngIf="practiceAreas[i + 2]">
+                                                    <span class="pointer" [ngClass]="{ 'notSubscribe' : !practiceAreas[i + 2].isSubscribed }" (click)="navigateToSubTopicPage(practiceAreas[i + 2])">{{ practiceAreas[i + 2].title }}</span>
+                                                </div>
+                                                <div class="col-md-3" *ngIf="practiceAreas[i + 3]">
+                                                    <span class="pointer" [ngClass]="{ 'notSubscribe' : !practiceAreas[i + 3].isSubscribed }" (click)="navigateToSubTopicPage(practiceAreas[i + 3])">{{ practiceAreas[i + 3].title }}</span>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4 col-lg-4 col-xl-4 m-hide">
+                <div class="searchPracticeAreaMain">
+                    <practice-area-search></practice-area-search>
+                </div>
+            </div>
+            <div class="col-xs-7 col-lg-4 col-xl-4 menu-col">
+                <div>
+                    <div class="m-navbar-toggle pull-right">
+
+                        <!-- Mobile menu toggle-->
+                        <div class="navbar-toggle collapsed" (click)="openMobiMenu()" aria-expanded="false">
+                            <div class="lines">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div><span class="menu-text"> Menu</span>
+                        </div>
+                    </div>
+
+                    <button class="btn waves-effect waves-light d-hide m-show pull-right m-searchbtn" type="button" (click)="openMobiSearch(modalContent)"><i class="zmdi zmdi-search"></i> Search</button>
+                </div>
+                <div id="navigation" class="searchNavi collapse navbar-collapse navbarResponsive" [collapse]="isCollapsed">
+                    <!-- Navigation Menu-->
+                    <ul class="navigation-menu text-right search-menu m-hide">
+                        <li>
+                            <a href="javascript:void(0)" (click)="navigateToFolders()"><i class="zmdi zmdi-folder"></i> <span> Folders </span> </a>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="javascript:void(0)" (click)="navigateToCalendar()" class="pointer"><i class="zmdi zmdi-calendar"></i> <span> Calendar </span> </a>
+                        </li>
+
+                        <li class="has-submenu">
+                            <a class="pointer" (click)="getAllWhatsNews()"><i class="zmdi zmdi-view-dashboard"></i> <span> What's New </span> </a>
+                        </li>
+                    </ul>
+                    <ul class="mobi-menu-header d-hide">
+                        <li>
+                            <div class="pgImage4 logo d-hide" (click)="closeMenu()" routerLink="/dashboard"><a><img src="dist/assets/images/LN.SVG" /></a></div>
+                        </li>
+                        <li class="text-right">
+                            <span class="close-icon" (click)="closeMenu()"><i class="fa fa-times"></i></span>
+                        </li>
+                    </ul>
+                    <div class="navigation-menu text-right mobi-menu d-hide">
+                        <ul class="mobi-menu-top-content" *ngIf="!showPracticeAreas">
+                            <li>
+                                <a href="javascript:void(0)" (click)="navigateToFolders()">
+                                    <span> Folders </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" (click)="navigateToCalendar()" class="pointer">
+                                    <span> Calendar </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="pointer" (click)="getAllWhatsNews()">
+                                    <span> What's New </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="text-right pointer" (click)="openPracticeAreasMenu()">
+                                    <span class="pull-left"> Practice Areas </span>
+                                    <i class="fa fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="mobi-menu-bottom-content" *ngIf="!showPracticeAreas">
+                            <li>
+                                <a class="text-right pointer" (click)="redirectToLibrary()">
+                                    <span class="pull-left"> Go to Library </span>
+                                    <i class="fa fa-external-link"></i>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a routerLink="/history-list" (click)="closeMenu()">
+                                    <span> History </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)" (click)="openModal(helpModal)">
+                                    <span> Help </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a (click)="openFeedbackModal(feedbackModal)">
+                                    <span> Feedback </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)" (click)="logout()">
+                                    <span> Sign out </span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <ul class="mobi-menu-pa" *ngIf="showPracticeAreas && !isShowSubTopics">
+                            <li>
+                                <a class="back-link pointer" (click)="showPracticeAreas = false">
+                                    <i class="fa fa-chevron-left"></i> <span>Back</span>
+                                </a>
+                            </li>
+                            <li *ngFor="let practiceArea of practiceAreas">
+                                <p class="pointer" (click)="showSubTopics(practiceArea)">
+                                    <span [ngClass]="{ 'not-subscribed' : !practiceArea.isSubscribed }"> {{ practiceArea.title }} </span>
+                                    <i class="fa fa-chevron-right"></i>
+                                </p>
+                            </li>
+                        </ul>
+
+                        <ul class="mobi-menu-pa-sub-topics" *ngIf="isShowSubTopics">
+                            <li>
+                                <a class="back-link pointer" (click)="isShowSubTopics = false">
+                                    <i class="fa fa-chevron-left"></i> <span>Back</span>
+                                </a>
+                                <a class="viewAll-link pull-right pointer" (click)="navigateToSubtopics()">
+                                    <span>View All</span>
+                                </a>
+                            </li>
+                            <li class="topic-name" *ngFor="let topic of subTopics; let i = index">
+                                <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)">
+                                    <ngb-panel id="mainpanel-{{i}}">
+                                        <ng-template ngbPanelTitle>
+                                            <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ topic.title }}</span></span>
+                                        </ng-template>
+                                        <ng-template ngbPanelContent>
+                                            <ul class="subtopic-links">
+                                                <ng-container *ngFor="let subTopic of topic.subTocItem">
+                                                    <li class="subtopic-name pointer" (click)="navigateToGuidanceNote(subTopic)">{{ subTopic.title }}</li>
+                                                </ng-container>
+                                            </ul>
+                                        </ng-template>
+                                    </ngb-panel>
+                                </ngb-accordion>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                    <!-- End navigation menu  -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<ng-template #modalContent let-close="close">
+    <!--<div class="modal-header" style="display:none;">
+        <h5 class="modal-title">
+            Create Folder <button type="button" class="close pull-right" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>-->
+    <div class="modal-body">
+        <practice-area-search (onCloseMobiSearchModal)="closeMobieSearchModal()" [focusOn]="true"></practice-area-search>
+    </div>
+</ng-template>
+
+
+<ng-template #helpModal let-close="close">
+    <div class="modal-header lexis-help-modal">
+        <button type="button" class="close pointer" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body lexis-help-modal">
+        <div class="row">
+            <div class="col-xs-12">
+                <p class="help-modal-heading">
+                    HELP
+                </p>
+                <p class="help-info">
+                    Your input helps us improve My LexisNexis and Practical Guidance. For immediate support with online issues, please call LexisNexis Customer Support at 0860 765 432 or 079 529 4777 (after hours). Our Customer Support team of professionals is available 24/7 to assist you.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <p class="help-modal-heading">
+                    HELP - LIBRARY
+                </p>
+                <ul class="help-topic-list">
+                    <li>Basic Skills</li>
+                    <li>Legal Search</li>
+                    <li>Advanced Legal Search</li>
+                </ul>
+                <a href="#" class="help-link">Click here to access New My LexisNexis video tutorials</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <p class="help-modal-heading">
+                    HELP - PRACTICAL GUIDANCE
+                </p>
+                <ul class="help-topic-list">
+                    <li>Basic Skills</li>
+                </ul>
+                <p class="help-info">Training tutorials will be available soon.</p>
+            </div>
+        </div>
+    </div>
+</ng-template>

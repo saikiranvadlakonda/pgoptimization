@@ -1,0 +1,53 @@
+.spinner-hidden {
+    visibility: hidden;
+}
+/* LexisNexis color definitions */
+.loader {
+    position: relative;
+    z-index: 999999;
+    height: 70px;
+    width: 70px;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+
+
+.circular {
+    -webkit-animation: fa-spin 1s infinite linear;
+    height: 100%;
+    transform-origin: center center;
+    width: 100%;
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.path {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35;
+    animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+    stroke-linecap: round;
+    stroke: #ED1C24;
+}
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35px;
+    }
+
+    100% {
+    }
+}

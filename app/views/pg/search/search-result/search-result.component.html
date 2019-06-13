@@ -1,0 +1,191 @@
+<div *ngIf="!isSubContent && !isPDF">
+    <div class="row search-result-page" *ngIf="searchResults&&isCollapsed">
+        <div class="col-xs-12 col-lg-4 col-xl-3 m-hide">
+        </div>
+        <div class="col-xs-12 col-md-12 col-lg-8 col-xl-9">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-7 col-xl-7 noPadding">
+                    <button type="button" class="btn btn-primary mfiltrsBtn d-hide" (click)="isCollapsed = !isCollapsed" aria-expanded="false" ><i class="fa fa-sliders"></i> Filter search results</button>
+                    <!--<div class="col-sm-2">
+                        <span class="foldersButton pull-left">
+                            <a (click)="navigateToPracticeAreaSubTopics()" class="pointer"><i class="fa fa-angle-left leftArrowIcon"></i></a>
+                        </span>
+
+                    </div>-->
+                    <div class="searchresultspa search1366r">
+                        <span class="searchresultspaName">About {{searchResults?.resultSet?.totalHits}} search results for <strong *ngFor="let didYouMean of searchResults?.didYouMean">{{didYouMean?.term}}</strong></span>
+                        <span class="searchresulttime">({{(searchResults?.resultSet?.time)/100}} seconds) </span>
+                        <div class="searchresultcontent" *ngIf="searchResults?.searchResults.length>0">Showing {{searchResults?.searchResults.length}} of {{searchResults?.resultSet?.totalHits}}</div>
+                    </div>
+
+                    <div id="DidYouMean" *ngIf="searchResults">
+                        <div class="DidYouMean-Original" *ngIf="!searchResults?.didYouMean[0]?.isCorrect">
+                            <span>Search for </span><a class="" (click)="doOrigonalSearch(insteadSearch.innerText)" *ngIf="searchResults?.didYouMean.length > 0 "><span id="insteadSearch" #insteadSearch class="pointer"> {{searchResults?.didYouMean[0]?.origonalTerm}}</span></a><span> instead</span>
+                        </div>
+
+                        <div class="DidYouMean-Original" *ngIf="searchResults?.didYouMeanQuery">
+                            <span>Did You Mean </span><a id="DidYouMeanLink" class="" (click)="doDidYouMeanSearch()" *ngFor="let didYouMean of searchResults?.didYouMean"><span>{{didYouMean?.OrigonalTerm}}</span></a>
+                        </div>
+                        <div id="DidYouMeanQuery" style="display: none"></div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-5 col-lg-5 col-xl-5 text-right m-hide">
+                    <div class="searchresultspa search1366r">
+                        <span class="foldersButton">
+                            <!--<a href="javascript:void(0);"><i class="icon-star icons"></i></a>-->
+                            <a (click)="showFolderModal(modalContent)"><i class="ion-ios7-folder"></i></a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="row" *ngIf="searchResults?.searchResults.length == 0">
+        <div class="col-lg-12">
+            <div class="card-box border-radius-0 searchfilters p-40">
+                <span class="searchresultspaName"> 0 search results for {{searchResults?.didYouMean[0]?.term}}</span>
+                <hr />
+                <h4> No Results Found</h4>
+            </div>
+        </div>
+    </div>-->
+    <div class="row" *ngIf="searchResults">
+        <!--<div class="col-xs-12 col-lg-12 col-xl-12" *ngIf="searchResults?.searchResults.length > 0">-->
+        <div class="col-xs-12 col-lg-12 col-xl-12">
+            <div class="row">
+                <div class="col-xs-12 col-lg-4 col-xl-3">
+                    <div class="card-box border-radius-0 searchfilters p-20 collapse mFilters-card" [collapse]=isCollapsed id="mFilters">
+                        <search-filter [navigationEntries]="searchResults?.navigationEntries"
+                                       [searchedParameters]="searchResults?.searchedParameters"
+                                       (selectedPracticeArea)="practiceAreaClick($event)"
+                                       (selectedTopic)="topicClick($event)"
+                                       (selectedSubTopic)="subTopicClick($event)"
+                                       (selectedDocumentType)="documentTypeClick($event)"
+                                       (narrowSearchWithinResults)="narrowSearchClick($event)"
+                                       (isCollapsedChange)="collapseSearch($event)">
+                        </search-filter>
+                        <div class="ShowMoreMainDiv m-hide">
+                            <button type="button" class="btn btn-primary mfiltrsApplyBtn" (click)="isCollapsed = !isCollapsed"><i class="fa fa-check m-hide"></i> Apply Filter</button>
+                        </div>
+                        <!--<div class="ShowMoreMainDiv hidden-lg-up">
+                            <button type="button" class="btn btn-primary mfiltrsApplyBtn" (click)="applyFilter(isCollapsed)">Apply Filters</button>
+                         </div>-->
+                    </div>
+                    <div class="card-box border-radius-0 searchfilters p-40 m-hide">
+                        <search-filter [navigationEntries]="searchResults?.navigationEntries"
+                                       [searchedParameters]="searchResults?.searchedParameters"
+                                       (selectedPracticeArea)="practiceAreaClick($event)"
+                                       (selectedTopic)="topicClick($event)"
+                                       (selectedSubTopic)="subTopicClick($event)"
+                                       (selectedDocumentType)="documentTypeClick($event)"
+                                       (narrowSearchWithinResults)="narrowSearchClick($event)">
+                        </search-filter>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-lg-8 col-xl-9 noPadding" *ngIf="isCollapsed">
+                    <div class="card-box border-radius-0 searchResults p-40" *ngIf="isCollapsed">
+                        <search-result [pagedItems]="pagedItems"
+                                       [searchedParameters]="searchResults?.searchedParameters"
+                                       [pager]="pager"
+                                       [error]="error"
+                                       (selectedPagesize)="onPageSizeChange($event)"
+                                       (selectedSort)="onSortChange($event)"
+                                       (selectedPageNumber)="onPageChange($event)"
+                                       (selectedDomainPath)="onSearchResultClick($event)"
+                                       (checkedResult)="onSearchResultChecked($event)">
+                        </search-result>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="row">
+        <div class="col-xs-12 col-lg-4 col-xl-3">
+        </div>
+        <div class="col-xs-12 col-lg-8 col-xl-9 text-left search-ralated">
+            <h5 class="text-uppercase">Searches Related To <strong>Practice</strong></h5>
+                <ul>
+                <li><a href="javascript:void(0);"><strong>Practice</strong> Definition <i class="zmdi zmdi-long-arrow-right"></i></a></li>
+                <li><a href="javascript:void(0);"><strong>Practice</strong> of law <i class="zmdi zmdi-long-arrow-right"></i></a></li>
+                <li><a href="javascript:void(0);">Best Search <strong>Practice</strong> <i class="zmdi zmdi-long-arrow-right"></i></a></li>
+                <li><a href="javascript:void(0);"><strong>Legal Suites</strong> in South Africa <i class="zmdi zmdi-long-arrow-right"></i></a></li>
+            </ul>
+        </div>
+    </div>-->
+</div>
+<div class="row guidance-note-page cntnt-view" *ngIf="isSubContent || isPDF">
+    
+        <div class="col-xs-12 col-lg-12 col-xl-12">
+            <div class="breadcrumb-text">
+                <div>
+                    You are here: <span routerLink="/dashboard"><a>Dashboard</a></span>  > Search results
+                 </div>
+            </div>
+        </div>
+        <div class="col-sm-12  col-xs-12 col-lg-12 col-xl-9">
+            <div class="row">
+                <div class="col-lg-8 col-xl-8">
+                    <h4 class="pageTitle p-l-0 m-t-10">
+                        <span class="folderBackMain pull-left" (click)="back()">
+                            <i class="fa fa-angle-left angleLeft leftarrowBackButton"></i>
+                        </span>
+                        <span class="folderName" *ngIf="pdfTitle">{{pdfTitle.replace('.pdf', '')}}</span>
+                    </h4>
+                    
+                </div>
+                
+            </div>
+        </div>
+ 
+</div>
+<div *ngIf="isSubContent" class="subContent searchContent text-center">
+    <ng-container *compile="contentHTML; context: this" >
+    </ng-container>
+</div>
+<div *ngIf="isPDF" class="subContent searchContent text-center">
+    <iframe [src]="pdfContent | safe: 'resourceUrl' " title="pdfTitle" width="100%" height="800px">
+    </iframe>
+</div>
+
+<ng-template #modalContent let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Save document reference to client folder
+            <button type="button" class="close pull-right" (click)="onPopUpCloseClick()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body">
+      <!--<pg-folder-container *ngIf="loadFolders" [isSaveToFolder]="true"
+                           (selectedSaveToFolder)="onSaveToFolderClick($event)" (popUpClose)="onPopUpCloseClick()" [saveToFolderContent]="saveToFolderContent"></pg-folder-container>-->
+        <app-folder-container *ngIf="loadFolders" [isSaveToFolder]="true"
+                              (selectedSaveToFolder)="onSaveToFolderClick($event)" (popUpClose)="onPopUpCloseClick()" [saveToFolderContent]="saveToFolderContent"></app-folder-container>
+    </div>
+</ng-template>
+
+
+<!--Alert Modal-->
+<ng-template #modalContentAlert let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Alert <button type="button" class="close pull-right" (click)="modalAlertRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <span>Please make a selection</span>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-primary" (click)="modalAlertRef.hide()">OK</button>
+    </div>
+</ng-template>

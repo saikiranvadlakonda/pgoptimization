@@ -1,0 +1,137 @@
+
+.pgTabMenuMain {
+  padding-top:7%;
+}
+.paLeftMainDivDashboard {
+  background-color: rgba(255,255,255,1);
+  /*height: 100%;
+  width: 100%;*/
+}
+
+.browsehisfav {
+    text-align: center;
+}
+
+
+.browse_hist_fav_tabs {
+  display: inline-block;
+  padding: 25px 50px !important;
+  text-align: center;
+  font-size: 15px !important;
+  background-color: rgb(210, 30, 22);
+  color: white;
+  border-right: 1px solid rgba(71, 71, 72, 0.23921568627450981);
+}
+
+
+.activeTab {
+  background-color: white !important;
+  border-right: 10px !important;
+  padding-bottom: 20px;
+  text-align: center !important;
+  padding-top: 17px;
+  font-weight: bold !important;
+  color: black !important;
+  font-size: 12px;
+}
+/*xs*/
+@media only screen and (max-width: 767px) {
+    /*.paLeftMainDivDashboard {
+        box-shadow: none;
+        background-color:transparent;
+    }*/ 
+  .browsehisfavContentMainDiv {
+    background-color: transparent !important;
+    padding-left: 3%;
+    padding-right: 3%;
+    -webkit-box-shadow: none;
+  }
+  .browsePractiseArea {
+    background-color: white;
+    color: gray;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    border-right:none;
+  }
+  .activeTab {
+    color: black;
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+}
+/*sm*/
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+    .dashBoardSearchMobileView {
+        display: none;
+    }
+  .dashboardPaHisCalCol {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+  .pgTabMenuCol {
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+}
+/*md*/
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+    .dashBoardSearchMobileView {
+        display: none;
+    }
+}
+/*lg*/ @media only screen and (min-width: 1201px) {
+    .dashBoardSearchMobileView {
+        display: none;
+    }
+}
+.browsehisfavTbs {
+  list-style: none;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+}
+  .browsehisfavTbs li {
+    display: inline-block;
+    padding: 25px 50px !important;
+    text-align: center;
+    width: calc(41.8% - 92.4px);
+    font-size: 15px !important;
+  }
+
+/*1680 to 1440 */
+@media (max-width: 1680px) {
+ 
+}
+
+/*1599 to 1440 */
+@media (max-width: 1600px) {
+ 
+}
+/*1439 to 1360 */
+@media (max-width: 1439px) {
+  
+}
+/*1359 to 1280 */
+@media (max-width: 1359px) {
+  
+}
+/*1279 to 1152 */
+@media (max-width: 1279px) {
+ 
+}
+/*1151 to 1024 */
+@media (max-width: 1151px) {
+
+}
+/*1023 to 970 */
+@media (max-width: 1023px) {
+ 
+}
+/*969 to 800 */
+@media (max-width: 969px) {
+  
+}
+/*799 to 768 */
+@media (max-width: 799px) {
+
+}

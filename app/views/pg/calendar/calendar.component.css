@@ -1,0 +1,48 @@
+.previousButton{
+    display:inline-block;
+}
+.monthView{
+ display:inline-block;
+ padding:10px;
+}
+.cal-day-number{
+    font-size:13px!important;
+    opacity:unset!important;
+    color:black;
+}
+h3 {
+  margin: 0 0 10px;
+}
+.eventsColor{
+  box-shadow: -2px 0px 0px #4169E1;
+}
+.courtDatesColor{
+  box-shadow: -2px 0px 0px #d74b4b;
+}
+.importantDatesColor{
+  box-shadow: -2px 0px 0px #5cb85c;
+}
+.seminarColor{
+  box-shadow: -2px 0px 0px #d9b94f;
+}
+pre {
+  background-color: #f5f5f5;
+  padding: 15px;
+}
+.cal-day-badge {
+    display: none;
+}
+.calBody{
+  background-color:white;
+}
+.p-b-15{
+  padding-bottom:15px;
+}
+.today {
+  color: white;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+.btn {
+  padding: 9px 25px!important;
+}

@@ -1,0 +1,81 @@
+.container-fluid {
+  background-color: #edeef3;
+}
+.showMoreTxt {
+  border-bottom: 1px solid rgba(156,164,171,0.5);
+  padding: 11px 11px 16px 3%;
+  font-size: 13px;
+}
+
+.topicName {
+  font-size: 11px;
+  color: rgb(152, 148, 148);
+  font-weight: bold;
+  background-color: white;
+  border-radius: 30px;
+  display: inline-block;
+  padding-top: 3px;
+  padding-right: 13px;
+  padding-bottom: 3px;
+  padding-left: 13px;
+}
+.leftArrowMain {
+  float: left;
+  padding-top: 26px;
+}
+
+.topicsNameReadMore {
+  padding-left: 12%;
+}
+
+.guidanceReferenceNoteMainRow{
+  padding-bottom:100px;
+}
+.guidanceDetailRow{
+  padding-bottom:100px;
+}
+.practiceArea {
+  font-size: 18px;
+  color: rgb(45, 44, 44);
+  font-weight: bold;
+}
+
+p.content-outline-sub {
+    color: #373a3c !important;
+    font-size: 16px;
+    font-family: "Lato", sans-serif;
+}
+
+/*xs*/
+@media only screen and (max-width: 767px) {
+  .xsView{
+    padding-top:20px;
+  }
+  .container-fluid {
+    padding-right: 3px;
+    padding-left: 3px;
+  }
+  .mainDivContainer {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  .practiceArea{
+    padding-left:7%;
+  }
+}
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .practiceArea{
+    color:black;
+  }
+  .container-fluid {
+    padding-right: 10px;
+    padding-left: 10px;
+  } 
+}
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+}
+@media only screen and (min-width: 1201px) {
+}
+.mainDivContainer {
+  margin-top: 10px;
+}

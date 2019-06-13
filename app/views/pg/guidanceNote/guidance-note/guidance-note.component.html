@@ -1,0 +1,252 @@
+<div class="guidance-note-page-container">
+    <div class="row guidance-note-page gndetail-page">
+        <div class="col-xs-12 col-lg-12 col-xl-12">
+            <div class="breadcrumb-text">
+                <div>
+                    You are here: <span><a routerLink="/dashboard">Dashboard</a></span>  >
+                    <span (click)="breadCrumbNavigation(subtopicBreadCrumb)"><a>{{rootArea}}</a></span> >
+                    <span> {{ subTopicTitle }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12" [ngClass]="essentials?.length == 0 ? 'col-lg-12 col-xl-12' : 'col-lg-8 col-xl-9'">
+            <div class="row header-container" *ngIf="!isPDF">
+                <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+                    <div class="guidance-note-header">
+                        <div class="table-row">
+                            <div class="table-cell">
+                            </div>
+                            <div class="table-cell">
+                                <span class="label label-pill label-default">{{rootArea}}</span>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="table-cell">
+                                <span *ngIf="(backButton == true)" class="folderBackMain" (click)="back()">
+                                    <i class="fa fa-angle-left angleLeft leftarrowBackButton"></i>
+                                </span>
+                            </div>
+                            <div class="table-cell">
+                                <h4 class="pageTitle p-l-0 m-t-10">
+                                    <span class="folderName">{{ practiceArea }}</span>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-cell">
+                            </div>
+                            <div class="table-cell">
+                                <div class="readmoreDsc"><pg-read-more [text]="paGuidance" [limitCount]="180"></pg-read-more></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-right">
+                    <span class="foldersButton">
+                        <!--<a href="javascript:void(0);"><i class="icon-star icons"></i></a>-->
+                        <a (click)="showFolderModal(modalContent)" class="pointer"><i class="ion-ios7-folder"></i></a>
+                        <a (click)="openEmailModal(unsubscribeModal)" class="pointer" *ngIf="isGuidanceView"><i class="icon-envelope-letter icons"></i></a>
+                        <a class="pointer" (click)="openFileDownloadModal(downloadModal, unsubscribeModal)" *ngIf="isGuidanceView"><i class="zmdi zmdi-download"></i></a>
+                        <a class="pointer" (click)="openPermaLinkModal(permaLinkModal)" *ngIf="!_pagerService.isMobile"><i class="icon-action-redo icons"></i></a>
+                        <!--<a (click)="openUnsubscribeModal(unsubscribeModal)" class="pointer" *ngIf="isGuidanceView"><i class="icon-envelope-letter icons"></i></a>-->
+                    </span>
+                </div>
+            </div>
+            <div class="row" *ngIf="isPDF">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="pageTitle p-l-0 m-t-10">
+                        <span class="folderBackMain pull-left" (click)="isPDF= !isPDF">
+                            <i class="fa fa-angle-left angleLeft leftarrowBackButton"></i>
+                        </span>
+                        <span class="folderName" title="{{pdfTitle}}">{{ pdfTitle?.length>45?(pdfTitle.substr(0, pdfTitle.substr(0,45).lastIndexOf(' ')))+'...':pdfTitle }}</span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row  guidance-note-page">
+        <div class="col-xs-12" [ngClass]="essentials?.length == 0 ? 'col-lg-12 col-xl-12' : 'col-lg-8 col-xl-9'" *ngIf="!isPDF">
+            <!--<div class="col-xs-12 col-lg-8 col-xl-9" *ngIf="!isPDF">-->
+            <div class="card-box border-radius-0 p-0 guiRefTabs">
+                <mat-tab-group (selectedTabChange)="changedTab($event)">
+                    <mat-tab label="Guidance">
+                        <sub-topic-guidance [guidances]="guidances"
+                                            [error]="guidanceError"
+                                            (domainPath)="navigateToGuidanceDetails($event)"
+                                            (subContent)="loadContentView($event)">
+                        </sub-topic-guidance>
+                    </mat-tab>
+                    <mat-tab label="References" [disabled]="(legislations==null && commentarys==null && caseLaws==null)?'':null" [ngClass]="(legislations==null && commentarys==null && caseLaws==null)?'disabledReferences':''">
+                        <sub-topic-reference [legislations]="legislations"
+                                             [commentarys]="commentarys"
+                                             [caseLaws]="caseLaws"
+                                             (subContent)="openLibContent($event)">
+                        </sub-topic-reference>
+                    </mat-tab>
+                </mat-tab-group>
+
+
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-lg-12 col-xl-12" *ngIf="isPDF">
+            <div class="card-box border-radius-0 searchContent">
+                <iframe [src]="pdfContent | safe: 'resourceUrl' " title="pdfTitle" width="100%" height="800px"></iframe>
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-4 col-xl-3 guidance-note-essentials" *ngIf="!isPDF && essentials?.length > 0">
+            <!--<div class="col-xs-12 col-lg-4 col-xl-3" *ngIf="!isPDF">-->
+            <essentials [essentials]="essentials" (essential)="downloadEssentials($event)"></essentials>
+        </div>
+    </div>
+    <!--<app-back-to-top *ngIf="scrollVal>0"></app-back-to-top>-->
+</div>
+
+<ng-template #modalContent let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Save document reference to client folder
+            <button type="button" class="close pull-right" (click)="onPopUpCloseClick()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body ">
+        <!--<pg-folder-container *ngIf="loadFolders" [isSaveToFolder]="true"
+                             (selectedSaveToFolder)="onSaveToFolderClick($event)" (popUpClose)="onPopUpCloseClick()" [saveToFolderContent]="saveToFolderContent"></pg-folder-container>-->
+        <app-folder-container *ngIf="loadFolders" [isSaveToFolder]="true"
+                              (selectedSaveToFolder)="onSaveToFolderClick($event)" (popUpClose)="onPopUpCloseClick()" [saveToFolderContent]="saveToFolderContent"></app-folder-container>
+
+    </div>
+</ng-template>
+
+<ng-template #downloadModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Download file to your computer
+            <button type="button" class="close pull-right" (click)="downloadModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+    </div>
+    <div class="modal-body ">
+        <!--<pg-folder-container *ngIf="loadFolders" [isSaveToFolder]="true"
+                             (selectedSaveToFolder)="onSaveToFolderClick($event)" (popUpClose)="onPopUpCloseClick()" [saveToFolderContent]="saveToFolderContent"></pg-folder-container>-->
+        <div mat-dialog-content>
+            <div class="form-group">
+                <label for="textinput" class="control-label">Title</label>
+                <input type="text" class="form-control" id="textinput" placeholder="" [(ngModel)]="fileTitle" required>
+                <p *ngIf="!isValidFileTitle" style="color:red;">Please enter a title</p>
+            </div>
+
+            <div class="form-group file-icon-img">
+                <label for="radios-inline" class="control-label">Format</label><br />
+                <mat-radio-group [(ngModel)]="fileFormat">
+                    <div>
+                        <mat-radio-button value="pdf">PDF<img class="filesIconW" src="dist/assets/images/pdf.png"></mat-radio-button>
+                        &nbsp;
+                        <mat-radio-button value="rtf">RTF<img class="filesIconW" src="dist/assets/images/wordIcon.png"></mat-radio-button>
+                    </div>
+
+                </mat-radio-group>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <!--<button class="btn btn-primary pull-left" *ngIf="IsValidForm" mat-button [mat-dialog-close]="true" cdkFocusInitial>Email</button>-->
+                <button class="btn btn-primary pull-left" (click)="validate()">Download</button>
+                <button class="btn btn-primary pull-right" (click)="closeFileDialog()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<!--permalink popup-->
+<ng-template #permaLinkModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Permalink Created
+            <button type="button" class="close pull-right" (click)="downloadModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body ">
+        <div id="permaLinkContent">
+            <div>
+                <style type="text/css">
+                    kbd {
+                        -moz-border-radius: 3px;
+                        -moz-box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+                        -webkit-border-radius: 3px;
+                        -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+                        background-color: #f7f7f7;
+                        border: 1px solid #ccc;
+                        border-radius: 3px;
+                        box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+                        color: #333;
+                        display: inline-block;
+                        font-family: Arial,Helvetica,sans-serif;
+                        font-size: 11px;
+                        line-height: 1.4;
+                        margin: 0 .1em;
+                        padding: .1em .6em;
+                        text-shadow: 0 1px 0 #fff;
+                    }
+                </style>
+                <div style="padding-bottom: 15px;">
+                    You can use the following URL to link directly to
+                    <div style="text-overflow: ellipsis; overflow: hidden;">
+                        <strong title="{{practiceArea}}">{{practiceArea}} </strong>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <input id="permalinkContent" [ngModel]="permaLink" class="form-control">
+                    </div>
+                </div>
+                <div>
+                    <kbd>Ctrl</kbd> + <kbd>C</kbd> will copy this to your clipboard
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #unsubscribeModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Alert
+            <button type="button" class="close pull-right" (click)="unsubscribeModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+    </div>
+    <div class="modal-body unsubscribe-body">
+        <div class="row">
+            <div class="col-md-12">
+                <img class="lockImage" src="dist/assets/images/lock.png" alt="lock.png" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <img class="logoImage" src="dist/assets/images/LexisNexis_logo.png" alt="logo.png" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="text-center unsubscribe-text">Sorry it seems that you are not subscribed to view this content, please contact Customer Care on <span>0860 765 432</span> for more information.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="text-center unsubscribe-link"><a (click)="unsubscribeModalRef.hide()">Click here</a> to return to the home page.</p>
+            </div>
+        </div>
+    </div>
+</ng-template>

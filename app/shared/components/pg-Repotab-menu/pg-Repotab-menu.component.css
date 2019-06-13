@@ -1,0 +1,202 @@
+﻿.paLeftMainDivDashboard {
+  background-color: rgba(255,255,255,1);
+  height: 100%;
+  width: 100%;
+}
+.pgTabMenuMain {
+  padding-top:7%;
+}
+
+.browsehisfav {
+    text-align: center;
+}
+
+.browse_hist_fav_tabs {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+#custom-search-input-top {
+  padding: 0px;
+  border: solid 1px #E4E4E4;
+  border-radius: 0px;
+  background-color: #fff;
+  display: inline-table;
+}
+
+  #custom-search-input-top input {
+    border: 0;
+    box-shadow: none;
+    height: 25px;
+    padding: 5px 10px;
+  }
+
+.downloadsSearchInput {
+  font-size: 10px;
+  height: 25px;
+  padding: 5px 10px;
+  height: 30px;
+}
+
+.FilterSearch {
+  display: inline-table;
+  width: 30%;
+  float: right;
+}
+
+.FilterSearch1 {
+  display: inline-table;
+  width: 27%;
+}
+
+.input-group-btn > .searchbutton {
+  font-size: 8pt;
+  padding: 0 10px;
+  vertical-align: middle;
+}
+
+.Filtersearchbutton {
+  font-size: 8px;
+}
+
+#custom-search-input-top button {
+  /* margin: 3px 0 0 0; */
+  background: none;
+  box-shadow: none;
+  border: 0;
+  /*color: #fff;*/
+  /* padding: 0 12px 0 12px; */
+  /*  border-left: solid 1px #ccc; */
+  /* font-size:10pt; */
+  color: black;
+  font-size: 10pt;
+  padding: 0 10px;
+  vertical-align: middle;
+  font-size: 8px;
+}
+#custom-search-input {
+  padding: 0px;
+  border: solid 1px #E4E4E4;
+  border-radius: 0px;
+  background-color: #fff;
+}
+
+  #custom-search-input input {
+    border: 0;
+    box-shadow: none;
+  }
+
+  #custom-search-input button {
+    margin: 3px 0 0 0;
+    background: none;
+    box-shadow: none;
+    border: 0;
+    color: #fff;
+    padding: 0 12px 0 12px;
+    /*  border-left: solid 1px #ccc; */
+  }
+
+    #custom-search-input button:hover {
+      border: 0;
+      box-shadow: none;
+      /*  border-left: solid 0px #ccc;*/
+    }
+
+
+#custom-search-input-top button:hover {
+  border: 0;
+  box-shadow: none;
+  /*  border-left: solid 0px #ccc;*/
+}
+
+#custom-search-input-top .glyphicon-search {
+  /* font-size: 10pt; */
+  color: white;
+}
+
+.input-group-btn {
+  background-color: rgb(210, 30, 22);
+}
+
+.downloadsSearchBtn {
+  font-size: 8pt;
+}
+.allContentNotes {
+  background-color: rgb(210, 30, 22);
+  text-align: center;
+  padding-top: 13px;
+  padding-bottom: 18px;
+  color: white;
+  border-right-color: rgba(71, 71, 72, 0.23921568627450981);
+  border-right-style: solid;
+  border-right-width: 1px;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.activeTab {
+  background-color: rgba(91, 89, 89, 0.1607843137254902) !important;
+  border-right: 10px !important;
+  padding-bottom: 18px;
+  text-align: center !important;
+  padding-top: 13px;
+  font-weight: bold !important;
+  color: black !important;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+.allContentMyNotesMainDiv {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.49019607843137253);
+  padding-left: 5%;
+  padding-top: 44px;
+  padding-bottom: 7px;
+}
+.serachMainPgRepoTab {
+  padding-right: 12%;
+}
+/*xs*/
+@media only screen and (max-width: 767px) {
+  .paLeftMainDivDashboard {
+        box-shadow: none;
+        background-color:transparent;
+    } 
+  .browsehisfavContentMainDiv {
+    background-color: transparent !important;
+    padding-left: 3%;
+    padding-right: 3%;
+    -webkit-box-shadow: none;
+  }
+  .browsePractiseArea {
+    background-color: white;
+    font-size: 9px;
+    color: gray;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    border-right:none;
+  }
+  .activeTab {
+    font-size: 9px;
+    color: black;
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+}
+/*sm*/
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+    .dashBoardSearchMobileView {
+        display: none;
+    }
+}
+/*md*/
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+    .dashBoardSearchMobileView {
+        display: none;
+    }
+}
+/*lg*/ @media only screen and (min-width: 1201px) {
+    .dashBoardSearchMobileView {
+        display: none;
+    }
+}
+
+
+

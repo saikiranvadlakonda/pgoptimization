@@ -1,0 +1,69 @@
+<div class="guidanceContentMainDiv">
+    <!--<div class="guidanceRefrenceContent">
+        <div id="custom-search-input-top" class="FilterSearch">
+            <input type="text" class="form-control input-lg downloadsSearchInput img-responsive" placeholder="Search this references" [(ngModel)]="searchQuery" />
+            <span class="input-group-btn">
+                <button class="btn btn-info btn-lg searchbutton" type="button">
+                    <i class="fa fa-search Filtersearchbutton"></i>
+                </button>
+            </span>
+        </div>
+        <div class="sortDiv pull-right">
+          <div class="sortybyresultperpage">Sort by</div>
+          <div class="sortresultDropDown">
+            <select class="c-select">
+              <option selected>Default</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
+
+
+          </div>
+        </div>
+    </div>-->
+    <div class="guidanceHeadContent" *ngIf="legislations">
+        <div class="legislationPlusMain">
+            <div class="refrenceHeading"> Legislation</div>
+
+            <div class="keySections" *ngFor="let legislation of legislations | filterByProperty: searchQuery : 'title' : 'subContentDomains.title'">
+                <div class="text12">{{legislation.title}}</div>
+                <div class="refrenceKeySections" *ngFor="let subContentDomain of legislation?.subContentDomains">
+                    <span class="cursorpointer" (click)="setSubContentDomainPath(subContentDomain)">{{subContentDomain.title}}</span>
+                </div>
+            </div>
+            <div class="keySections" *ngIf="(legislations | filterByProperty: searchQuery : 'title' : 'subContentDomains.title')?.length == 0">
+                <p class="noRecordsTxt">{{ error ? error : pgMessages.guidanceNote.noLegislation }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="guidanceHeadContent" *ngIf="commentarys">
+        <div class="legislationPlusMain">
+            <div class="refrenceHeading"> Commentary</div>
+
+            <div class="keySections" *ngFor="let commentary of commentarys | filterByProperty: searchQuery : 'title' : 'subContentDomains.title'">
+                <div class="text12">{{commentary.title}}</div>
+                <div class="refrenceKeySections" *ngFor="let subContentDomain of commentary?.subContentDomains">
+                    <span class="cursorpointer" (click)="setSubContentDomainPath(subContentDomain)">{{subContentDomain.title}}</span>
+                </div>
+            </div>
+            <div class="keySections" *ngIf="(commentarys | filterByProperty: searchQuery : 'title' : 'subContentDomains.title')?.length == 0">
+                <p class="noRecordsTxt">{{ error ? error : pgMessages.guidanceNote.noCommentary }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="guidanceHeadContent" *ngIf="caseLaws">
+        <div class="legislationPlusMain">
+            <div class="refrenceHeading"> Case Law</div>
+            <div class="keySections" *ngFor="let caseLaw of caseLaws | filterByProperty: searchQuery : 'title' : 'subContentDomains.title'">
+                <div class="text12">{{caseLaw.title}}</div>
+                <div class="refrenceKeySections" *ngFor="let subContentDomain of caseLaw?.subContentDomains">
+                    <span class="cursorpointer" (click)="setSubContentDomainPath(subContentDomain)">{{subContentDomain.title}}</span>
+                </div>
+            </div>
+            <div class="keySections" *ngIf="(caseLaws | filterByProperty: searchQuery : 'title' : 'subContentDomains.title')?.length == 0">
+                <p class="noRecordsTxt">{{ error ? error : pgMessages.guidanceNote.noCaseLaw }}</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+<div id="contentHistory" class="browsehisfavContentMainDiv" *ngIf="historyItems">
+    <div class="browsehisfavContent">
+        <!--<div *ngFor="let timePeriod of timePeriods" class="historyBlocks">-->
+        <div class="row timeperiod-row">
+            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 text-left">
+                <div class="timePeriod">&nbsp;</div>
+            </div>
+        </div>
+        <div class="historyMainDiv">
+            <div class="md-history-view">
+                <ng-container *ngFor="let historyItem of historyItems; let i = index">
+                    <div class="myBlock row" *ngIf="i%3==0 && i<9">
+                        <div *ngIf="historyItems[i]" class="col-lg-4 col-md-4 col-sm-4 col-xs-12" (click)="navigateToHistory(historyItems[i])">
+                            <div class="pointer historyItem">
+                                <div class="historyItemLmtTitle">{{getPracticeAreaName(historyItems[i])}}</div>
+                            </div>
+                            <div class="pointer historyItemName" mat-raised-button matTooltip="{{historyItems[i].name}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">{{ historyItems[i].name > 33 ? historyItems[i].name.trim().slice(0, 30).trim().concat('...') : historyItems[i].name }}</div>
+                            <div class="pointer historyItemDate">{{historyItems[i].dateBadge+" - "}}{{historyItems[i].date | date:'mediumTime'}}</div>
+                        </div>
+                        <div *ngIf="historyItems[i+1]" class="col-lg-4 col-md-4 col-sm-4 col-xs-12" (click)="navigateToHistory(historyItems[i+1])">
+                            <div class="pointer historyItem">
+                                <div class="historyItemLmtTitle">{{getPracticeAreaName(historyItems[i+1])}}</div>
+                            </div>
+                            <div class="pointer historyItemName" mat-raised-button matTooltip="{{historyItems[i+1].name}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">{{ historyItems[i+1].name > 33 ? historyItems[i+1].name.trim().slice(0, 30).trim().concat('...') : historyItems[i+1].name }}</div>
+                            <div class="pointer historyItemDate">{{historyItems[i+1].dateBadge+" - "}}{{historyItems[i+1].date | date:'mediumTime'}}</div>
+                        </div>
+                        <div *ngIf="historyItems[i+2]" class="col-lg-4 col-md-4 col-sm-4 col-xs-12" (click)="navigateToHistory(historyItems[i+2])">
+                            <div class="pointer historyItem">
+                                <div class="historyItemLmtTitle">{{getPracticeAreaName(historyItems[i+2])}}</div>
+                            </div>
+                            <div class="pointer historyItemName" mat-raised-button matTooltip="{{historyItems[i+2].name}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">{{ historyItems[i+2].name > 33 ? historyItems[i+2].name.trim().slice(0, 30).trim().concat('...') : historyItems[i+2].name }}</div>
+                            <div class="pointer historyItemDate">{{historyItems[i+2].dateBadge+" - "}}{{historyItems[i+2].date | date:'mediumTime'}}</div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="sm-history-view d-hide">
+                <ng-container *ngFor="let historyItem of historyItems; let i = index">
+                    <div class="myBlock row" *ngIf="i%2==0 && i<8">
+                        <div *ngIf="historyItems[i]" class="col-md-6 col-sm-6 col-xs-6" (click)="navigateToHistory(historyItems[i])">
+                            <div class="pointer historyItem">
+                                <div class="historyItemLmtTitle">{{getPracticeAreaName(historyItems[i])}}</div>
+                            </div>
+                            <div class="pointer historyItemName" mat-raised-button matTooltip="{{historyItems[i].name}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">{{ historyItems[i].name > 33 ? historyItems[i].name.trim().slice(0, 30).trim().concat('...') : historyItems[i].name }}</div>
+                            <div class="pointer historyItemDate">{{historyItems[i].dateBadge+" - "}}{{historyItems[i].date | date:'mediumTime'}}</div>
+                        </div>
+                        <div *ngIf="historyItems[i+1]" class="col-md-6 col-sm-6 col-xs-6" (click)="navigateToHistory(historyItems[i+1])">
+                            <div class="pointer historyItem">
+                                <div class="historyItemLmtTitle">{{getPracticeAreaName(historyItems[i+1])}}</div>
+                            </div>
+                            <div class="pointer historyItemName" mat-raised-button matTooltip="{{historyItems[i+1].name}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">{{ historyItems[i].name > 33 ? historyItems[i+1].name.trim().slice(0, 30).trim().concat('...') : historyItems[i+1].name }}</div>
+                            <div class="pointer historyItemDate">{{historyItems[i+1].dateBadge+" - "}}{{historyItems[i+1].date | date:'mediumTime'}}</div>
+                        </div>
+                    </div>
+
+                </ng-container>
+            </div>
+            <div *ngIf="historyItems?.length == 0">
+                <p>{{ error }}</p>
+            </div>
+        </div>
+        <!--</div>-->
+    </div>
+    <div class="showMore m-hide" (click)="showHistoryList()" *ngIf="historyItems?.length > 0">show more</div>
+    <div class="mobi-showMore text-center d-hide" *ngIf="historyItems?.length > 0"><span (click)="showHistoryList()">Show more</span></div>
+</div>

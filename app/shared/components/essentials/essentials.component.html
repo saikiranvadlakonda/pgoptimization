@@ -1,0 +1,59 @@
+<div class="card-box essentials border-radius-0 p-40" *ngIf="essentials && essentials.length > 0">
+    <h4 class="header-title m-t-0 m-b-20">
+        Essentials <span class="pull-right viewall"><a (click)="viewAllEssentials()" class="pointer">View All</a></span>
+    </h4>
+    <div class="essential-search-container pull-right d-hide">
+        <input type="text" class="form-control input-lg downloadsSearchInput img-responsive" placeholder="Search this guidance" [(ngModel)]="guidanceSearch" />
+        <span class="input-group-btn">
+            <button class="btn btn-info btn-lg searchbutton" type="button">
+                <i class="fa fa-search Filtersearchbutton"></i>
+            </button>
+        </span>
+    </div>
+
+    <div class="card-box tilebox-two border-radius-0 m-hide" *ngFor="let essential of essentials|slice:0:5">
+        <!--<i class="far fa-file-word pull-xs-right filesIconW"></i>-->
+        <!--<i *ngIf="essential?.mimeType=='.doc'" class="far fa-file-word pull-xs-right filesIconW"></i>
+        <i *ngIf="essential?.mimeType=='.pdf'" class="far fa-file-pdf pull-xs-right filesIconP"></i>-->
+        <img src="dist/assets/images/pdf.png" *ngIf="essential?.mimeType=='.pdf'" class="pull-xs-right filesIconW" />
+        <img src="dist/assets/images/wordIcon.png" *ngIf="essential?.mimeType=='.doc' || essential?.mimeType=='.docx'" class="pull-xs-right filesIconW" />
+        <img src="dist/assets/images/web-icon.png" *ngIf="essential?.mimeType=='link'" class="pull-xs-right filesIconW" />
+        <img src="dist/assets/images/spreadSheetIcon.svg" *ngIf="essential?.mimeType=='.xls'" class="pull-xs-right filesIconW" />
+        <img src="dist/assets/images/web-icon.png" *ngIf="essential?.mimeType !='link' && essential?.mimeType !='.pdf' && essential?.mimeType !='.doc' && essential?.mimeType !='.docx' && essential?.mimeType !='.xls'" class="pull-xs-right filesIconW" />
+        <div class="essential-detail-container">
+            <p><span class="label label-pill label-default">{{essential?.eType}}</span></p>
+            <h5 class="m-b-10 pointer" (click)="onClick(essential)">
+                <span data-plugin="counterup" mat-raised-button matTooltip="{{essential?.title.trim()}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                    {{essential?.title.trim().length>25?essential?.title.trim().slice(0,22).trim().concat('...'):essential?.title.trim()}}
+                </span>
+            </h5>
+            <h6 class="text-muted m-b-15 m-t-10">{{essential.guidance}}</h6>
+        </div>
+    </div>
+    <div class="mobi-essentials d-hide">
+        <div class="card-box tilebox-two border-radius-0 table-row" *ngFor="let essential of essentials|slice:0:5">
+            <div class="table-cell essential-imgbox">
+                <img src="dist/assets/images/wordIcon.png" *ngIf="essential?.mimeType=='.doc' || essential?.mimeType=='.docx'" />
+                <img src="dist/assets/images/pdf.png" *ngIf="essential?.mimeType=='.pdf'" />
+                <img src="dist/assets/images/web-icon.png" *ngIf="essential?.mimeType=='link'" />
+                <img src="dist/assets/images/spreadSheetIcon.svg" *ngIf="essential?.mimeType=='.xls'" />
+                <img src="dist/assets/images/web-icon.png" *ngIf="essential?.mimeType !='link' && essential?.mimeType !='.pdf' && essential?.mimeType !='.doc' && essential?.mimeType !='.docx' && essential?.mimeType !='.xls'" />
+            </div>
+            <div class="table-cell">
+                <p><span class="label label-pill label-default">{{essential?.eType}}</span></p>
+                <span data-plugin="counterup" class="titles" (click)="onClick(essential)" mat-raised-button matTooltip="{{essential?.title.trim()}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                    {{essential?.title.length>25?essential?.title.slice(0, 22).trim().concat('...'):essential?.title}}
+                </span>
+                <h6 class="text-muted m-b-15 m-t-10">{{essential?.guidance}}</h6>
+            </div>
+            <div class="table-cell action-container">
+                <span class="btn-group">
+                    <button class="btn btn-purple dropdown-toggle waves-effect waves-light" [matMenuTriggerFor]="menu"><i class="fa fa-ellipsis-h"></i></button>
+                    <mat-menu class="subtopic-essential-menu" #menu="matMenu">
+                        <button mat-menu-item (click)="onClick(essential)">Download</button>
+                    </mat-menu>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

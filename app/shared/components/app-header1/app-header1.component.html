@@ -1,0 +1,235 @@
+<nav class="navbar mobi-navbar"  id="myHeader1" *ngIf="_pager.mobiView" style="visibility:hidden;">
+    <div class="navbar-header">
+        <a class="navbar-brand pointer" routerLink="/dashboard">
+            <img src="dist/assets/images/LN.svg" alt="Logo" />
+        </a>
+    </div>
+    <ul class="nav mobile-lexis-product-selector">
+        <li class="nav-item dropdown notification-list top-left-link-icon" dropdown>
+            <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="button-logo" dropdownToggle aria-controls="dropdown-logo">
+                <img src="dist/assets/images/1-020.png" alt="img" />
+                <span class="menu-name">Practical Guidance</span> <i class="zmdi zmdi-chevron-down down-icon"></i>
+            </a>
+            <div class="dropdown-menu" id="dropdown-logo" *dropdownMenu role="menu" aria-labelledby="button-logo">
+                <a role="menuitem" (click)="redirectToLibrary()" class="dropdown-item pointer">
+                    <div class="item-icon">
+                        <img src="dist/assets/images/1-01.png" alt="img" />
+                    </div>
+                    <span class="item-name">Library</span>
+                </a>
+                <a class="divider" href="javascript:void(0);" role="separator"></a>
+                <a role="menuitem" href="javascript:void(0);" class="dropdown-item">
+                    <div class="item-icon">
+                        <img src="dist/assets/images/1-03.png" alt="img" />
+                    </div>
+                    <span class="item-name">Assure</span>
+                </a>
+            </div>
+        </li>
+    </ul>
+
+    <ul class="nav right-menu">
+        <li class="nav-item dropdown notification-list top-left-link-icon" dropdown>
+            <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="bars-link" dropdownToggle aria-controls="right-dropdown-menu">
+                <div class="lines">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </a>
+            <div class="dropdown-menu" id="right-dropdown-menu" *dropdownMenu role="menu" aria-labelledby="bars-link">
+                <a role="menuitem" href="javascript:void(0);" class="dropdown-item" routerLink="/history-list">
+                    <span class="item-name">History</span>
+                </a>
+                <a class="divider" href="javascript:void(0);" role="separator"></a>
+                <a role="menuitem" href="javascript:void(0);" class="dropdown-item" (click)="openFeedbackModal(feedbackModal)">
+                    <span class="item-name">Feedback</span>
+                </a>
+                <a class="divider" href="javascript:void(0);" role="separator"></a>
+                <a role="menuitem" href="javascript:void(0);" class="dropdown-item pointer" (click)="logout()">
+                    <span class="item-name">Logout</span>
+                </a>
+            </div>
+        </li>
+    </ul>
+
+</nav>
+
+<!--<div class="topbar-main m-hide">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-6 col-lg-3 col-xl-3">
+        <div class="topbar-left">
+          <ul class="nav pull-left top-left-link">
+            <li class="nav-item dropdown notification-list top-left-link-icon" dropdown>
+              <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect mlink" href="javascript:void(0);" id="button-logo" dropdownToggle aria-controls="dropdown-logo">
+                Practical Guidance <i class="zmdi zmdi-chevron-down noti-icon"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-arrow-success dropdown-md top-left-dropdown" id="dropdown-logo" *dropdownMenu role="menu" aria-labelledby="button-logo">
+                <div role="menuitem" class="dropdown-item noti-title brand-bg">
+                </div>
+
+                <a role="menuitem" href="javascript:void(0);" class="dropdown-item notify-item">
+                  <div class="notify-icon">
+                    <img src="dist/assets/images/1-01.png" alt="img" class="img-fluid">
+                  </div>
+
+                  <p class="notify-details">
+                    <span>Library</span>
+                  </p>
+                </a>
+
+                <a role="menuitem" href="javascript:void(0);" class="dropdown-item notify-item">
+                  <div class="notify-icon">
+                    <img src="dist/assets/images/1-03.png" alt="img" class="img-fluid">
+                  </div>
+                  <p class="notify-details">
+                    <span>Assure</span>
+                  </p>
+                </a>
+
+
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+      <div class="col-xs-6 col-lg-7 col-xl-8 text-right">
+        <ul class="navigation-menu user-menu">
+          <li>
+            <a routerLink="/history-list"><i class="zmdi zmdi-time-restore"></i> <span> History </span> </a>
+          </li>
+
+          <li class="has-submenu">
+            <a href="#"><i class="zmdi zmdi-help"></i> <span> Help </span> </a>
+          </li>
+
+          <li class="has-submenu pointer">
+            <a (click)="openFeedbackModal(feedbackModal)"><i class="zmdi zmdi-collection-text"></i><span> Feedback </span> </a>
+          </li>
+
+        </ul>
+      </div>
+      <div class="col-xs-6 col-lg-2 col-xl-1">
+        <div class="menu-extras">
+
+          <!--<ul *ngIf="_authService.loggedInUserName"  class="nav navbar-nav pull-right user-drop">->
+            <ul class="nav navbar-nav pull-right user-drop">
+                <li dropdown class="nav-item notification-list top-right-user">
+                    <a id="button-basic" dropdownToggle class="nav-link dropdown-toggle arrow-none waves-effect waves-light nav-user"
+                       aria-controls="dropdown-basic">
+                        <!--<span class="usrName">Hi, {{_authService.loggedInUserName}}</span>->
+                        <i class="zmdi zmdi-account-circle"></i> <i class="zmdi zmdi-chevron-down user-down-arrow"></i>
+                    </a>
+                    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-arrow profile-dropdown"
+                        role="menu" aria-labelledby="button-basic">
+                        <li role="menuitem" class="dropdown-item noti-title">
+                            <!--<h5 class="text-overflow text-white"><small>{{_authService.loggedInUserName}}</small> </h5>->
+                        </li>
+                        <li role="menuitem">
+                            <a class="dropdown-item notify-item" href="javascript:void(0);"><i class="zmdi zmdi-account-circle"></i> <span>Profile</span></a>
+                        </li>
+                        <li role="menuitem">
+                            <a class="dropdown-item notify-item" href="javascript:void(0);"><i class="zmdi zmdi-settings"></i> <span>Settings</span></a>
+                        </li>
+                        <li role="menuitem">
+                            <a (click)="logout()" class="dropdown-item notify-item" href="javascript:void(0);"><i class="zmdi zmdi-power"></i> <span>Logout</span></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        <!--</div>
+      </div>
+    </div>
+
+
+
+
+
+    <div class="clearfix"></div>
+
+  </div>
+</div>-->
+
+
+<ng-template #feedbackModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Feedback <button type="button" class="close pull-right" (click)="feedbackModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body">
+
+        <h4>TELL US WHAT YOU THINK</h4>
+        <p>Your input helps us improve My LexisNexis. For immediate support with online issues, please call LexisNexis Customer Support at +27 86 076 5432 or +27 79 529 4777 (after hours). Our Customer Support team of professionals is available 24/7 to assist you.</p>
+        <span>* denotes required fields.</span>
+        <div class="feedback-container">
+            <div class="feedback-container">
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <mat-form-field [hideRequiredMarker]="false" [floatLabel]="'auto'">
+                            <input matInput placeholder="Name" required [(ngModel)]="feedBackData.name" maxlength="150">
+                            <mat-error>Please enter your name</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field [hideRequiredMarker]="false" [floatLabel]="'auto'">
+                            <input type="text" matInput placeholder="Contact No" required [(ngModel)]="feedBackData.contactNumber" pattern="\s*[0+]\d{9,20}|[0+]\d{2,4}\s\d{3}\s\d{4}\s*">
+
+                            <mat-error>Please enter a valid contact number</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <mat-form-field [hideRequiredMarker]="false" [floatLabel]="'auto'">
+                            <input type="email" matInput placeholder="Email" required [(ngModel)]="feedBackData.email" pattern="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*">
+                            <mat-error>Please Enter a valid Email Address</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6 radioTop">
+                        <mat-radio-group [(ngModel)]="feedBackData.issue">
+                            <mat-radio-button value="Content Issue" checked="true">Content Issue</mat-radio-button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <mat-radio-button value="Usage Issue">Usage Issue</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <mat-select placeholder="Please select a Practice Area" required [(ngModel)]="feedBackData.practiceArea">
+                                <ng-container *ngFor="let practiceArea of practiceAreasList">
+                                    <ng-container *ngIf="practiceArea?.topicType=='Practice Area' ">
+                                        <mat-option [value]="practiceArea.title">
+                                            {{ practiceArea.title }}
+                                        </mat-option>
+                                    </ng-container>
+                                </ng-container>
+                            </mat-select>
+                            <mat-error>Please select a Practice Area</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <mat-form-field>
+                            <textarea matInput placeholder="Comments" [(ngModel)]="feedBackData.comments" required minRows="2"></textarea>
+                            <mat-error *ngIf="feedBackData?.comments==null || feedBackdata?.comments!=''">Please enter your comment</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <button class="btn btn-primary" mat-button (click)="validateNSubmitFeedback()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,85 @@
+<div class="whats-new-container">
+    <div class="row whatsNewPage">
+        <div class="col-xs-12 col-lg-12 col-xl-12">
+            <div class="breadcrumb-text">
+                <div>You are here: <span><a routerLink="/dashboard">Dashboard</a></span> > News</div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
+            <h4 class="pageTitle">What's new</h4>
+        </div>
+    </div>
+    <div class="row whatsNewPage whatsNewFilters" *ngIf="newItems">
+        <div class="col-sm-6  col-xs-6 col-md-4 col-lg-6 col-xl-6 whatsNewSearch-container">
+            <div class="searchWhatsNew">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-search"></i></span><input class="form-control" type="text" placeholder="SEARCH NEWS" [(ngModel)]="searchText" />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6  col-xs-6 col-md-8 col-lg-6 col-xl-6 text-right whatsNew-filters">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>CATEGORY</label>
+                        <div class="btn-group" dropdown>
+                            <button id="button-basic" dropdownToggle type="button" class="btn btn-secondary dropdown-toggle category-toggle waves-effect waves-light" aria-controls="dropdown-basic">
+                                <span class="selected-pa-name">{{practiceArea==undefined?'All Practice Areas':practiceArea.title}}</span> <span class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu whatsNew-category-menu"
+                                role="menu" aria-labelledby="button-basic">
+                                <li role="menuitem"><a class="dropdown-item pointer" (click)="getAllWhatsNew1()">All Practice Areas</a></li>
+                                <li role="menuitem" *ngFor="let practiceArea of practiceAreas"><a class="dropdown-item pointer" (click)="practiceAreaChange(practiceArea)">{{practiceArea?.title}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="col-sm-4">
+                  <ul class="nav navbar-nav navbar-brand-dropdown pull-right">
+                    <li class="dropdown">
+                      <div class="form-group shortBy">
+                        <label>SORTY BY </label>
+                        <span class="paTitle shortByBlcok pointer">
+                          <span (click)="sort()">Most Recent</span>
+                          <span class="glyphicon glyphicon-sort-by-attributes" *ngIf="asc"></span>
+                          <span class="glyphicon glyphicon-sort-by-attributes-alt p-r-8" *ngIf="!asc"></span>
+                        </span>
+                      </div>
+
+                    </li>
+                  </ul>
+                </div>-->
+            </div>
+        </div>
+    </div>
+    <div class="row whatsNewPage">
+        <div class="col-xs-12 col-lg-12 col-xl-12">
+            <div class="card-box border-radius-0 whatsNewPage-content p-0">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" *ngFor="let newItem of newItems|filterByProperty:searchText : 'title'">
+                        <p class="card-text">
+                            <small class="text-muted">PUBLISHED ON: {{newItem?.datePublished | date: 'd LLL, yyyy'}}</small>
+                        </p>
+                        <h4 class="card-title pointer" (click)="openWhatsNewPdf(newItem)" *ngIf="newItem?.isPdf =='True'">{{newItem?.title}}</h4>
+                        <h4 class="card-title pointer" (click)="detailView(newItem)" *ngIf="newItem?.isPdf !=='True'">{{newItem?.title}}</h4>
+                        <!--<h4 class="card-title pointer" (click)="detailView(newItem)" *ngIf="newItem?.link == ''">{{newItem?.title}}</h4>
+                        <h4 class="card-title pointer" *ngIf="newItem?.link != '' && newItem?.isSubscribed"><a href="{{newItem?.link}}" target="_blank">{{newItem?.title}}</a></h4>
+                        <h4 class="card-title pointer" *ngIf="newItem?.link != '' && !newItem?.isSubscribed"><span (click)="showUnsubscribed(newItem)">{{newItem?.title}}</span></h4>-->
+                        <p class="card-text">
+                            {{ newItem?.description.length > 283 ? newItem?.description.trim().slice(0, 210).trim().concat('...') : newItem?.description }}
+                        </p>
+                        <!--<p>{{newItem?.newsCategory}}</p>-->
+                    </li>
+                </ul>
+
+                <div *ngIf="((newItems | filterByProperty : searchText : 'title')?.length == 0)" class="text-center card-text list-group-item no-records-error">
+                    {{ whatsNewError ? whatsNewError : pgMessages.whatsNew.noWhatsNew }}
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 morebtn text-center whatsNew-show-more" *ngIf="newItems?.length > 0">
+            <button type="button" *ngIf="((newItems | filterByProperty : searchText : 'title')?.length > 4 && paChange == true) || (((newItems | filterByProperty : searchText : 'title')?.length > 4) && paChange == false && showMore == true)" class="btn btn-default" (click)="loadMore()">SHOW MORE</button>
+            <button type="button" *ngIf="((newItems | filterByProperty : searchText : 'title')?.length > 4 && paChange == false && showMore == false)" class="btn btn-default" (click)="showLess()">SHOW LESS</button>
+        </div>
+    </div>
+</div>

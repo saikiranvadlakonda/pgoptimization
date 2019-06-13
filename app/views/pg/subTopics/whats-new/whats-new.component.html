@@ -1,0 +1,58 @@
+
+<div class="wats-new-blcok" *ngIf="news">
+    <h4 class="header-title m-t-0 m-b-20 subtopicTitle">What's new</h4>
+    <ng-container *ngFor="let newsCategory of news; let i=index">
+        <!--<h4 class="header-title m-t-0 m-b-20 subtopicTitle"><b>{{newsCategory?.title}}</b></h4>-->
+        <ng-container *ngIf="i%3==0">
+            <div class="row whats-new-recnt" >
+                <div class="col-sm-4 col-xs-12" *ngIf="news[i]">
+                    <div class="card card-block border-0">
+                        <p class="txt"><span>POSTED ON: {{news[i].datePublished | date: 'd LLL, yyyy'}}</span></p>
+                        <h6 class="card-title" (click)="detailView(news[i])" mat-raised-button matTooltip="{{news[i]?.title.trim()}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                        {{news[i]?.title.trim().length>28?news[i].title.trim().slice(0,25).trim().concat('...'):news[i].title}}
+                        </h6>
+                        <p class="decp whatsNewReadmoreDsc">
+                            <!--{{news[i].description}}-->
+                            <pg-read-more text="{{news[i].description}}" limitCount="110"></pg-read-more>
+                        </p>
+                        
+                    </div>
+                </div>
+                <div class="col-sm-4 col-xs-12" *ngIf="news[i+1]">
+                    <div class="card card-block border-0">
+                        <p class="txt"><span>POSTED ON: {{news[i+1].datePublished | date: 'd LLL, yyyy'}}</span></p>
+                        <h6 class="card-title"  (click)="detailView(news[i+1])" mat-raised-button matTooltip="{{news[i+1]?.title.trim()}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                        {{news[i+1]?.title.trim().length>28?news[i+1].title.trim().slice(0,25).trim().concat('...'):news[i+1].title}}
+                        </h6>
+                        <p class="decp whatsNewReadmoreDsc">
+                            <!--{{news[i+1].description}}-->
+                            <pg-read-more text="{{news[i+1].description}}" limitCount="110"></pg-read-more>
+                        </p>
+                        
+                    </div>
+                </div>
+                <div class="col-sm-4 col-xs-12" *ngIf="news[i+2]">
+                    <div class="card card-block border-0">
+                        <p class="txt"><span>POSTED ON: {{news[i+2].datePublished | date: 'd LLL, yyyy'}}</span></p>
+                        <h6 class="card-title" (click)="detailView(news[i+2])" mat-raised-button matTooltip="{{news[i+2]?.title.trim()}}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                        {{news[i+2]?.title.trim().length>28?news[i+2].title.trim().slice(0,25).trim().concat('...'):news[i+2].title}}
+                        </h6>
+                        <p class="decp whatsNewReadmoreDsc">
+                            <!--{{news[i+2].description}}-->
+                            <pg-read-more text="{{news[i+2].description}}" limitCount="110"></pg-read-more>
+                        </p>
+                        
+                    </div>
+                </div>
+                <!--<hr />-->
+                
+            </div>
+            
+        </ng-container>
+        
+    </ng-container>
+    <p *ngIf="news.length==0" class="text-center noWhatsNew " style="padding: 50px 70px;">{{ error }}</p>
+    <div class="col-xl-12 morebtn text-center" *ngIf="news.length > 0" style="background-color: #f7f7f9;">
+        <button type="button" class="btn btn-default" (click)="showAllWhatsNew()">SHOW MORE</button><br /><br />
+    </div>
+</div>

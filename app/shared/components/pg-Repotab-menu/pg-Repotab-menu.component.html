@@ -1,0 +1,50 @@
+﻿
+<div class="paLeftMainDivDashboard">
+  <div class="allContentMyNotesMainDiv">
+    <div class="row">
+      <div class="col-sm-5 col-md-5 col-lg-5">
+        <span *ngFor="let tab of tabs;let i=index" style="cursor:pointer"
+             class="browse_hist_fav_tabs allContentNotes"
+             [ngClass]="(i === activeTab) ? 'activeTab' : ''"
+             (click)="_tabClicked(i)">
+          {{tab}}
+        </span>
+      </div>
+        <div class="serachMainPgRepoTab">
+          <div id="custom-search-input-top" class="FilterSearch">
+            <input type="text" class="form-control input-lg downloadsSearchInput img-responsive" placeholder="Enter your search here">
+            <span class="input-group-btn">
+              <button class="btn btn-info btn-lg searchbutton" type="button">
+                <i class="glyphicon glyphicon-search Filtersearchbutton"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+        <!--<div id="custom-search-input-top" class="FilterSearch">
+            <input type="text" class="form-control input-lg downloadsSearchInput img-responsive" placeholder="Enter your search here">
+            <span class="input-group-btn">
+                <button class="btn btn-info btn-lg searchbutton" type="button">
+                    <i class="glyphicon glyphicon-search Filtersearchbutton"></i>
+                </button>
+            </span>
+        </div>-->
+    </div>
+  </div>
+</div>
+<!--<div class="paLeftMainDivDashboard">
+    <div class="allContentMyNotesMainDiv">
+        <div class="allContentMyNotes">
+            <span class="allTxt">All</span>
+            <span class="contentOnlyTxt">Contents Only</span>
+            <span class="myNotesTxt">My Notes</span>
+        </div>
+        <div id="custom-search-input-top" class="FilterSearch">
+            <input type="text" class="form-control input-lg downloadsSearchInput img-responsive" placeholder="Enter your search here">
+            <span class="input-group-btn">
+                <button class="btn btn-info btn-lg searchbutton" type="button">
+                    <i class="glyphicon glyphicon-search Filtersearchbutton"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>-->

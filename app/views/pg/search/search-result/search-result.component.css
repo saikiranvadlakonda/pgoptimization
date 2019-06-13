@@ -1,0 +1,248 @@
+.container-fluid {
+  background-color: #edeef3;
+}
+.SearchResultMainDiv{
+	padding-top: 10px;
+}
+.searchBarNavMainDiv {
+  background-color:rgba(255,255,255,1);
+  /* padding-top : 18px;
+  padding-bottom:18px; */
+  border:none;
+  margin-top:30px;
+}
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.SearchRelatedRightArrow{
+	padding-right:20px;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+
+.SearchFilterMainDiv{
+	padding:15px 0;
+}
+.mainDivContainer {
+  /*margin-left:8%;
+  margin-right:8%;*/
+}
+.input-group-btn >.searchbutton{
+	font-size:8pt;
+	padding: 0 10px;
+	vertical-align: middle;
+}
+.searchBarNavMainDivpa{
+	font-weight:bold;
+	font-size:10px;
+	padding-top:3px;
+}
+
+
+
+
+.searchrelatedhead{
+	font-size:8pt;
+	color:rgba(0,0,0,0.8);
+	font-family: Lato;
+    font-weight: bold;
+}
+.SearchRelatedMainDiv{
+	    padding-top: 10%;
+}
+.searchDiv {
+  /**background-color: rgba(156,164,171,1);**/
+}
+.searchwithinresult{
+	padding-bottom:16px;
+	 font-size: 8pt; 
+	font-weight: bold;
+}
+.searchrelatedName {
+  font-size:8pt;
+  color:#053C71;
+  font-family:Lato;
+}
+.searchrelatedtopicsDiv {
+  /* border-radius: 8px; */
+  background-color: white;
+  margin-top: 30px;
+  /* height : 80px; */
+  padding-left:8%;
+  padding-top:5px;
+  padding-bottom:5px;
+  width:89%;
+
+}
+.btn-circleRightarrow{
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	padding: 6px 0;
+	font-size: 12px;
+	line-height: 1.428571429;
+	border-radius: 15px;
+	background-color: rgba(156,164,171,0.2);
+}
+.searchresultstar{
+	width: 25px;
+	height: 25px;
+	text-align: center;
+	padding: 6px 0;
+	font-size: 12px;
+	line-height: 1.428571429;
+	border-radius: 15px;
+	background-color: white;
+	padding-top:6px;
+	color:gray;
+}
+.SearchResultStarMain{
+	padding-right: 7px;
+}
+.searchResultFolderMainSpan {
+  padding-left: 4px;
+}
+.searchresultfolder {
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+  background-color: white;
+  color: darkgray;
+  padding-top: 6px;
+}
+.SearchResultStarFolderMain{
+	padding-left: 4%;
+}
+
+/** Start of Readmore content styles **/
+.read-more-state {
+  display: none;
+}
+
+.read-more-target {
+  opacity: 0;
+  max-height: 0;
+  font-size: 0;
+  transition: .25s ease;
+}
+
+.read-more-state:checked ~ .read-more-wrap .read-more-target {
+  opacity: 1;
+  font-size: inherit;
+  max-height: 999em;
+}
+
+.read-more-state ~ .read-more-trigger:before {
+  content: '';
+}
+
+.read-more-state:checked ~ .read-more-trigger:before {
+  content: '';
+}
+
+.read-more-trigger {
+  cursor: pointer;
+  display: inline-block;
+/** padding: 0 .5em;*/
+  color: #666;
+  font-size: .9em;
+  line-height: 2;
+/**  border: 1px solid #ddd;*/
+/**  border-radius: .25em;*/
+}
+/** End of Readmore content styles **/
+
+
+
+/**Downloads Search box end*/
+.display-table-cell{
+  display: table-cell;
+  vertical-align: middle;
+  padding-right:10px;
+}
+.extra-padding-right{
+	padding-right:15px
+}
+.extra-padding-right-sm{
+	padding-right:7px
+}
+.no-padding{
+	padding:0;
+}
+
+@media only screen and (max-width: 767px) {
+
+  .mobileViewFilterButton {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #053C71;
+  }
+  .mobilerFilterSearchResult {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+  }
+}
+
+@media only screen and (max-width: 991px) and (min-width: 768px)  {
+  .mainDivContainer {
+    /*margin-left: 6%;
+    margin-right: 6%;*/
+  }
+
+  .container-fluid {
+    padding-right: 10px;
+    padding-left: 10px;
+  } 
+  .searchResultFolderMainSpan {
+    padding-left: 10%;
+  }
+
+
+  .mobileViewFilterButton{
+    display:none;
+  }
+  .searchFiltercol4 {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+}
+@media only screen and (max-width: 1200px) and (min-width: 992px)  {
+
+  .mobileViewFilterButton {
+    display: none;
+  }
+
+}
+@media only screen and (min-width: 1201px) {
+  .mobileViewFilterButton {
+    display: none;
+  }
+}
+
+
+

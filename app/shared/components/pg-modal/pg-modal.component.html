@@ -1,0 +1,102 @@
+<!--<div *ngIf="modalOpen" [config]="{ show: true }" (onHidden)="onHidden()" bsModal #autoShownModal="bs-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Not Subscribed</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>You are not subscribed to view the content in this Practice Area.</div>
+        <br />
+        <div>  Please contact your Account Manager or Customer Services on 0860 765 432 or customercare@lexisnexis.co.za should you wish to subscribe.</div>
+      </div>
+        <button mat-button (click)="openDialog(MatDialogReff)" #MatDialogReff>Open dialog</button>
+    </div>
+  </div>
+</div>-->
+
+<!--<button mat-button (click)="openDialog(MatDialogReff)" #MatDialogReff>Open dialog</button>-->
+
+<ng-template #feedbackModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Feedback <button type="button" class="close pull-right" (click)="dialogRef.close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body">
+
+        <h4>TELL US WHAT YOU THINK</h4>
+        <p>Your input helps us improve My LexisNexis. For immediate support with online issues, please call LexisNexis Customer Support at +27 86 076 5432 or +27 79 529 4777 (after hours). Our Customer Support team of professionals is available 24/7 to assist you.</p>
+        <span>* denotes required fields.</span>
+        <div class="feedback-container">
+            <div class="feedback-container">
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <mat-form-field [hideRequiredMarker]="false" [floatLabel]="'auto'">
+                            <input matInput placeholder="Name" required [(ngModel)]="feedBackData.name" maxlength="150">
+                            <mat-error>Please enter your name</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field [hideRequiredMarker]="false" [floatLabel]="'auto'">
+                            <input type="text" matInput placeholder="Contact No" required [(ngModel)]="feedBackData.contactNumber" pattern="\s*[0+]\d{9,20}|[0+]\d{2,4}\s\d{3}\s\d{4}\s*">
+
+                            <mat-error>Please enter a valid contact number</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <mat-form-field [hideRequiredMarker]="false" [floatLabel]="'auto'">
+                            <input type="email" matInput placeholder="Email" required [(ngModel)]="feedBackData.email" pattern="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*">
+                            <mat-error>Please Enter a valid Email Address</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6 radioTop">
+                        <mat-radio-group [(ngModel)]="feedBackData.issue">
+                            <mat-radio-button value="Content Issue" checked="true">Content Issue</mat-radio-button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <mat-radio-button value="Usage Issue">Usage Issue</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <mat-select placeholder="Please select a Practice Area" required [(ngModel)]="feedBackData.practiceArea">
+                                <ng-container *ngFor="let practiceArea of practiceAreasList">
+                                    <ng-container *ngIf="practiceArea?.type">
+                                        <mat-option [value]="practiceArea.title">
+                                            {{ practiceArea.title }}
+                                        </mat-option>
+                                    </ng-container>
+                                </ng-container>
+                            </mat-select>
+                            <mat-error>Please select a Practice Area</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <mat-form-field>
+                            <textarea matInput placeholder="Comments" [(ngModel)]="feedBackData.comments" required minRows="2"></textarea>
+                            <mat-error *ngIf="feedBackData?.comments==null || feedBackdata?.comments!=''">Please enter your comment</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <button class="btn btn-primary" mat-button (click)="validateNSubmitFeedback()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+

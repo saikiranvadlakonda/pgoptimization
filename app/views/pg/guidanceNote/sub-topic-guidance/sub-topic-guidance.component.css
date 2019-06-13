@@ -1,0 +1,124 @@
+.paLeftMainDivDashboard {
+  background-color: rgba(255,255,255,1);
+  height: 100%;
+  width: 100%;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0);
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.guidanceRefrence {
+  text-align: center;
+}
+.guidance {
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 20px;
+  color: black;
+  text-transform: capitalize;
+  font-size: 16px;
+}
+.refrence {
+  background-color: rgb(210, 30, 22);
+  border-right: 10px;
+  padding-bottom: 20px;
+  text-align: center;
+  padding-top: 17px;
+  font-weight: bold;
+  color: white;
+}
+guidance_refrence_tabs {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.form-control {
+  border: 0px solid #ccc !important;
+}
+.input-lg {
+  border-radius: 0px !important;
+}
+.input-group-btn {
+  background-color: rgb(210, 30, 22);
+}
+
+
+
+
+
+.sortresultDropDownSub {
+  color: rgba(0,0,0,0.7);
+  font-family: Lato;
+}
+
+
+.bookmarkMaintained {
+  color: #74767b;
+}
+.contentStructureMainDivBookmark {
+  padding-left: 4%;
+
+}
+
+.noRecordsTxt {
+    font-weight: normal;
+    font-size: 15px;
+    color: #818a91;
+}
+
+
+.header1PgDownArrow{
+  padding-left:2px;
+}
+
+/*xs*/
+@media only screen and (max-width: 767px) {
+  .guidance {
+    padding-top: 9px;
+    padding-bottom: 11px;
+  }
+  .refrence {
+    padding-top: 9px;
+    padding-bottom: 11px;
+  }
+  .FilterSearch {
+    width: 49%;
+    margin-left: 100px;
+  }
+  #custom-search-input-top input{
+  }
+  
+  .guidanceHeading{
+  }
+}
+
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .guidanceTxt {
+  }
+
+  .FilterSearch {
+    width: 45%;
+    margin-left: 100px;
+  }
+}
+  
+
+  .guidance {
+    padding-top: 10px;
+    padding-bottom: 14px;
+  }
+  .refrence {
+    padding-top: 10px;
+    padding-bottom: 14px;
+  }
+
+
+
+.pointer.guidanceTxt {
+  font-size: 16px;
+}
+.pointer.refrenceTxt {
+  font-size: 16px;
+}
+.pointerCursor {
+    cursor: pointer !important;
+}

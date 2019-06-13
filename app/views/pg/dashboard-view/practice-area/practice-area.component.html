@@ -1,0 +1,72 @@
+<div id="contentbrowser" class="browsehisfavContentMainDiv">
+    <div class="browsehisfavContent desktop-pa-tab-content">
+        <ng-container *ngFor="let practicearea of practiceAreas; let i = index">
+            <div class="paBlock xsView row" *ngIf="i%4==0">
+                <div class="col-xs-6 col-md-6 col-lg-3 col-xl-3">
+                    <div class="pointer browse-p-areasBlock" *ngIf="practiceAreas[i]" (click)="setDomainPath(practiceAreas[i].domainPath)" [ngStyle]="{'color':practiceAreas[i].isSubscribed == true ? 'Bluue' : 'darkgray' }">{{practiceAreas[i].title}}</div>
+                </div>
+                <div class="col-xs-6 col-md-6 col-lg-3 col-xl-3">
+                    <div class="pointer browse-p-areasBlock" *ngIf="practiceAreas[i+1]" (click)="setDomainPath(practiceAreas[i+1].domainPath)" [ngStyle]="{'color':practiceAreas[i+1].isSubscribed == true ? 'Bluue' : 'darkgray' }">{{practiceAreas[i+1].title}}</div>
+                </div>
+                <div class="col-xs-6 col-md-6 col-lg-3 col-xl-3">
+                    <div class="pointer browse-p-areasBlock" *ngIf="practiceAreas[i+2]" (click)="setDomainPath(practiceAreas[i+2].domainPath)" [ngStyle]="{'color':practiceAreas[i+2].isSubscribed == true ? 'Bluue' : 'darkgray' }">{{practiceAreas[i+2].title}}</div>
+                </div>
+                <div class="col-xs-6 col-md-6 col-lg-3 col-xl-3">
+                    <div class="pointer browse-p-areasBlock" *ngIf="practiceAreas[i+3]" (click)="setDomainPath(practiceAreas[i+3].domainPath)" [ngStyle]="{'color':practiceAreas[i+3].isSubscribed == true ? 'Bluue' : 'darkgray' }">{{practiceAreas[i+3].title}}</div>
+                </div>
+            </div>
+        </ng-container>
+        <p *ngIf="practiceAreas?.length == 0">{{ error }}</p>
+    </div>
+
+    <div class="browsehisfavContent mobi-pa-tab-content">
+        <div class="row pa-search-container">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <input type="text" class="form-control" [(ngModel)]="searchQuery" (keyup)="onSearchQueryEnter($event)" placeholder="Search Practice Areas">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit" (click)="searchPracticeAreas()">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="paBlock xsView row paRow-eq-height" *ngIf="i%3==0">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 col-xl-3 practiceArea">
+                <div class="pointer browse-p-areasBlock" *ngIf="filteredPracticeAreas[i]" (click)="setDomainPath(filteredPracticeAreas[i].domainPath)" [ngStyle]="{'color':filteredPracticeAreas[i].isSubscribed == true ? 'Bluue' : 'darkgray' }">{{filteredPracticeAreas[i].title}}</div>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 col-xl-3 practiceArea">
+                <div class="pointer browse-p-areasBlock" *ngIf="filteredPracticeAreas[i+1]" (click)="setDomainPath(filteredPracticeAreas[i+1].domainPath)" [ngStyle]="{'color':filteredPracticeAreas[i+1].isSubscribed == true ? 'Bluue' : 'darkgray' }">{{filteredPracticeAreas[i+1].title}}</div>
+                <div class="pointer browse-p-areasBlock" *ngIf="!filteredPracticeAreas[i+1]">-</div>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 col-xl-3 practiceArea">
+                <div class="pointer browse-p-areasBlock" *ngIf="filteredPracticeAreas[i+2]" (click)="setDomainPath(filteredPracticeAreas[i+2].domainPath)" [ngStyle]="{'color':filteredPracticeAreas[i+2].isSubscribed == true ? 'Bluue' : 'darkgray' }">{{filteredPracticeAreas[i+2].title}}</div>
+                <div class="pointer browse-p-areasBlock" *ngIf="!filteredPracticeAreas[i+2]">-</div>
+            </div>
+        </div>-->
+
+        <div class="pa-block">
+            <ng-container *ngFor="let practicearea of filteredPracticeAreas | slice:0:(filteredPracticeAreas?.length > 9 ? countOfPaToShow : filteredPracticeAreas?.length); let i = index">
+                <ul class="pa-block-row" *ngIf="i%3==0">
+                    <li class="practiceArea">
+                        <span class="pointer" *ngIf="filteredPracticeAreas[i]" (click)="setDomainPath(filteredPracticeAreas[i].domainPath)" [ngStyle]="{'color':filteredPracticeAreas[i].isSubscribed == true ? 'Bluue' : 'darkgray' }">{{filteredPracticeAreas[i].title}}</span>
+                    </li>
+                    <li class="practiceArea">
+                        <span class="pointer" *ngIf="filteredPracticeAreas[i+1]" (click)="setDomainPath(filteredPracticeAreas[i+1].domainPath)" [ngStyle]="{'color':filteredPracticeAreas[i+1].isSubscribed == true ? 'Bluue' : 'darkgray' }">{{filteredPracticeAreas[i+1].title}}</span>
+                        <span class="pointer" *ngIf="!filteredPracticeAreas[i+1]">-</span>
+                    </li>
+                    <li class="practiceArea">
+                        <span class="pointer" *ngIf="filteredPracticeAreas[i+2]" (click)="setDomainPath(filteredPracticeAreas[i+2].domainPath)" [ngStyle]="{'color':filteredPracticeAreas[i+2].isSubscribed == true ? 'Bluue' : 'darkgray' }">{{filteredPracticeAreas[i+2].title}}</span>
+                        <span class="pointer" *ngIf="!filteredPracticeAreas[i+2]">-</span>
+                    </li>
+                </ul>
+            </ng-container>
+        </div>
+
+        <div class="show-more-pas text-center" *ngIf="filteredPracticeAreas?.length > 9">
+            <p class="pointer" (click)="toggleShowMore()">{{ countOfPaToShow > 9 ? 'Show less' : 'Show more' }}</p>
+            <p class="mobi-pas-notification" *ngIf="filteredPracticeAreas?.length == 0">{{ error ? error : 'No practice areas found.' }}</p>
+        </div>
+    </div>
+</div>

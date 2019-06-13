@@ -1,0 +1,70 @@
+<div class="myFoldersView">
+    <div class="row">
+        <div class="col-xs-12 col-lg-12 col-xl-12">
+            <div class="breadcrumb-text">
+                <div *ngIf="viewType=='ClientList'">You are here: <span><a routerLink="/dashboard">Dashboard</a></span> > Folders</div>
+                <div *ngIf="viewType=='folderDetails'">
+                    <span *ngIf="foldersList?.length>0" class="fa fa-angle-left angleLeft backArrowButton backArrowButton-small" (click)="navigateToBack()"></span>
+                    <ng-container *ngFor="let folder of foldersList;let i=index">
+                        {{i>0?' > ':''}}<span (click)="navigateToThisFolderFromMyFolders(folder)" *ngIf="i!=(foldersList.length-1)"><a>{{folder?.folderName}}</a></span>
+                        <span *ngIf="i==(foldersList.length-1)" style="padding-left:5px; padding-right:5px;">{{folder?.folderName}}</span>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6  col-xs-12 col-md-9 col-lg-9 ">
+            <h4 class="pageTitle">{{ foldersList.length === 0 ? 'My Folders' : foldersList[foldersList.length - 1]?.folderName }}</h4>
+            <!--<h4 class="pageTitle" *ngIf="viewType=='folderDetails'">{{ foldersList.length === 0 ? 'My Folders' : 'no' }}</h4>-->
+            <!--<div *ngIf="viewType=='folderDetails'" class="folder-breadcrumb">
+                <span *ngIf="foldersList?.length>0" class="fa fa-angle-left angleLeft backArrowButton" (click)="navigateToThisFolderFromMyFolders(0)"></span>
+                <ng-container *ngFor="let folder of foldersList;let i=index">
+                    {{i>0?' > ':''}}<span (click)="navigateToThisFolderFromMyFolders(folder)" *ngIf="i!=(foldersList.length-1)"><a>{{folder?.folderName}}</a></span>
+                    <span *ngIf="i==(foldersList.length-1)">{{folder?.folderName}}</span>
+                </ng-container>
+            </div>-->
+        </div>
+    </div>
+    <div class="row my-folders-page">
+        <div class="col-xs-12 col-lg-12 col-xl-12">
+            <div class="card-box border-radius-0 my-folders p-0">
+                <app-folder-container [isSaveToFolder]="false"
+                                      (selectedSaveToFolder)="onSaveToFolderClick($event)" (popUpClose)="onPopUpCloseClick()" [saveToFolderContent]="saveToFolderContent"
+                                      (currentViewSelection)="currentViewSelection($event)"
+                                      [folderClick]="navigateToThisFolder"
+                                      (selectedFoldersList)="selectedFoldersList($event)"></app-folder-container>
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-12 col-xl-3">
+            <!--<div class="card-box border-radius-0 recently-viewes">
+                <div class="p-20 tilebox-two foldersHeader">
+                    <h4 class="m-b-10"><span data-plugin="counterup">You Recently Viwed</span></h4>
+                    <hr />
+                </div>
+
+                <div class="whatNew-txt-content p-20">
+                    <p><span class="label label-pill label-default">Eslom</span></p>
+                    <h5 class="m-t-0">
+                        National Energy Regulator of South Africa
+                    </h5>
+                    <p class="font-600 m-b-5">15 Oct 2018 - Yesterday</p>
+
+                    <hr />
+                </div>
+                <div class="whatNew-txt-content p-20">
+                    <p><span class="label label-pill label-default">Flamingo Law Suite</span></p>
+                    <h5 class="m-t-0">Key things to remeber</h5>
+                    <p class="font-600 m-b-5">13 Oct 2018 - 2days ago</p>
+
+                    <hr />
+                </div>
+                <div class="whatNew-txt-content p-20">
+                    <p><span class="label label-pill label-default">Toyota</span></p>
+                    <h5 class="m-t-0">Why there is a need for king IV</h5>
+                    <p class="font-600 m-b-5">12 Oct 2018 - 3days ago</p>
+
+                </div>
+
+            </div>-->
+        </div>
+    </div>
+</div>

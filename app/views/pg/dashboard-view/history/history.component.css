@@ -1,0 +1,106 @@
+
+.browsehisfav {
+  text-align: center;
+}
+.browsehisfavContentMainDiv {
+  /*padding-top: 24px;
+  width: 100%;*/
+  
+
+}
+.browsehisfavContent > div > div > div {
+    font-size: 13px;
+    font-weight: bold;
+    color: #053C71;
+  }
+.historyContentMain {
+  min-height: 110px;
+  padding-bottom: 10px;
+}
+.timePeriod {
+  font-weight: bold;
+  margin-left: 70px;
+  padding-bottom: 15px;
+  color: rgba(0, 0, 0, 0.7686274509803922);
+  font-size: 16px;
+}
+
+
+
+/*xs*/
+@media only screen and (max-width: 767px) {
+  .browsehisfavContentMainDiv{
+    /*padding-top:5%;*/
+  }
+  .timePeriod {
+    border-bottom: 1px solid #80808040;
+    padding-left: 6%;
+    /*margin-left: 5%;*/
+    margin-right: 5%;
+  }
+  /*.historyItem{
+    margin-left:7%;
+  }*/
+  .historyItemName{
+    /*margin-left:9%;*/
+  }
+  .historyItemDate {
+    /*margin-left: 9%;*/
+  }
+  .historyContentMain{
+    padding-left:8%;
+  }
+}
+/*sm*/
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .dashBoardSearchMobileView {
+    display: none;
+  }
+
+  .historyContentMain{
+    height:110px;
+  }
+
+  .historyContentMain:nth-child(6n+1),
+  .historyContentMain:nth-child(6n+2),
+  .historyContentMain:nth-child(6n+3) {
+    background-color: #f1f5ff;
+  }
+
+}
+/*md*/
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+  .dashBoardSearchMobileView {
+    display: none;
+  }
+  .historyItemName{
+    /*margin-right:13%;*/
+  }
+  .timePeriod{
+  }
+  .historyItemLmtTitle{
+  }
+  .historyItemDate{
+  }
+  .historyContentMain:nth-child(6n+1),
+  .historyContentMain:nth-child(6n+2),
+  .historyContentMain:nth-child(6n+3) {
+    background-color: #f1f5ff;
+  }
+}
+/*lg*/ @media only screen and (min-width: 1201px) {
+  .dashBoardSearchMobileView {
+    display: none;
+  }
+  .historyContentMain:nth-child(6n+1),
+  .historyContentMain:nth-child(6n+2),
+  .historyContentMain:nth-child(6n+3) {
+    background-color: #f1f5ff;
+  }
+}
+.historyMainDiv .myBlock.row:nth-child(odd) {
+  background: #f1f5ff;
+}
+/*.historyMainDiv .myBlock.row {
+  padding: 15px 0 !important;
+}*/

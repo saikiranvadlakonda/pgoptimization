@@ -1,0 +1,74 @@
+<div class="subtopic-container">
+    <div class="row guidance-note-page sub-topics">
+        <div class="col-xs-12 col-lg-12 col-xl-12">
+            <div class="breadcrumb-text">
+                <div>You are here: <span><a routerLink="/dashboard">DashBoard</a></span> > {{practiceArea}}</div>
+            </div>
+        </div>
+        <div class="col-sm-12  col-xs-12 col-md-12 col-lg-12">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <h4 class="pageTitle p-l-0 m-t-10">
+                        <span class="folderBackMain pull-left" (click)="backToSubTopic()" *ngIf="isPDF">
+                            <i class="fa fa-angle-left angleLeft leftarrowBackButton"></i>
+                        </span>
+                        <span class="folderName" *ngIf="!isPDF">{{practiceArea}}</span>
+                        <span class="folderName" *ngIf="isPDF">{{pdfTitle}}</span>
+                    </h4>
+                    <div class="readmoreDsc subTopics" *ngIf="!isPDF"><pg-read-more text="{{paGuidance}}" [limitCount]="180"></pg-read-more></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row  guidance-note-page sub-topics">
+        <div class="col-xs-12 col-lg-8 col-xl-9" *ngIf="!isPDF">
+            <div class="card-box border-radius-0 p-0 topics-block">
+                <div class="mobileReadMore">
+                    <div class="overViewMobile">OVERVIEW</div>
+                    <pg-read-more text="{{paGuidance}}"></pg-read-more>
+                </div>
+                <category [practiceAreaDet]="currentTopic" (subTopic)="navigateToGuidanceNote($event)"></category>
+                <whats-new [news]="news" [whatsNewInput]="whatsNewInput"></whats-new>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-lg-12 col-xl-12 col-md-12 col-sm-12" *ngIf="isPDF">
+            <div class="card-box border-radius-0 searchResults p-40">
+                <iframe [src]="pdfContent | safe: 'resourceUrl' " title="pdfTitle" width="100%" height="800px"></iframe>
+            </div>
+        </div>
+        <div class="col-xs-12 col-lg-4 col-xl-3" *ngIf="!isPDF">
+            <essentials [essentials]="essentials" (essential)="downloadContent($event)"></essentials>
+            <recently-viewed [recentlyViewed]="recentlyViewed" (selectedRecentlyViewed)="onRecentlyViewClick($event)" (viewAllClick)="onViewAllClick()"></recently-viewed>
+            <!--<div class="card-box border-radius-0 external-contributors  p-40">
+              <h4 class="header-title m-t-0 m-b-10">External Contributors</h4>
+
+
+              <div class="inbox-widget nicescroll">
+
+
+                <div class="inbox-item">
+                  <div class="inbox-item-img"><img src="dist/assets/images/users/avatar-4.jpg" class="img-circle" alt=""></div>
+                  <h5 class="inbox-item-author">Maria Kalabakas</h5>
+                  <p class="inbox-item-text">Compliance Officer</p>
+                </div>
+
+                <div class="inbox-item">
+                  <div class="inbox-item-img"><img src="dist/assets/images/users/avatar-7.jpg" class="img-circle" alt=""></div>
+                  <h5 class="inbox-item-author">Julian Jones</h5>
+                  <p class="inbox-item-text">Director, Cliffe Dekker Hofmeyr NIC</p>
+                </div>
+
+                <div class="inbox-item">
+                  <div class="inbox-item-img"><img src="dist/assets/images/users/avatar-6.jpg" class="img-circle" alt=""></div>
+                  <h5 class="inbox-item-author">Lorem Leagal Firm</h5>
+                  <p class="inbox-item-text">Multidisciplinary</p>
+                </div>
+
+
+              </div>
+
+            </div>-->
+        </div>
+    </div>
+</div>

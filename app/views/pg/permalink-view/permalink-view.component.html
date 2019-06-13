@@ -1,0 +1,150 @@
+<div class="row guidance-note-page">
+    <div class="col-xs-12 col-lg-12 col-xl-12">
+        <div class="breadcrumb-text">
+            <div>You are here: <span><a routerLink="/dashboard">Dashboard</a></span> > {{title}}</div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-lg-12 col-xl-9">
+        <div class="row">
+            <div class="col-lg-8 col-xl-8">
+                <span class="label label-pill label-default" *ngIf="rootArea">{{rootArea}}</span>
+                <h4 class="pageTitle p-l-0 m-t-10">
+                    <span class="folderBackMain pull-left" (click)="back()" *ngIf="contentHistory?.length>0">
+                        <i class="fa fa-angle-left angleLeft leftarrowBackButton"></i>
+                    </span>
+                    <span class="folderName" title="{{title}}">{{(title?.length>25)?(title.slice(0,30)+'...'):(title)}}</span>
+                </h4>
+                <b class="authorDetails">
+                    <span class="authorName" [innerHtml]="downloadContentInfo?.authorName">{{downloadContentInfo?.authorName}}</span>
+                </b>
+                <div class="readmoreDsc"><pg-read-more text="">&nbsp;</pg-read-more></div>
+            </div>
+            <div class="col-lg-4 col-xl-4 text-right">
+                <span class="foldersButton">
+                    <!--<a href="javascript:void(0);"><i class="icon-star icons"></i></a>-->
+                    <a (click)="showFolderModal(modalContent)"><i class="ion-ios7-folder"></i></a>
+                    <a (click)="openEmailModal(modalEmailContent)" class="pointer"><i class="icon-envelope-letter icons"></i></a>
+                    <a class="pointer" (click)="openFileDownloadModal(downloadModal)"><i class="zmdi zmdi-download"></i></a>
+                    <a class="pointer" (click)="openPermaLinkModal(permaLinkModal)" *ngIf="!_pagerService.isMobile"><i class="icon-action-redo icons"></i></a>
+                </span>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row  guidance-note-page">
+   <!-- <div class="col-xs-12 col-lg-12 col-xl-12">
+        <div class="card-box border-radius-0" *ngIf="contentHTML && !showChildContent">
+            <div class="newsPageContent" [innerHTML]="contentHTML | safe:'html'"></div>
+        </div>
+        <div id="doc" class="guidanceContentMainDiv showGuidanceDetail" *ngIf="downloadContentInfo?.mimeType!='application/pdf'" style="background-color:white; padding:50px;">
+            <ng-container *compile="downloadContentInfo?.fileStrContent; context: this">
+            </ng-container>
+        </div>
+    </div>-->
+
+
+    <div class="col-xs-12 col-lg-8 col-xl-9">
+        <div class="card-box border-radius-0 guiRefTabs" *ngIf="downloadContentInfo && downloadContentInfo?.mimeType!='' && downloadContentInfo?.mimeType!='application/pdf'">
+            <div id="doc" class="guidanceContentMainDiv showGuidanceDetail" style="background-color:white; padding:50px;">
+                <ng-container *compile="downloadContentInfo?.fileStrContent; context: this">
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-xs-12 col-lg-4 col-xl-3" *ngIf="isGuidanceNote">
+        <div class="card-box border-radius-0 content-outline  p-40" *ngIf="showGuidanceDetail && guidances && contentOutlinesList?.length>0">
+            <h4 class="header-title m-t-0 m-b-40">Content Outline</h4>
+
+            <div class="inbox-widget nicescroll">
+
+                <ul>
+                    <li *ngFor="let contentOutline of contentOutlinesList">
+                        <div class="pointer" (click)="scroll(contentOutline.domainId)">
+                            <p class="content-outline-sub">{{contentOutline.title}}</p>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <essentials [essentials]="essentials" (essential)="downloadEssentials($event)" *ngIf="essentials?.length>0"></essentials>
+    </div>
+
+</div>
+
+
+<ng-template #modalContent let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Save document reference to client folder
+            <button type="button" class="close pull-right" (click)="onPopUpCloseClick()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body">
+        <!--<pg-folder-container *ngIf="loadFolders" [isSaveToFolder]="true"
+                             (selectedSaveToFolder)="onSaveToFolderClick($event)" (popUpClose)="onPopUpCloseClick()" [saveToFolderContent]="saveToFolderContent"></pg-folder-container>-->
+        <app-folder-container *ngIf="loadFolders" [isSaveToFolder]="true"
+                              (selectedSaveToFolder)="onSaveToFolderClick($event)" (popUpClose)="onPopUpCloseClick()" [saveToFolderContent]="saveToFolderContent"></app-folder-container>
+    </div>
+</ng-template>
+
+<!--permalink popup-->
+<ng-template #permaLinkModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Permalink Created
+            <button type="button" class="close pull-right" (click)="downloadModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body ">
+        <div id="permaLinkContent">
+            <div>
+                <style type="text/css">
+                    kbd {
+                        -moz-border-radius: 3px;
+                        -moz-box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+                        -webkit-border-radius: 3px;
+                        -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+                        background-color: #f7f7f7;
+                        border: 1px solid #ccc;
+                        border-radius: 3px;
+                        box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+                        color: #333;
+                        display: inline-block;
+                        font-family: Arial,Helvetica,sans-serif;
+                        font-size: 11px;
+                        line-height: 1.4;
+                        margin: 0 .1em;
+                        padding: .1em .6em;
+                        text-shadow: 0 1px 0 #fff;
+                    }
+                </style>
+                <div style="padding-bottom: 15px;">
+                    You can use the following URL to link directly to
+                    <div style="text-overflow: ellipsis; overflow: hidden;">
+                        <strong title="{{practiceArea}}">{{practiceArea}} </strong>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <input id="permalinkContent" [value]="permaLink" class="form-control">
+                    </div>
+                </div>
+                <div>
+                    <kbd>Ctrl</kbd> + <kbd>C</kbd> will copy this to your clipboard
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

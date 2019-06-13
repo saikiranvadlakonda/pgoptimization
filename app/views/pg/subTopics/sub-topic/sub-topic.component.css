@@ -1,0 +1,75 @@
+﻿.container-fluid {
+  background-color: #edeef3;
+  padding-bottom:100px;
+}
+.separateTab {
+  height: 27px;
+  width: 100%
+}
+.showMoreTxt {
+  border-bottom: 1px solid rgba(156,164,171,0.5);
+  padding: 11px 11px 16px 3%;
+}
+.showMoreTxt > div {
+    padding-left: 2%;
+    color: rgb(70, 68, 68);
+    font-size: 13px;
+  }
+.dashboardPaReadMore {
+  /*padding-left:12%;*/
+}
+.paLeftMainDiv {
+  background-color: rgba(255,255,255,1);
+  /*height: 100%;
+  width: 100%;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);*/
+  padding: 50px
+}
+.practiceArea {
+  color: rgb(45, 44, 44);
+  font-weight: 100;
+  /*padding-left: 12%;*/
+  font-size:30px!important;
+}
+@media only screen and (max-width: 767px) {
+  .container-fluid{
+    padding-left:8px;
+    padding-right:8px;
+  }
+  .mainDivContainer{
+    margin-left:2%;
+    margin-right:2%;
+  }
+  .practiceArea{
+    padding-left:10%;
+  }
+  .xsView{
+    padding-top:20px;
+  }
+  .dashboardPaReadMore{
+    display:none;
+  }
+}
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .practiceArea {
+  }
+  .mobileReadMore{
+    display:none;
+  }
+
+}
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+  .practiceArea {
+  }
+  .mobileReadMore {
+    display: none;
+  }
+}
+@media only screen and (min-width: 1201px) {
+  .mobileReadMore {
+    display: none;
+  }
+}
+.mainDivContainer {
+  margin-top: 10px;
+}

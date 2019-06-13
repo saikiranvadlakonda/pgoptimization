@@ -1,0 +1,65 @@
+.list-group > div {
+  cursor: pointer;
+  color: #3c5a7e;
+}
+
+@media only screen and (max-width: 767px) {
+  .list-group > div {
+    padding-left: 3%;
+    color: #053C71;
+    font-weight:bold;
+    cursor:pointer;
+  }
+  .list-group {
+    border-bottom: 1px;
+    border-bottom-color: #80808052;
+    border-bottom-style: solid;
+    margin-left: 11%;
+    margin-right: 2%;
+  }
+  .mobileViewBack {
+    padding-left: 14%;
+    padding-bottom: 27px;
+    color: #8080809e;
+    font-weight: bold;
+  }
+  .backButtonMobileView{
+    padding-left:11%;
+    float:left;
+    cursor:pointer;
+  }
+}
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .practiceAreasRightArrowHeader1{
+    display:none;
+  }
+  .mobileViewBack{
+    display:none;
+  }
+  .backButtonMobileView {
+    display: none;
+  }
+}
+/*md*/
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+  .practiceAreasRightArrowHeader1 {
+    display: none;
+  }
+  .mobileViewBack {
+    display: none;
+  }
+  .backButtonMobileView{
+    display:none;
+  }
+}
+/*lg*/ @media only screen and (min-width: 1201px) {
+  .practiceAreasRightArrowHeader1 {
+    display: none;
+  }
+  .mobileViewBack {
+    display: none;
+  }
+  .backButtonMobileView {
+    display: none;
+  }
+}

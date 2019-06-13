@@ -1,0 +1,150 @@
+.paLeftMainDivDashboard {
+  background-color: rgba(255,255,255,1);
+  height: 100%;
+  width: 100%;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0);
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.guidanceRefrence {
+  text-align: center;
+}
+
+.guidance {
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 20px;
+  color: black;
+}
+
+.refrence {
+  background-color: rgb(210, 30, 22);
+  border-right: 10px;
+  padding-bottom: 20px;
+  text-align: center;
+  padding-top: 17px;
+  font-weight: bold;
+  color: white;
+}
+
+guidance_refrence_tabs {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+
+.form-control {
+  border: 0px solid #ccc !important;
+}
+
+.input-lg {
+  border-radius: 0px !important;
+}
+
+.input-group-btn {
+  background-color: rgb(210, 30, 22);
+}
+
+
+.sortresultDropDownSub {
+  color: rgba(0,0,0,0.7);
+  font-family: Lato;
+}
+
+
+.guidanceHeading {
+  float: left;
+  color: #053C71;
+}
+
+.noRecordsTxt {
+    font-weight: normal;
+    font-size: 15px;
+    color: #818a91;
+    padding-top: 25px;
+}
+
+.bookmarkMaintained {
+  color: #74767b;
+}
+
+.contentStructureMainDivBookmark {
+  padding-left: 4%;
+}
+
+
+
+.keySectionsContent {
+  color: gray;
+  padding-top: 3px;
+}
+
+
+
+.header1PgDownArrow {
+  padding-left: 2px;
+}
+
+.keySections .text12 {
+    color: #333232;
+    padding: 30px 0px 15px 0px;
+    text-transform: uppercase;
+}
+
+/*xs*/
+@media only screen and (max-width: 767px) {
+  .guidance {
+    padding-top: 9px;
+    padding-bottom: 11px;
+  }
+
+  .refrence {
+    padding-top: 9px;
+    padding-bottom: 11px;
+  }
+  
+}
+
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .refrenceTxt {
+  }
+
+  .guidance {
+    padding-top: 10px;
+    padding-bottom: 14px;
+  }
+
+  .refrence {
+    padding-top: 10px;
+    padding-bottom: 14px;
+  }
+
+  .refrenceHeading{
+  }
+ 
+}
+
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+  refrenceHeading {
+  }
+}
+
+@media only screen and (min-width: 1201px) {
+  refrenceHeading{
+  }
+  .keySections {
+  }
+  .refrenceKeySections {
+  }
+  #custom-search-input-top input {
+  }
+  .sortybyresultperpage {
+  }
+
+  .sortresultDropDownSub {
+  }
+  }
+.pointer.refrenceTxt {
+  font-size: 16px;
+}

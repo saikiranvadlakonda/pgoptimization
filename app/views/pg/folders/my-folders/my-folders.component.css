@@ -1,0 +1,564 @@
+.container-fluid {
+  background-color: #edeef3;
+  padding-bottom: 254px;
+}
+.updateFolder {
+  float:left;
+}
+.updateFolderTxt {
+  font-size:13px;
+}
+.searchNewFolder {
+}
+.foldersMainDiv{
+ 
+}
+
+.allContentMyNotesMainDiv{
+	padding:33px;
+}
+.noOfFilesinFolder{
+	padding-left: 5%;
+    color: gray;
+    font-weight: bold;
+}
+.foldersButton {
+  padding-right: 2%;
+}
+.saveButton {
+  background-color: white;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 12px;
+  color: rgba(128, 128, 128, 0.6196078431372549);
+  cursor:pointer;
+}
+.folderButtonsMain {
+  padding-left: 50%;
+  padding-bottom: 16px;
+}
+.forwardMainButton {
+  padding-left: 12%;
+}
+.folderTxt {
+  background-color: rgb(210, 30, 22);
+  border-radius: 20px;
+  padding: 9px 7px;
+  font-size: 10px;
+  color: white;
+}
+  .backgroundOval {
+  color: rgba(0,0,0,0.7);
+  font-weight: bold;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 30px;
+  display: inline-block;
+  padding-top: 3px;
+  padding-right: 13px;
+  padding-bottom: 3px;
+  padding-left: 13px;
+}
+.mainHeadDiv{
+	padding-top:13px;
+}
+.h4Heading{
+	padding-left:4%;
+}
+.borderRectangle {
+  padding-left: 14%;
+  padding-right: 14%;
+  padding-top: 10px;
+  border: 1px solid rgba(128, 128, 128, 0.43137254901960786);
+  margin-left: 5%;
+  margin-right: 5%;
+  border-radius: 3px;
+  padding-bottom: 10px;
+  height: 100px;
+}
+.filesStructure{
+	padding:12px;
+}
+.newFolderTxt {
+  text-align: center;
+  vertical-align: text-bottom;
+  padding-left: 2%;
+  font-size: 13px;
+  color: rgba(0,0,0,0.8);
+  /* font-weight: bold; */
+  /* float: right; */
+  background-color: rgb(210, 30, 22);
+  border-radius: 0px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 10px;
+  padding-bottom: 9px;
+  color: white;
+  text-align: center;
+}
+.nameCreatedDate{
+	padding:20px;
+	background-color: #fbfaff;
+}
+.nameTxt {
+  padding-left: 12%;
+  color: rgba(128, 128, 128, 0.611764705882353);
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.dateCreated {
+  color: rgba(128, 128, 128, 0.611764705882353);
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.filesMainHead{
+	padding-top: 5px;
+    color: #053C71;
+}
+.totalFilesCol {
+  padding-bottom:30px;
+}
+.filesSubContent {
+  padding-top: 5px;
+  color: gray;
+}
+
+.noOfFilesinFolderView {
+  padding-bottom: 20px;
+  padding-left: 5%;
+  color: rgba(128, 128, 128, 0.6196078431372549);
+  font-weight: bold;
+}
+.editPencilButton {
+  padding-top: 10px;
+  font-size: 20px
+}
+.filesIndetailMain {
+  padding-top: 2%;
+  width: 100%;
+  background-color: rgba(255,255,255,1);
+  font-family: Lato;
+  padding-bottom: 2%;
+  border-bottom: rgba(128, 128, 128, 0.1607843137254902) solid 1px;
+}
+.folderMenu {
+  color: rgba(128, 128, 128, 0.611764705882353);
+}
+.paLeftMainDivDashboard{
+  background-color:rgba(255,255,255,1);
+  /*height:100%;
+  width:100%;
+  padding-left: 15px;
+  padding-right: 15px;*/
+}
+.folderSize {
+  font-size: 30px;
+  padding-top:13px;
+}
+.folderIconDetailMain {
+  padding-left:5%;
+}
+
+.fileNameCount {
+  vertical-align: middle;
+  width: 80%; /**added by prashanth*/
+  padding-bottom:10px;
+  padding-top:10px;
+}
+
+.showMoreTxt {
+  padding-top: 16px;
+  border-bottom: 1px solid rgba(156,164,171,0.5);
+  padding: 11px;
+  padding-left: 3%;
+}
+  .showMoreTxt > div {
+    padding-left: 2%;
+    color: rgb(70, 68, 68);
+    font-size: 13px;
+    padding-bottom: 5px;
+  }
+.contentOnlyTxt {
+  background-color: rgb(210, 30, 22);
+  border-radius: 0px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 8px;
+  padding-bottom: 7px;
+  color: white;
+  text-align: center;
+}
+.fileNamesRow {
+  border-bottom: 1px solid rgba(156,164,171,0.5);
+  margin-left: 0%;
+  margin-right: 0%;
+}
+.myNotesTxt {
+  background-color: rgb(210, 30, 22);
+  border-radius: 0px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 8px;
+  padding-bottom: 7px;
+  color: white;
+  text-align: center;
+}
+.allContentMyNotes{
+	float: left;
+    padding-top: 12px;
+}
+/*sprint 4 css starts*/
+
+
+  
+.downloadsSearchInput {
+  font-size: 8pt;
+  height: 25px;
+  padding: 5px 10px;
+  height : 30px;
+}
+.FilterSearch{
+	display: inline-table;
+	width:23%;
+	float:right;
+}
+.FilterSearch1{
+	display: inline-table;
+	width:23%;
+}
+.input-group-btn >.searchbutton{
+	font-size:8pt;
+	padding: 0 10px;
+	vertical-align: middle;
+}
+.Filtersearchbutton{
+	font-size: 12px;
+    color: #fff;
+}
+
+
+
+.mainDivContainer {
+  margin-top: 10px;
+}
+.body{
+	background-color:rgba(156,164,171,0.2);
+	font-family: Lato;
+	font-size:8pt;
+}
+/*to be removed*/
+#custom-search-input{
+    padding: 0px;
+    border: solid 1px #E4E4E4;
+    border-radius: 0px;
+    background-color: #fff;
+}
+#custom-search-input input{
+    border: 0;
+    box-shadow: none;
+}
+
+#custom-search-input button{
+    margin: 3px 0 0 0;
+    background: none;
+    box-shadow: none;
+    border: 0;
+    color: #fff;
+    padding: 0 12px 0 12px;
+  /*  border-left: solid 1px #ccc; */
+}
+
+#custom-search-input button:hover{
+    border: 0;
+    box-shadow: none;
+  /*  border-left: solid 0px #ccc;*/
+}
+
+
+#custom-search-input-top button:hover{
+    border: 0;
+    box-shadow: none;
+  /*  border-left: solid 0px #ccc;*/
+}
+
+
+
+
+.downloadsSearchBtn {
+  font-size: 8pt;
+}
+.paRecentlyViewedMainDiv{
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color:rgba(255,255,255,1);
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+}
+.paRecentlyViewedHead{
+  width:100%;
+  display:inline-table;
+  padding-top:20px;
+  padding-bottom: 10px;
+  border-bottom-style:solid;
+  border-bottom-width:1pt;
+  border-bottom-color:rgba(156,164,171,0.5);
+
+}
+.paRecentlyViewedHead > div{
+  display:table-cell;
+  vertical-align:middle
+}
+.paRecentlyViewTxt{
+	font-size: 7pt;
+    color: rgba(0,0,0,0.5);
+}
+.paRecentlyViewTxtSub{
+	font-size: 10pt;
+    color: rgba(0,0,0,0.8);
+    font-weight: bold;
+}
+.paRecentlyViewedViewAll {
+  font-size:pt;
+  /* color:rgba(0,0,0,0.8); */
+  font-weight:bold;
+  float: right;
+  text-decoration:underline;
+}
+.paRecentlyViewedItem{
+	border-bottom-style:solid;
+  border-bottom-width:1pt;
+  border-bottom-color:rgba(158, 156, 156, 0.18);
+  padding-top: 10px;
+  padding-bottom: 13px
+}
+.paRecentlyViewedTitle {
+  font-size: 8pt;
+  color: rgba(0,0,0,0.7);
+  font-weight: bold;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 30px;
+/**  width:-moz-min-content;**/
+  display: inline-block;
+  padding-top : 3px;
+  padding-right : 13px;
+  padding-bottom: 3px;
+  padding-left: 13px;
+}
+.paRecentlyViewedContent{
+	font-size: 9pt;
+    color : #053C71;
+    line-height: 18pt;
+	font-weight:bold;
+	padding-top:2px;
+}
+.body {
+  background-color: rgba(156,164,171,0.2);
+  font-family: Lato;
+  font-size: 8pt;
+}
+.paLeftMainDivDashboard {
+  background-color: rgba(255,255,255,1);
+}
+.browsehisfav {
+  text-align: center;
+}
+.browse_hist_fav_tabs {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.browsePractiseArea {
+  background-color: rgb(210, 30, 22);
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 20px;
+  color: white;
+  border-right-color: #474748;
+  border-right-style: solid;
+  border-right-width: 1px;
+}
+.activeTab {
+  background-color: white !important;
+  border-right: 10px !important;
+  padding-bottom: 20px !important;
+  text-align: center !important;
+  padding-top: 17px !important;
+  font-weight: bold !important;
+  color: black !important;
+}
+.history {
+  background: rgb(210, 30, 22);
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 20px;
+  color: white;
+  border-right-color: #474748;
+  border-right-style: solid;
+  border-right-width: 1px;
+}
+.calender {
+  background-color: rgb(210, 30, 22);
+  border-right-style: solid;
+  border-right-width: 1pt;
+  border-right-color: #C8C8DB;
+  text-align: center;
+  padding-top: 17px;
+  padding-bottom: 20px;
+  color: white;
+}
+.downloadsSearchInput {
+  font-size: 8pt;
+  height: 25px;
+  padding: 5px 10px;
+}
+.downloadsSearchInput {
+  height: 30px;
+}
+.browsehisfavContentMainDiv {
+  padding-top: 5%;
+  width: 100%;
+  background-color: rgba(255,255,255,1);
+  font-family: Lato;
+  overflow: hidden;
+  padding-bottom: 5%;
+}
+.browsehisfavContent {
+ 
+}
+.round {
+  position: relative;
+}
+
+.round label {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 14px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 14px;
+  }
+
+.round label:after {
+      border: 1.5px solid #fff;
+      border-top: none;
+      border-right: none;
+      content: "";
+      height: 5px;
+      left: 0px;
+      opacity: 0;
+      position: absolute;
+      top: 2px;
+      transform: rotate(-45deg);
+      width: 10px;
+    }
+
+.round input[type="checkbox"] {
+    visibility: hidden;
+  }
+
+.round input[type="checkbox"]:checked + label {
+    background-color: rgb(94, 159, 97);
+    border-color: rgb(94, 159, 97);
+  }
+
+.round input[type="checkbox"]:checked + label:after {
+        opacity: 1;
+      }
+  /*xs*/
+  @media only screen and (max-width: 767px) {
+    .browsePractiseArea{
+    background-color:white;
+  }
+  .history {
+    background-color: white;
+    color:gray!important;
+    font-weight:bold;
+    border-right:none;
+  }
+  .calender {
+    background-color: white;
+    color: gray !important;
+    font-weight: bold;
+  }
+  .paLeftMainDivDashboard{
+    box-shadow:none;
+  }
+  .browsehisfavContentMainDiv {
+    background-color: transparent !important;
+    padding-left: 3%;
+    padding-right: 3%;
+    -webkit-box-shadow:none;
+  }
+  .browsehisfavContent {
+    background-color: white;
+    padding-left: 2%;
+    text-align: center;
+  }
+  .dashBoardSearchMobileView {
+    padding-top: 12px;
+    border-bottom: 1px solid #80808073;
+  }
+  .downloadsSearchInput {
+    background-color: transparent;
+    box-shadow: none;
+    font-size: 12px;
+  }
+  .dashboardSearchIcon {
+    float: right;
+    padding-top: 10px;
+    padding-right: 5%;
+    color: #80808078;
+    font-size: 12px;
+  }
+  .searchInputDashboard{
+    display:inline-block;
+  }
+  .allContentMyNotesMainDiv {
+    padding: 33px;
+    border-bottom:1px solid gray;
+  }
+}
+/*sm*/
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .dashBoardSearchMobileView {
+    display: none;
+  }
+  .mainDivContainer{
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  .container-fluid {
+    padding-right: 11px;
+    padding-left: 11px;
+  }
+  .FilterSearch1{
+    width:30%;
+  }
+}
+/*md*/
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+  .dashBoardSearchMobileView {
+    display: none;
+  }
+}
+/*lg*/ @media only screen and (min-width: 1201px) {
+  .dashBoardSearchMobileView {
+    display: none;
+  }
+}
+
+.myFoldersContnet {
+  padding-bottom: 60px;
+  background: #fff;
+  padding-top: 20px;
+}
+.recentlyViewedBlock {
+  padding-bottom: 60px;
+  background: #fff;
+  padding-top: 20px;
+  height:300px;
+}
+.paLeftMainDivDashboard.foldersMainDiv {
+  padding: 20px 20px;
+}

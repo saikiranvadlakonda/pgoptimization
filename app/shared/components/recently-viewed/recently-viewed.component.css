@@ -1,0 +1,108 @@
+﻿.paRecentlyViewedMainDiv {
+  /*padding-left: 30px;
+  padding-right: 30px;*/
+  background-color: rgba(255,255,255,1);
+  /*box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);*/
+  padding: 15px 30px;
+  margin-top: 20px;
+}
+.paRecentlyViewedDate {
+  color: rgba(128, 128, 128, 0.6392156862745098);
+  padding-left: 2px;
+  font-size: 12px;
+}
+.paRecentlyViewedHead {
+  width: 100%;
+  display: inline-table;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  border-bottom-style: solid;
+  border-bottom-width: 1pt;
+  border-bottom-color: rgba(156,164,171,0.5);
+}
+.recentlyViewedViewAll {
+  float:left;
+}
+.paRecentlyViewTxt {
+  color: rgba(0,0,0,0.5);
+  font-size: 12px;
+  font-weight:bold;
+}
+
+.paRecentlyViewTxtSub {
+  color: rgba(0,0,0,0.8);
+  font-weight: bold;
+  font-size:16px;
+}
+
+.paRecentlyViewedTitle {
+  color: rgba(0,0,0,0.55);
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.09);
+  border-radius: 30px;
+  /**  width:-moz-min-content;**/
+  display: inline-block;
+  padding-top: 2px;
+  padding-right: 13px;
+  padding-bottom: 2px;
+  padding-left: 10px;
+  white-space:nowrap;
+}
+
+.paRecentlyViewedViewAll {
+  /* color:rgba(0,0,0,0.8); */
+  font-weight: bold;
+  float: right;
+  text-decoration: underline;
+  padding-top:10px;
+}
+
+.paRecentlyViewedItem {
+  border-bottom-style: solid;
+  border-bottom-width: 1pt;
+  border-bottom-color: rgba(158, 156, 156, 0.18);
+  padding-top: 10px;
+  padding-bottom: 13px;
+  padding-left: 20px;
+}
+
+.paRecentlyViewedContent {
+  color: #053C71;
+  line-height: 18pt;
+  font-weight: bold;
+  padding-top: 2px;
+  padding-left:2px;
+  font-size:14px;
+}
+/*xs*/
+@media only screen and (max-width: 767px) {
+
+}
+/*sm*/
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .paRecentlyViewTxtSub{
+  }
+  .paRecentlyViewedViewAll{
+  }
+  .paRecentlyViewedTitle{
+    white-space:normal;
+  }
+  .paRecentlyViewedContent{
+  }
+  .paRecentlyViewTxt{
+  }
+  .paRecentlyViewedDate{
+  }
+}
+/*md*/
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+
+}
+ /*lg*/ @media only screen and (min-width: 1201px){
+
+}
+
+.paRecentlyViewedMainDiv .paRecentlyViewedItem:last-child {
+  border: none;
+}

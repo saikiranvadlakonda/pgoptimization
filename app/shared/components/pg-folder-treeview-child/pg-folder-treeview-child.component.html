@@ -1,0 +1,34 @@
+<div *ngFor="let subfolder of subFolders" class="subflodersTree">
+  <div *ngIf="subfolder.isVisible" [ngClass]="(subfolder.isSlected) ? 'selectedRow pointerCursor':'pointerCursor'" (click)="showHideFolder(subfolder.folderNameID,subfolder.isVisible,subfolder.parentFolderID,subfolder)" (blur)="blured()">
+    <div *ngIf="!subfolder.isNewFolder">
+      <div *ngIf="!subfolder.isEditEnabled" class="subfloders">
+        <i class="icon-folder-alt icons"></i> <span>{{subfolder.folderName}}</span>
+      </div>
+      <div *ngIf="subfolder.isEditEnabled"  class="subfloders">
+        <i class="icon-folder-alt icons"></i>
+        <input type="text" name="name" class="form-control" [(ngModel)]="subfolder.folderName" />
+        <i class="fa fa-floppy-o text-custom" aria-hidden="true" (click)="editFolder(subfolder)"></i>
+        <i class="fa fa-times-circle text-danger" aria-hidden="true" (click)="undoChanges()"></i>
+      </div>
+    </div>
+    <div *ngIf="subfolder.isNewFolder" class="subfloders">
+      <i class="icon-folder-alt icons"></i>
+      <input type="text" name="name" class="form-control" [(ngModel)]="subfolder.folderName"/>
+      <i class="fa fa-floppy-o text-custom" aria-hidden="true" (click)="newFolder(subfolder)"></i>
+      <i class="fa fa-times-circle text-danger" aria-hidden="true" (click)="undoChanges()"></i>
+    </div>
+  </div>
+  <div *ngIf="subfolder.folders && subfolder.isVisible"  class="subfloders-sub">
+    <pg-folder-treeview-child [subFolders]="subfolder.folders" (nodeClicked)="nodeChildClicked($event)"
+                              (setNodeCollapsed)="nodeChildCollapsed($event)" (cancelClicked)="childNodeCancelClicked()"
+                              (editFolders)="editChildFolder($event)" (newFolders)="addChildFolder($event)" (deleteFolder)="deleteChildFolder($event)"></pg-folder-treeview-child>
+  </div>
+  <div *ngIf="subfolder?.files?.length>0 && subfolder.isFilesVisible && showFiles" style="padding-left:30px">
+    <div *ngFor="let file of subfolder?.files">
+      <div><i class="fa fa-file-o" aria-hidden="true"></i>&nbsp;{{file.title}}&nbsp;<i class="fa fa-times-circle text-danger" aria-hidden="true"></i></div>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,293 @@
+
+.resultPerPageNumber {
+  border: none;
+  background-color: rgba(156, 164, 171, 0)
+}
+
+.paRightMainDiv {
+  background-color: transparent;
+  height: 100%;
+  width: 100%
+}
+
+
+.resultperpage {
+  float: right;
+  padding-right: 7%;
+}
+
+
+.nextText {
+  padding-left: 4%;
+}
+
+.resultsselectall {
+  font-family: Lato;
+  color: #b9b5b5;
+  font-size: 11px;
+}
+
+.sortybyresultperpage {
+  padding-right: 10px;
+  color: rgba(0,0,0,0.4);
+  font-size: 13px;
+  font-family: Lato;
+}
+
+.PaginationPrev {
+  padding-left: 0px;
+}
+
+.PaginationNext {
+  padding-right: 0px;
+}
+
+
+.PaginationMainDiv > a {
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.previousTxt {
+  padding-right: 2%;
+}
+
+.paRecentlyViewedMainDiv {
+  padding: 25px 50px;
+  background-color: rgba(255,255,255,1);
+  /*box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);*/
+}
+
+.paRecentlyViewedHead {
+  width: 100%;
+  display: inline-table;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  border-bottom-style: solid;
+  border-bottom-width: 1pt;
+  border-bottom-color: rgba(156,164,171,0.5);
+}
+
+  .paRecentlyViewedHead > div {
+    display: table-cell;
+    vertical-align: middle
+  }
+
+
+.paginationActivePage {
+  background-color: #4CAF50;
+}
+
+
+
+/**Downloads Search box end*/
+.extra-padding-right {
+  padding-right: 15px
+}
+
+.extra-padding-right-sm {
+  padding-right: 7px
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.paginationGetNumbers {
+  cursor: pointer;
+  font-size: 14px;
+}
+
+@media only screen and (max-width: 767px) {
+  .checkContainer {
+    display: none;
+  }
+
+  .selectAllMaindiv {
+    display: none;
+  }
+
+  .paRecentlyViewedHead {
+    border-bottom: none;
+  }
+
+    .paRecentlyViewedHead > div {
+      display: none;
+    }
+
+  .checkmark {
+    display: none;
+  }
+}
+
+
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .mainDivContainer {
+    margin-left: 6%;
+    margin-right: 6%;
+  }
+
+  .container-fluid {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .filtercheckboxSelectAll {
+    margin-right: 0px;
+  }
+
+  .resultsselectall {
+  }
+
+  .sortybyresultperpage {
+    padding-right: 5px;
+  }
+
+  .resultPerPageNumber {
+    font-size: 9px;
+  }
+
+
+  .paRecentlyViewedMainDiv {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .checkContainer {
+    margin-bottom: 0px !important;
+  }
+
+  .PaginationMainDiv {
+    font-size: 10px;
+  }
+
+  .PaginationMainDiv  .page-link {
+    font-size: 1rem;
+  }
+
+  .pagination > .active > a,
+  .pagination > .active > a:focus,
+  .pagination > .active > a:hover,
+  .pagination > .active > span,
+  .pagination > .active > span:focus,
+  .pagination > .active > span:hover {
+    padding: 4px 6px;
+  }
+}
+
+@media only screen and (max-width: 1200px) and (min-width: 992px) {
+
+  .resultsguidancecontent {
+  }
+
+  .resultsguidancefooter {
+  }
+
+  .guidancehead {
+  }
+
+  .guidanceheading {
+  }
+}
+
+@media only screen and (min-width: 1201px) {
+  .resultsselectall {
+  }
+
+  .sortybyresultperpage {
+  }
+
+  .guidancehead {
+  }
+
+  .guidanceheading {
+  }
+
+  .resultsguidancecontent {
+  }
+
+  .resultsguidancefooter {
+  }
+}
+
+
+
+
+.pagingPadding {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+
+.checkContainer {
+  display: block;
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-size: 14px;
+  vertical-align: top;
+}
+
+  /* Hide the browser's default checkbox */
+  .checkContainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 13px;
+  width: 13px;
+  border: 1px solid #b9b5b5;
+}
+
+/* On mouse-over, add a grey background color */
+.checkContainer:hover input ~ .checkmark {
+  /* background-color: #ccc;*/
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkContainer input:checked ~ .checkmark {
+  /* background-color: #2196F3;*/
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkContainer input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkContainer .checkmark:after {
+  left: 4px;
+  top: 2px;
+  width: 5px;
+  height: 8px;
+  border: solid #053C71;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.slctxt {
+  vertical-align: top;
+  display: inline-block;
+  margin-top: -3px;
+}

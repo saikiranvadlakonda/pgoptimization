@@ -1,0 +1,23 @@
+<ng-template #emailSuccessfulAlert let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Alert <button type="button" class="close pull-right" (click)="emailSuccessfulAlertRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </h5>
+
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <span>Email Sent Successfully.</span>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-primary" (click)="emailSuccessfulAlertRef.hide()">OK</button>
+    </div>
+</ng-template>
+
