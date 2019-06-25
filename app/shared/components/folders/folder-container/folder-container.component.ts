@@ -407,7 +407,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
     }
 
     searchFolders(parentFolder, folderId) {
-        if (!parentFolder && parentFolder.folderName == folderId) {
+        if (parentFolder && parentFolder.folderName == folderId) {
             this._foldersService.getSelectedFoldersFiles(parentFolder.folderNameID).subscribe(data => {
                 parentFolder['folders'] = JSON.parse(JSON.stringify(data.foldersList));
                 parentFolder['files'] = JSON.parse(JSON.stringify(data.filesList));
