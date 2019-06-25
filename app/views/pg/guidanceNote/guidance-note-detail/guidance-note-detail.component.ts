@@ -740,7 +740,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                         subtopic = topic.subTocItem.find(nI => domainPath.split('/')[5] == nI.domainId);
                     } else {
                         topic = selectedPracticeArea.subTocItem.find(item => domainPath.split('/')[3] == item.domainPath.split('/')[3]);
-                        subtopic = (topic !== undefined) ? topic.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId) : topic.subTocItem.find(nI => domainPath.includes(nI.domainId));
+                        subtopic = (topic !== undefined) ? topic.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId) : {};
                     }
                     var input = {
                         "subTopicDomainPath": subtopic.domainPath,

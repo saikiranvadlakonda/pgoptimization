@@ -114,7 +114,7 @@ export class LoginComponent implements OnInit {
 
                                                                 let selectedPA = practiceAreas.find(pa => dpath.indexOf(pa.domainPath) == 0);
                                                                 this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPA);
-                                                                var topic = selectedPA.subTocItem ? selectedPA.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPA.subTocItem.find(nI => dpath.includes(nI.domainId));
+                                                                var topic = selectedPA.subTocItem ? selectedPA.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
                                                                 var subTopic = topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
                                                                 var input = undefined;
                                                                 var paTitle = selectedPA.title;

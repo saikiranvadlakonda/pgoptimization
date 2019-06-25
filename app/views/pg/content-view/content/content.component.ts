@@ -395,7 +395,7 @@ export class ContentComponent implements OnInit {
                               var allPAs = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
                               var spa = allPAs.find(nI => domainPath.split('/')[3] == nI.domainId);
                               var paTitle = spa.title;
-                              var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => domainPath.split('/')[3] == nI.domainId) : selectedPracticeArea.subTocItem.find(nI => domainPath.includes(nI.domainId));
+                              var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => domainPath.split('/')[3] == nI.domainId) : {};
                               topic = paModule.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId);
                               subtopic = topic.subTocItem.find(nI => domainPath.split('/')[5] == nI.domainId);
                               var guidancedetail = {

@@ -478,11 +478,11 @@ export class ContentService {
             var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
             var selectedPracticeArea = practiceAreas.find(nI => paDomainId == nI.domainId);
             this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
-            var topic = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPracticeArea.subTocItem.find(nI => dpath.includes(nI.domainId));
+            var topic = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
             var subtopic = topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
 
             if (this.isPgModule(dpath)) {
-                var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPracticeArea.subTocItem.find(nI => dpath.includes(nI.domainId));
+                var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
                 topic = paModule.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
                 subtopic = topic.subTocItem.find(nI => dpath.split('/')[5] == nI.domainId);
 
