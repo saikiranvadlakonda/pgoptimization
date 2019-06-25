@@ -28,12 +28,13 @@
                             </button>
                             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu whatsNew-category-menu"
                                 role="menu" aria-labelledby="button-basic">
-                                <li role="menuitem"><a class="dropdown-item pointer" (click)="getAllWhatsNew1()">All Practice Areas</a></li>
+                                <li role="menuitem"><a class="dropdown-item pointer" (click)="getAllWhatsNew(true)">All Practice Areas</a></li>
                                 <li role="menuitem" *ngFor="let practiceArea of practiceAreas"><a class="dropdown-item pointer" (click)="practiceAreaChange(practiceArea)">{{practiceArea?.title}}</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
+                <!--Below is for sort drop down, for future scope we are keeping it-->
                 <!--<div class="col-sm-4">
                   <ul class="nav navbar-nav navbar-brand-dropdown pull-right">
                     <li class="dropdown">
@@ -62,13 +63,9 @@
                         </p>
                         <h4 class="card-title pointer" (click)="openWhatsNewPdf(newItem)" *ngIf="newItem?.isPdf =='True'">{{newItem?.title}}</h4>
                         <h4 class="card-title pointer" (click)="detailView(newItem)" *ngIf="newItem?.isPdf !=='True'">{{newItem?.title}}</h4>
-                        <!--<h4 class="card-title pointer" (click)="detailView(newItem)" *ngIf="newItem?.link == ''">{{newItem?.title}}</h4>
-                        <h4 class="card-title pointer" *ngIf="newItem?.link != '' && newItem?.isSubscribed"><a href="{{newItem?.link}}" target="_blank">{{newItem?.title}}</a></h4>
-                        <h4 class="card-title pointer" *ngIf="newItem?.link != '' && !newItem?.isSubscribed"><span (click)="showUnsubscribed(newItem)">{{newItem?.title}}</span></h4>-->
                         <p class="card-text">
                             {{ newItem?.description.length > 283 ? newItem?.description.trim().slice(0, 210).trim().concat('...') : newItem?.description }}
                         </p>
-                        <!--<p>{{newItem?.newsCategory}}</p>-->
                     </li>
                 </ul>
 

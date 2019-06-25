@@ -28,7 +28,6 @@ export class HistoryComponent {
     ) {
     }
 
-
     showHistoryList() {
         this.showHistory.emit("true");
     }

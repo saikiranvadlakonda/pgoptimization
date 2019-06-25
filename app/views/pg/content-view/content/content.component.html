@@ -62,7 +62,8 @@
                 </div>
             </div>
             <div *ngIf="isPDF" class="subContent searchContent text-center">
-                <iframe [src]="pdfContent | safe: 'resourceUrl' " title="pdfTitle" width="100%" height="800px"></iframe>
+                <!--<iframe [src]="pdfContent | safe: 'resourceUrl' " title="pdfTitle" width="100%" height="800px"></iframe>-->
+                <app-pdf-viewer [pdfContent]="pdfContent"></app-pdf-viewer>
             </div>
         </div>
     </div>

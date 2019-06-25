@@ -12,6 +12,7 @@ import { RouterProxy } from '../../../../store/router/proxy/router.proxy';
 import { StateParams } from '../../../../shared/models/state-params/state-params.model';
 import { Observable } from 'rxjs/Observable';
 import { PgMessages } from '../../../../shared/constants/messages';
+import { PagerService } from '../../../../shared/services/pager/pager.service';
 
 @Component({
     selector: 'app-whats-new',
@@ -20,25 +21,21 @@ import { PgMessages } from '../../../../shared/constants/messages';
 })
 export class WhatsNewComponent implements OnInit {
     private subscriptions: Subscription = new Subscription();
-    routerState$: Observable<StateParams>;
     constructor(
         private _dataStoreService: DataStoreService,
         private _whatsNewService: WhatsNewService,
         private _navigationService: NavigationService,
         private _modalService: PgModalService,
+        private _pagerService: PagerService,
         private _routerProxy: RouterProxy
-    ) { this.routerState$ = this._routerProxy.getViewModel(); }
+    ) { }
     practiceAreas: TocItemViewModel[];
     practiceArea: TocItemViewModel;
-    whatsNew: NewGroupEntity[];
     newItems: NewItemEntity[];
     pageIndex: number = 0;
     pageSize: number = 5;
     searchText: string;
     asc: boolean = false;
-    whatsNewCategories;
-    isSubscribed: boolean = false;
-    viewModel;
     lastPageSize: number = 0;
     showMore: boolean = true;
     paChange: boolean = true;
@@ -49,13 +46,9 @@ export class WhatsNewComponent implements OnInit {
         this.practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
         const stateSubscription = this._routerProxy.getViewModel().subscribe((viewModel) => {
             if (viewModel) {
-                this.viewModel = viewModel;
-                if (this.viewModel.paTitle && this.viewModel.paTitle !== undefined) {
-                    //  this.practiceArea = this.viewModel.title;
+                if (viewModel.paTitle && viewModel.paTitle !== undefined) {
                     if (!this.practiceArea) {
-                        //this.practiceArea = this.practiceAreas[0];
                         this.practiceAreas.forEach(pa => {
-                            var paName = pa.title;
                             if (pa.title == viewModel.paTitle) {
                                 this.practiceArea = pa;
                             }
@@ -67,14 +60,7 @@ export class WhatsNewComponent implements OnInit {
 
         this.subscriptions.add(stateSubscription);
         this.newItems = [];
-
-        //window.scrollTo(0, 0);
-        let scrollEle = document.getElementById('newpg');
-        if (/msie\s|trident\/|edge\//i.test(window.navigator.userAgent))
-            scrollEle.scrollTop = 0;
-        else
-            scrollEle.scrollTo(0, 0);
-        //this.newItems = this._dataStoreService.getSessionStorageItem("WhatsNews");
+        this._pagerService.setPageView();
         this.getSelectedWhatsNew();
 
     }
@@ -82,39 +68,8 @@ export class WhatsNewComponent implements OnInit {
     getWhatsNew() {
         let input;
         if (this.practiceArea == undefined) {
-            input = {
-                "domainPath": "a2ioc", "tocItemType": "PA", "pageIndex": this.pageIndex, "pageSize": this.pageSize
-            };
-            this._whatsNewService.getAllLatestWhatsNew(input).subscribe((whatsNew: any) => {
-                if (whatsNew && whatsNew.length > 0) {
-                    if (whatsNew[0].isValid) {
-                        this.newItems = [];
-                        this._dataStoreService.setSessionStorageItem("WhatsNews", whatsNew);
-                        for (var i = this.pageIndex; i < this.pageSize && whatsNew != undefined && whatsNew.length > 0; i++) {
-                            if (whatsNew[i] !== undefined) {
-                                this.newItems.push(whatsNew[i]);
-                            }
-                        }
-                        this.practiceArea = undefined;
-                        var newItemsSize = this.newItems.length - 1;
-                        if (this.lastPageSize == newItemsSize && this.lastPageSize != 0) {
-                            this.showMore = false;
-                            this.pageSize = this.pageSize - 5;
-                        } else {
-                            this.lastPageSize = newItemsSize;
-                        }
-                        this.whatsNewError = undefined;
-                    } else {
-                        this.newItems = [];
-                        this.whatsNewError = PgMessages.constants.whatsNew.error;
-                        this.showMore = false;
-                    }
-                } else {
-                    this.newItems = [];
-                    this.whatsNewError = (Array.isArray(whatsNew)) ? PgMessages.constants.whatsNew.noWhatsNewForAppliedFilters : PgMessages.constants.whatsNew.error;
-                    this.showMore = false;
-                }
-            });
+            this.getAllWhatsNew(false);
+
         } else {
             input = {
                 "domainPath": this.practiceArea.domainPath, "tocItemType": this.practiceArea.type, "pageIndex": this.pageIndex, "pageSize": this.pageSize
@@ -125,7 +80,6 @@ export class WhatsNewComponent implements OnInit {
                         this.newItems = [];
                         for (var i = this.pageIndex; i < this.pageSize && whatsNew != undefined && whatsNew.length > 0; i++) {
                             if (whatsNew[i] !== undefined) {
-
                                 this.newItems.push(whatsNew[i]);
                             }
                         }
@@ -164,23 +118,39 @@ export class WhatsNewComponent implements OnInit {
         this.pageSize = 5;
 
     }
+
+    /**
+     * This will be invoked whenever Practice Area is changed.
+     * @param practiceArea
+     */
     practiceAreaChange(practiceArea: TocItemViewModel) {
         this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", practiceArea);
         this.practiceArea = practiceArea;
         this.pageSize = 5;
-       // this.searchText = "";
+        //Below code is to clear the search term whenever user changes practice area from Category drop down. For reference sake we are keeping it.
+        // this.searchText = "";
         this.paChange = true;
         this.showMore = true;
         this.lastPageSize = 0;
         this.getWhatsNew();
     }
 
+
+    /**
+    * This is to sort the what's new based on Date Published, for future scope we have commented the UI and keeping this method for reference sake.
+    * 
+    */
     sort() {
         this.asc = !this.asc;
         var sortColumn = (this.asc) ? "formatedDatePublished" : "-formatedDatePublished";
         this.newItems = this.transform(this.newItems, sortColumn);
     }
 
+    /**
+     * This is helper method for sort function.
+     * @param array
+     * @param args
+     */
     transform(array: Array<any>, args: string): Array<any> {
         if (typeof args[0] === "undefined") {
             return array;
@@ -195,24 +165,35 @@ export class WhatsNewComponent implements OnInit {
         return array;
     }
 
+    /**
+     * To check the given domain path is related to PG.
+     * @param domainPath - full domain path
+     * @returns true if given path is related PG, false if not.
+     */
     isPgDomainPath(domainPath: string) {
         return (domainPath.indexOf('a2ioc') > -1 ? true : false);
     }
 
+    /**
+     * This is a helper method to check the given domain path is related to PG Module.
+     * @param domainPath
+     */
     isPgModule(domainPath: string) {
         return (domainPath.indexOf('b2ioc') > -1 || domainPath.indexOf('nor6d') > -1 ? true : false);
     }
 
+    /**
+     * This is to view the whats new in detail. This will also check DA.
+     * @param newItem
+     */
     detailView(newItem) {
-
-       
         var selectedPracticeArea = this.practiceAreas.find(nI => newItem.practiceAreaTitle == nI.title);
         var allPAs = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
 
         if (this.isPgModule(newItem.domainPath)) {
             selectedPracticeArea = allPAs.find(nI => newItem.domainPath.split('/')[3] == nI.domainId);
         }
-        
+
         newItem.disablePermalink = true;
         if (selectedPracticeArea.isSubscribed) {
             newItem.isValid = true;
@@ -234,16 +215,6 @@ export class WhatsNewComponent implements OnInit {
         }
     }
 
-    showUnsubscribed(newsItem) {
-        var selectedPracticeArea = this.practiceAreas.find(nI => newsItem.practiceAreaTitle == nI.title);
-        if (selectedPracticeArea.isSubscribed || (newsItem.newsCategory.toLowerCase() == 'breaking news' || newsItem.newsCategory.toLowerCase() == 'opinion piece')) {
-            this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
-            this._dataStoreService.setSessionStorageItem("selectedNewItem", newsItem);
-            this._navigationService.navigate(PgConstants.constants.URLS.ContentView.ContentView);
-        }
-        else
-            this._modalService.open();
-    }
 
     getSelectedWhatsNew() {
         if (this._dataStoreService.getSessionStorageItem("WhatsNews") !== null) {
@@ -260,7 +231,7 @@ export class WhatsNewComponent implements OnInit {
         }
 
         if (this.practiceArea == undefined)
-            this.getAllWhatsNew();
+            this.getAllWhatsNew(true);
         else {
             let input = {
                 "domainPath": this.practiceArea.domainPath, "tocItemType": this.practiceArea.type, "pageIndex": this.pageIndex, "pageSize": 500
@@ -287,73 +258,49 @@ export class WhatsNewComponent implements OnInit {
         }
     }
 
-    getSelectedWhatsNew1() {
-        if (this.practiceArea == undefined) this.getAllWhatsNew();
-        else {
-            let input = {
-                "domainPath": this.practiceArea.domainPath, "tocItemType": this.practiceArea.type, "pageIndex": this.pageIndex, "pageSize": 500
-            };
-            this._whatsNewService.getWhatsNew(input).subscribe(data => {
-                this.newItems = [];
-                this._dataStoreService.setSessionStorageItem("WhatsNews", data);
-                for (var i = this.pageIndex; i < this.pageSize && data != undefined && data.length > 0; i++) {
-                    this.newItems.push(data[i]);
-                }
-            });
+
+    getAllWhatsNew(resetFlags: boolean) {
+        if (resetFlags) {
+            this.practiceArea = undefined;
+            this.lastPageSize = 0;
+            this.pageSize = 5;
         }
-
-
-    }
-    getAllWhatsNew() {
         let input = {
-            "domainPath": "asdfsd/asdfs/a2ioc", "tocItemType": "PA", "pageIndex": 0, "pageSize": 5
+            "domainPath": "a2ioc", "tocItemType": "PA", "pageIndex": this.pageIndex, "pageSize": this.pageSize
         };
+
         this._whatsNewService.getAllLatestWhatsNew(input).subscribe((whatsNew: any) => {
             if (whatsNew && whatsNew.length > 0) {
                 if (whatsNew[0].isValid) {
                     this.newItems = [];
                     this._dataStoreService.setSessionStorageItem("WhatsNews", whatsNew);
-                    for (var i = this.pageIndex; i < this.pageSize; i++) {
-                        this.newItems.push(whatsNew[i]);
+                    for (var i = this.pageIndex; i < this.pageSize && whatsNew != undefined && whatsNew.length > 0; i++) {
+                        if (whatsNew[i] !== undefined) {
+                            this.newItems.push(whatsNew[i]);
+                        }
+                    }
+                    this.practiceArea = undefined;
+                    var newItemsSize = this.newItems.length - 1;
+                    if (this.lastPageSize == newItemsSize && this.lastPageSize != 0) {
+                        this.showMore = false;
+                        this.pageSize = this.pageSize - 5;
+                    } else {
+                        this.lastPageSize = newItemsSize;
                     }
                     this.whatsNewError = undefined;
                 } else {
                     this.newItems = [];
                     this.whatsNewError = PgMessages.constants.whatsNew.error;
+                    this.showMore = false;
                 }
             } else {
                 this.newItems = [];
                 this.whatsNewError = (Array.isArray(whatsNew)) ? PgMessages.constants.whatsNew.noWhatsNewForAppliedFilters : PgMessages.constants.whatsNew.error;
+                this.showMore = false;
             }
         });
     }
 
-    getAllWhatsNew1() {
-        this.practiceArea = undefined;
-        this.lastPageSize = 0;
-        this.pageSize = 5;
-        let input = {
-            "domainPath": "asdfsd/asdfs/a2ioc", "tocItemType": "PA", "pageIndex": 0, "pageSize": 5
-        };
-        this._whatsNewService.getAllLatestWhatsNew(input).subscribe((whatsNew: any) => {
-            if (whatsNew && whatsNew.length > 0) {
-                if (whatsNew[0].isValid) {
-                    this.newItems = [];
-                    this._dataStoreService.setSessionStorageItem("WhatsNews", whatsNew);
-                    for (var i = this.pageIndex; i < this.pageSize; i++) {
-                        this.newItems.push(whatsNew[i]);
-                    }
-                    this.whatsNewError = undefined;
-                } else {
-                    this.newItems = [];
-                    this.whatsNewError = PgMessages.constants.whatsNew.error;
-                }
-            } else {
-                this.newItems = [];
-                this.whatsNewError = (Array.isArray(whatsNew)) ? PgMessages.constants.whatsNew.noWhatsNewForAppliedFilters : PgMessages.constants.whatsNew.error;
-            }
-        });
-    }
 
     isShowSubscribed(newsItem) {
         var selectedPracticeArea = this.practiceAreas.find(nI => newsItem.domainPath.includes(nI.domainPath));
@@ -366,12 +313,42 @@ export class WhatsNewComponent implements OnInit {
 
 
     openWhatsNewPdf(newItem) {
-        if (this.isShowSubscribed(newItem)) {
+        var selectedPracticeArea = this.practiceAreas.find(nI => newItem.practiceAreaTitle == nI.title);
+        var allPAs = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
 
-            window.open(newItem.link, "_blank");
-        } else {
-            this._modalService.open();
+        if (this.isPgModule(newItem.domainPath)) {
+            selectedPracticeArea = allPAs.find(nI => newItem.domainPath.includes(nI.domainId));
         }
+        newItem.disablePermalink = true;
+        if (selectedPracticeArea.isSubscribed) {
+            newItem.isValid = true;
+            if (newItem.link)
+                window.open(newItem.link, "_blank");
+            else {
+                //PDF Viewer 
+                //this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
+                //this._dataStoreService.setSessionStorageItem("selectedNewItem", newItem);
+                //this._navigationService.navigate(PgConstants.constants.URLS.ContentView.ContentView);
+            }
+            
+        }
+        else {
+            newItem.isValid = false;
+            this._whatsNewService.findSubscribedNews(newItem).subscribe(isSubscribed => {
+                if (isSubscribed) {
+                    if (newItem.link)
+                        window.open(newItem.link, "_blank");
+                    else {
+                        //PDF Viewer 
+                        //this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
+                        //this._dataStoreService.setSessionStorageItem("selectedNewItem", newItem);
+                        //this._navigationService.navigate(PgConstants.constants.URLS.ContentView.ContentView);
+                    }
+                } else {
+                    this._modalService.open();
+                }
+            });
+        }                
     }
 
 

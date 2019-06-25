@@ -49,6 +49,8 @@ import { ErrorModalComponent } from './components/pg-error-modal/error-modal.com
 import { SearchService } from './services/search/search-service';
 import { BackToTopComponent } from './components/back-to-top/back-to-top.component';
 import { BackToTopDirective } from './directives/back-to-top.directive';
+import { BreadCrumbComponent } from './components/bread-crumb/bread-crumb.component';
+import { PdfViewerComponent } from './components/pdf-viewer/pdf-viewer.component';
 
 const sharedComponents = [
     AppHeader1Component,
@@ -81,7 +83,9 @@ const sharedComponents = [
     FolderDetailComponent,
     ErrorModalComponent,
     BackToTopComponent,
-    BackToTopDirective
+    BackToTopDirective,
+    BreadCrumbComponent,
+    PdfViewerComponent
 ];
 
 @NgModule({

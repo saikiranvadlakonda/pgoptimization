@@ -13,7 +13,7 @@ const APPROUTES: Routes = [
     { path: 'logout', component: LogoutComponent },
     //{ path: 'login', loadChildren: 'app/views/pg/account/account.module#AccountModule' },
     { path: 'dashboard', canActivate: [AuthGuard], loadChildren: 'app/views/pg/dashboard-view/dashboard.module#DashboardModule' },
-    { path: 'practice-areas', canActivate: [AuthGuard], loadChildren: 'app/views/pg/practiceAreas/practice-areas.module#PracticeAreasModule' },
+    //{ path: 'practice-areas', canActivate: [AuthGuard], loadChildren: 'app/views/pg/practiceAreas/practice-areas.module#PracticeAreasModule' },
     { path: 'search-results', canActivate: [AuthGuard], loadChildren: 'app/views/pg/search/search.module#SearchModule' },
     { path: 'sub-topics', canActivate: [AuthGuard], loadChildren: 'app/views/pg/subTopics/sub-topics.module#SubTopicsModule' },
     { path: 'guidance-note', canActivate: [AuthGuard], loadChildren: 'app/views/pg/guidanceNote/guidance-note.module#GuidanceNoteModule' },

@@ -22,21 +22,17 @@ import { WeekdayFormatterService } from '../../../shared/services/weekday-format
     ]
 })
 export class CalendarComponent implements OnInit {
-    @ViewChild('modalContent') modalContent: TemplateRef<any>
 
+    @ViewChild('modalContent') modalContent: TemplateRef<any>
     view: string = 'month';
     viewDate: Date = new Date();
     events: CalendarEvent[] = [];
     eventsWithNoTitle: CalendarEvent[] = [];
-
     refresh: Subject<any> = new Subject();
-
     activeDayIsOpen: boolean = true;
-
     modalData: {
         event: CalendarEvent;
     };
-
     modalRef: BsModalRef;
 
 
@@ -51,24 +47,10 @@ export class CalendarComponent implements OnInit {
             this.viewDate = new Date(dat);
         }
         this.getCalendarEvents();
-        //window.scrollTo(0, 0);
         this._pagerService.setPageView();
-        /*
-        let scrollEle = document.getElementById('newpg');
-        try {
-            if (window.navigator.userAgent.indexOf("Edge") == -1)
-                scrollEle.scrollTo(0, 0);
-            else
-                scrollEle.scrollIntoView();
-        } catch (e) {
-        }*/
     }
 
     viewDateChanged() {
-        this.reset();
-    }
-
-    reset() {
         this.events = [];
         this.eventsWithNoTitle = [];
         this.getCalendarEvents();
@@ -83,8 +65,6 @@ export class CalendarComponent implements OnInit {
                     this.events = events.map(event => {
                         return {
 
-                            //start: addHours(new Date(s.startDate), 8),
-                            //end: addHours(new Date(s.endDate), 17),  
                             start: new Date(event.startDate),
                             end: new Date(event.endDate),
                             title: event.title,
@@ -92,7 +72,6 @@ export class CalendarComponent implements OnInit {
                             meta: {
                                 notes: event.title
                             },
-                            // allDay: true,
                             description: event.description,
                             startDateDisplay: event.startDateDisplay,
                             endDateDisplay: event.endDateDisplay,
@@ -104,8 +83,6 @@ export class CalendarComponent implements OnInit {
                     this.eventsWithNoTitle = events.map(event => {
                         return {
 
-                            //start: addHours(new Date(s.startDate), 8),
-                            //end: addHours(new Date(s.endDate), 17),  
                             start: new Date(event.startDate),
                             end: new Date(event.endDate),
                             title: '',
@@ -113,7 +90,6 @@ export class CalendarComponent implements OnInit {
                             meta: {
                                 notes: event.title
                             },
-                            // allDay: true,
                             description: event.description,
                             startDateDisplay: event.startDateDisplay,
                             endDateDisplay: event.endDateDisplay,

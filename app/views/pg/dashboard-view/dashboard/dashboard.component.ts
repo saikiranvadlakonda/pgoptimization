@@ -4,9 +4,7 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 import { PgConstants } from '../../../../shared/constants/pg.constants';
 import { StateParams } from '../../../../shared/models/state-params/state-params.model';
 import { HistoryItem } from '../../../../shared/models/history/history-item.model';
-import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent } from 'angular-calendar';
-import { FolderInfoViewModel } from '../../../../shared/models/Repository/folderInfo.model';
-import { Observable } from 'rxjs/Observable'
+import { CalendarEvent } from 'angular-calendar';
 import { HistoryService } from '../../../../shared/services/history/history.service';
 import { FoldersService } from '../../../../shared/services/folders/folders.service';
 import { CalendarService } from '../../../../shared/services/calendar/calendar.service';
@@ -17,7 +15,6 @@ import { PgModalService } from '../../../../shared/services/pg-modal/pg-modal.se
 import { NewGroupEntity, NewItemEntity } from '../../../../shared/models/whats-new/new-group.model';
 import { SubscriberFolderEntity } from '../../../../shared/models/folder';
 import { Subject } from 'rxjs';
-import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
 import { HistoryComponent } from '../history/history.component';
 import { PgMessages } from '../../../../shared/constants/messages';
 import { CalendarDateFormatter } from 'angular-calendar';
@@ -82,20 +79,10 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit() {
         this._pagerService.setPageView();
-        //window.scrollTo(0, 0);
-        /*
-        let scrollEle = document.getElementById('newpg');
-        if (window.navigator.userAgent.indexOf("Edge") == -1)
-            scrollEle.scrollTo(0, 0);
-        else
-            scrollEle.scrollTop = 0;
-        */
         let today = new Date();
         let startDate = new Date(today.getFullYear(), today.getMonth(), 1);
         let endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
         this.getCalendarEvents(32, startDate, endDate, 'All');
-        //this.getPracticeAreas();
-        //this.getFolders();
     }
 
     @HostListener('window:resize', ['$event'])
@@ -105,21 +92,15 @@ export class DashboardComponent implements OnInit {
     /**
     Retrieves all the folders of logged in user.
      */
-    getFolders() {
-        
+    getFolders() {        
         this._foldersService.getRootFolders().subscribe((rootFolders: any) => {
-            if (rootFolders && rootFolders.length > 0) {
-                if (rootFolders[0].isValid) {
-                    this.folderInfo = rootFolders;
-                    this._dataStoreService.setSessionStorageItem("ClientFolders", this.folderInfo);
-                    this.foldersError = undefined;
-                } else {
-                    this.folderInfo = [];
-                    this.foldersError = PgMessages.constants.folders.error;
-                }
+            if (rootFolders && rootFolders.length > 0 && rootFolders[0].isValid) {
+                this.folderInfo = rootFolders;
+                this._dataStoreService.setSessionStorageItem("ClientFolders", this.folderInfo);
+                this.foldersError = undefined;               
             } else {
                 this.folderInfo = [];
-                this.foldersError = (Array.isArray(rootFolders)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
+                this.foldersError = (Array.isArray(rootFolders) && rootFolders.length == 0) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
             }
             this._searchService.getSearchFilters().subscribe((filters) => {
                 this._dataStoreService.setSessionStorageItem("searchFilters", filters);
@@ -130,35 +111,23 @@ export class DashboardComponent implements OnInit {
     To retrieve all the Practice Areas.
      */
     getPracticeAreas() {
-       /* if (this._dataStoreService.getSessionStorageItem("AllPracticeAreas") != null) {
-            this.practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
-            this.practiceAreaError = (this.practiceAreas.length == 0) ? PgMessages.constants.practiceArea.noPracticeAreas : undefined;
-            this.getWhatsNew();
-        } else {*/
         this._practiceAreaService.getPracticeAreas().subscribe((practiceAreas: any) => {
             this.getFolders();
-                if (practiceAreas && practiceAreas.length > 0) {
-                    if (practiceAreas[0].isValid) {
-                        this.setModulesAsPracticeAreas(practiceAreas);
-                        this._dataStoreService.setSessionStorageItem("AllPracticeAreas", this.practiceAreas);
-                        this.getWhatsNew();
-                        this.practiceAreaError = undefined;
-                    } else {
-                        this.practiceAreas = [];
-                        this.practiceAreaError = PgMessages.constants.practiceArea.error;
-                    }
+            if (practiceAreas && practiceAreas.length > 0 && practiceAreas[0].isValid) {
+                    this.setModulesAsPracticeAreas(practiceAreas);
+                    this._dataStoreService.setSessionStorageItem("AllPracticeAreas", this.practiceAreas);
+                    this.getWhatsNew();
+                    this.practiceAreaError = undefined;                
+            } else {
+                this.practiceAreas = [];
+                if ((Array.isArray(practiceAreas)) && practiceAreas.length == 0) {
+                    this.practiceAreaError = PgMessages.constants.practiceArea.noPracticeAreas;
+                    alert("You are not subscribed to Practical Guidance. Do you wish to view more information about this product?");
                 } else {
-                    this.practiceAreas = [];
-                    if ((Array.isArray(practiceAreas))) {
-                        this.practiceAreaError = PgMessages.constants.practiceArea.noPracticeAreas;
-                        alert("You are not subscribed to Practical Guidance. Do you wish to view more information about this product?");
-                    } else {
-                        this.practiceAreaError = PgMessages.constants.practiceArea.error;
-                    }
+                    this.practiceAreaError = PgMessages.constants.practiceArea.error;
                 }
-            });
-        //}
-
+            }
+        });
     }
 
     setModulesAsPracticeAreas(practiceAreas: TocItemViewModel[]): void {
@@ -193,22 +162,15 @@ export class DashboardComponent implements OnInit {
         this.practiceAreas.push(...unSubPAs.sort((pa1, pa2) => pa1.title > pa2.title ? 1 : pa1.title === pa2.title ? 0 : -1));
     }
 
-
     getHistory() {
         this._hisotryService.getHistory().subscribe((history: any) => {
-            if (history && history.length > 0) {
-                if (history[0].isValid) {
-                    
-                    this.historyList = history;
-                    this.timePeriods = this.removeDuplicates(this.historyList, 'dateBadge');
-                    this.historyError = undefined;
-                } else {
-                    this.historyList = [];
-                    this.historyError = PgMessages.constants.history.error;
-                }
+            if (history && history.length > 0 && history[0].isValid) {
+                this.historyList = history;
+                this.timePeriods = this.removeDuplicates(this.historyList, 'dateBadge');
+                this.historyError = undefined;                
             } else {
                 this.historyList = [];
-                this.historyError = (Array.isArray(history)) ? PgMessages.constants.history.noHistory : PgMessages.constants.history.error;
+                this.historyError = (Array.isArray(history) && history.length == 0) ? PgMessages.constants.history.noHistory : PgMessages.constants.history.error;
             }
         });
     }
@@ -221,8 +183,7 @@ export class DashboardComponent implements OnInit {
 
     getCalendarEvents(zoneId: number, startDate: Date, endDate: Date, eventTypeCode: string) {
         this._calendarService.getCalendarEvents(zoneId, startDate.toString(), endDate.toString(), eventTypeCode).subscribe(events => {
-            if (events && events.length > 0) {
-                if (events[0].isValid) {
+            if (events && events.length > 0 && events[0].isValid) {
                     this.events = events.map(event => {
                         return {
                             start: new Date(event.startDate),
@@ -237,16 +198,11 @@ export class DashboardComponent implements OnInit {
                         }
                     });
                     this.bEvents = this.events.map(event => event);
-                    this.eventsError = undefined;
-                } else {
-                    this.events = [];
-                    this.bEvents = [];
-                    this.eventsError = PgMessages.constants.calendar.error;
-                }
+                    this.eventsError = undefined;                
             } else {
                 this.events = [];
                 this.bEvents = [];
-                this.eventsError = (Array.isArray(events)) ? PgMessages.constants.calendar.noEvents : PgMessages.constants.calendar.error;
+                this.eventsError = (Array.isArray(events) && events.length == 0) ? PgMessages.constants.calendar.noEvents : PgMessages.constants.calendar.error;
             }
             this.getPracticeAreas();
         });
@@ -257,24 +213,7 @@ export class DashboardComponent implements OnInit {
         this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
         this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(selectedPracticeArea));
     }
-
-    changeTab(tabindex) {
-        this.activeTab = tabindex;
-        if (tabindex == 1) {
-            if (!this.historyList) {
-                this.getHistory();
-            }
-        }
-        if (tabindex == 2) {
-            if (this.events.length == 0) {
-                let today = new Date();
-                let startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-                let endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                this.getCalendarEvents(32, startDate, endDate, 'All');
-            }
-        }
-    }
-
+    
     navigateToMyFolders() {
         this._navigationService.navigate(PgConstants.constants.URLS.Folders.MyFolders);
     }
@@ -288,7 +227,6 @@ export class DashboardComponent implements OnInit {
         this._dataStoreService.setSessionStorageItem("viewDate", this.viewDate);
         this._navigationService.navigate(PgConstants.constants.URLS.Calendar.Calendar);
     }
-
     
     getWhatsNew() {
         if (this._dataStoreService.getSessionStorageItem("AllWhatsNews") !== null) {
@@ -301,25 +239,17 @@ export class DashboardComponent implements OnInit {
                 "domainPath": "a2ioc", "tocItemType": "PA", "pageIndex": 0, "pageSize": 10
             };
             this._whatsNewService.getAllLatestWhatsNew(input).subscribe((whatsNew: any) => {
-                if (whatsNew && whatsNew.length > 0) {
-                    if (whatsNew[0].isValid) {
-                        this.newItems = whatsNew;
-                        this._dataStoreService.setSessionStorageItem("WhatsNews", whatsNew);
-                        this._dataStoreService.setSessionStorageItem("AllWhatsNews", whatsNew);
-                        this.newItemsLoaded = true;
-                        this.whatsNewError = undefined;
-                    } else {
-                        this.newItems = [];
-                        this.newItemsLoaded = true;
-                        this.whatsNewError = PgMessages.constants.whatsNew.error;
-                    }
+                if (whatsNew && whatsNew.length > 0 && whatsNew[0].isValid) {
+                    this.newItems = whatsNew;
+                    this._dataStoreService.setSessionStorageItem("WhatsNews", whatsNew);
+                    this._dataStoreService.setSessionStorageItem("AllWhatsNews", whatsNew);
+                    this.newItemsLoaded = true;
+                    this.whatsNewError = undefined;                    
                 } else {
                     this.newItems = [];
                     this.newItemsLoaded = true;
-                    this.whatsNewError = (Array.isArray(whatsNew)) ? PgMessages.constants.whatsNew.noWhatsNew : PgMessages.constants.whatsNew.error;
+                    this.whatsNewError = (Array.isArray(whatsNew) && whatsNew.length == 0) ? PgMessages.constants.whatsNew.noWhatsNew : PgMessages.constants.whatsNew.error;
                 }
-                //this.getFolders();
-
             });
         }
     }
@@ -329,43 +259,15 @@ export class DashboardComponent implements OnInit {
         this._navigationService.navigate(PgConstants.constants.URLS.WhatsNew.WhatsNew, new StateParams(inputNotedet));
     }
 
-    detailView(newItem) {
-        this._dataStoreService.setSessionStorageItem("selectedNewItem", newItem);
-        var selectedPracticeArea = this.practiceAreas.find(d => newItem.domainPath.includes(d.domainPath));
-        if (selectedPracticeArea.isSubscribed) {
-            if (newItem.isPdf == 'True') {
-                this.openWhatsNewPdf(newItem);
-            } else {
-                newItem.isValid = true;
-                this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
-                this._dataStoreService.setSessionStorageItem("selectedNewItem", newItem);
-                this._navigationService.navigate(PgConstants.constants.URLS.ContentView.ContentView);
-            }
-        } else {
-            newItem.isValid = false;
-            this._whatsNewService.findSubscribedNews(newItem).subscribe(isAllowedNews => {
-                if (isAllowedNews) {
-                    this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
-                    this._dataStoreService.setSessionStorageItem("selectedNewItem", newItem);
-                    this._navigationService.navigate(PgConstants.constants.URLS.ContentView.ContentView);
-                } else {
-                    this._modalService.open();
-                }
-            });
-        }
-        // this._navigationService.navigate(PgConstants.constants.URLS.ContentView.ContentView);
-    }
-
     updateSlideIndex(event: number) {
         this.whatsNewCarouselNum = event + 1;
     }
+
     viewDateChanged() {
-        this.reset();
-    }
-    reset() {
         this.events = [];
         this.getCalendarEventsByClick();
-    }
+    }   
+    
     getCalendarEventsByClick() {
         const startDate = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth(), 1);
         const endDate = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth() + 1, 0);
@@ -396,59 +298,14 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    getPracticeAreasOnly() {
-        this._practiceAreaService.getPracticeAreasOnly().subscribe(data => {
-        });
-    }
     changedTab(evnt: any) {
         if (evnt != undefined && evnt.index == 1) {
             if (!this.historyList) {
                 this.getHistory();
             }
         }
-
     }
-
-
-    isShowSubscribed(newsItem) {
-        var selectedPracticeArea = this.practiceAreas.find(nI => newsItem.domainPath.includes(nI.domainPath));
-        if (selectedPracticeArea.isSubscribed) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    openWhatsNewPdf(newItem) {
-        var selectedPracticeArea = this.practiceAreas.find(nI => newItem.domainPath.includes(nI.domainPath));
-        if (selectedPracticeArea.isSubscribed) {
-            if (newItem.isPdf == 'True') {
-                this.openWhatsNewPdf(newItem);
-            } else {
-                newItem.isValid = true;
-                this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
-                this._dataStoreService.setSessionStorageItem("selectedNewItem", newItem);
-                this._navigationService.navigate(PgConstants.constants.URLS.ContentView.ContentView);
-            }
-        } else {
-            newItem.isValid = false;
-            this._whatsNewService.findSubscribedNews(newItem).subscribe(isAllowedNews => {
-                if (isAllowedNews) {
-                    if (newItem.isPdf == 'True') {
-                        this.openWhatsNewPdf(newItem);
-                    } else {
-                        newItem.isValid = true;
-                        this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
-                        this._dataStoreService.setSessionStorageItem("selectedNewItem", newItem);
-                        this._navigationService.navigate(PgConstants.constants.URLS.ContentView.ContentView);
-                    }
-                } else {
-                    this._modalService.open();
-                }
-            });
-        }
-    }
-
+    
     isStartDayOfEvent(day: any, event: any): boolean {
         let currentDate: Date = new Date(new Date(day.date).toLocaleDateString('en-US'));
         let eventStartDate: Date = new Date(new Date(event.start).toLocaleDateString('en-US'));

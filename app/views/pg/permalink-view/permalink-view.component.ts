@@ -67,7 +67,6 @@ export class PermalinkViewComponent implements OnInit {
         const fromLib: string = this.route.snapshot.queryParamMap.has('LibToPg') ? this.route.snapshot.queryParamMap.get('LibToPg') : undefined;
 
         this._dataStoreService.setSessionStorageItem('userToken', firstParam);
-        //this._dataStoreService.setSessionStorageItem('userInfo', { isAuthenticated: true, "userName": "test03" });
         if (this.route.snapshot.queryParamMap.keys.length > 0) {
             let subscriberClientId = this.route.snapshot.queryParamMap.get('subscriberClientId');
             let subscriberId = this.route.snapshot.queryParamMap.get('subscriberId');
@@ -116,11 +115,11 @@ export class PermalinkViewComponent implements OnInit {
                                                             var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
                                                             var selectedPracticeArea = practiceAreas.find(nI => paDomainId == nI.domainId);
                                                             this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
-                                                            var topic1 = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : undefined;
+                                                            var topic1 = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPracticeArea.subTocItem.find(nI => dpath.includes(nI.domainId));
                                                             var subtopic = topic1.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
                                                             var paTitle = selectedPracticeArea.title;
                                                             if (selectedPracticeArea.domainId == 'b2ioc' || selectedPracticeArea.domainId == 'nor6d') {
-                                                                var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : undefined;
+                                                                var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPracticeArea.subTocItem.find(nI => dpath.includes(nI.domainId));
                                                                 topic1 = paModule.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
                                                                 subtopic = topic1.subTocItem.find(nI => dpath.split('/')[5] == nI.domainId);
                                                                 var spa = allPAs.find(nI => dpath.split('/')[3] == nI.domainId);
@@ -178,24 +177,21 @@ export class PermalinkViewComponent implements OnInit {
                                                                 } else {
                                                                     this.getGNdetailData(inputdata, guidancedetail);
                                                                 }
-                                                            }
-                                                           // this.getGNdetailData(inputdata, guidancedetail);
-                                                            
-                                                           // this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNoteDetail, new StateParams(guidancedetail));
-
+                                                            }                                                           
                                                         }
                                                         else {
                                                             this.showContent();
                                                         }
-
                                                         break;
+
                                                     case PgConstants.constants.ContentPageType.PractiseArea:
                                                         break;
+
                                                     case PgConstants.constants.ContentPageType.SubTopic:
 
                                                         let selectedPA = practiceAreas.find(pa => dpath.indexOf(pa.domainPath) == 0);
                                                         this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPA);
-                                                        var topic = selectedPA.subTocItem ? selectedPA.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : undefined;
+                                                        var topic = selectedPA.subTocItem ? selectedPA.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPA.subTocItem.find(nI => dpath.includes(nI.domainId));
                                                         var subTopic = topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
                                                         var input = undefined;
                                                         if (selectedPA.domainId == 'b2ioc' || selectedPA.domainId == 'nor6d') {

@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { NavigationService } from '../navigation/navigation.service';
+import { PgConstants } from '../../constants/pg.constants';
 import { AuthService } from '../auth/auth.service';
 import { SpinnerService } from '../../components/pg-spinner/pg-spinner.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-  constructor(
+  constructor(private _router: Router,
+    private _navigationService: NavigationService,
     private _authService: AuthService,
     private _spinnerService: SpinnerService
   ) { }

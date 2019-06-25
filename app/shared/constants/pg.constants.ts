@@ -60,7 +60,7 @@ export class PgConstants {
             FindSubscribedNews: BackendHost.getInstance().getHost() + 'api/secured/WhatsNew/FindSubscribedNews',
             RedirectToLib: BackendHost.getInstance().getHost() + 'api/anon/account/RedirectToLibrary',
             LogSearchContentViewRequest: BackendHost.getInstance().getHost() + 'api/secured/analytics/logSearchContentViewRequest',
-            GetPdfStream: '/api/anon/account/getPDFStream/',
+            GetPdfStream: '/api/secured/content/getPDFStream/',
             GetSearchFilters:  BackendHost.getInstance().getHost() + 'api/secured/search/getSearchFilters',
         },
 

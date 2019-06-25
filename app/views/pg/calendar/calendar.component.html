@@ -23,11 +23,7 @@
                         </div>
                     </div>
                 </div>
-                <!--<div class="col-md-12 col-lg-4 text-right">
-                    <span class="foldersButton">
-                        <a href="javascript:void(0);"><i class="ti-settings  saveButton boxshadow cog"></i></a>
-                    </span>
-                </div>-->
+                
             </div>
         </div>
     </div>
@@ -53,27 +49,6 @@
             </ul>
         </div>
         <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-xl-4 text-center calendar-header m-hide">
-            <!--<h4>
-                <span class="previousButton clarrows ft" mwlCalendarPreviousView
-                      [view]="view"
-                      [(viewDate)]="viewDate"
-                      (viewDateChange)="viewDateChanged()">
-                    <span class="leftArrowMain">
-                        <i class="fa fa-angle-left  leftarrowBackButton"></i>
-                    </span>
-                </span>
-                <span *ngIf="view === 'day'">{{ formatDate(viewDate) }}</span>
-                <span *ngIf="view !== 'day'">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</span>
-                <span class="previousButton clarrows rt"
-                      mwlCalendarNextView
-                      [view]="view"
-                      [(viewDate)]="viewDate"
-                      (viewDateChange)="viewDateChanged()">
-                    <span class="leftArrowMain">
-                        <i class="fa fa-angle-right  leftarrowBackButton"></i>
-                    </span>
-                </span>
-            </h4>-->
             <div class="mon-nav-container">
                 <div class="calendar-mon-nav-t">
                     <div class="calendar-mon-nav-tr">
@@ -172,7 +147,6 @@
                                  (mwlClick)="eventClicked.emit({ event: event })">
                             </div>
                         </div>
-                        <!--<span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }} </span>-->
                         <span class="cal-day-number">{{ day?.date | calendarDate:'monthViewDayNumber':locale }}</span>
                         <ng-container *ngFor="let event of day?.events | slice: 0:1">
                             <div class="cal-day-notes" [ngClass]="event?.eventCss" [style.width.%]="getCalDayWidth(day, event)" (mwlClick)="eventClicked.emit({ event: event })" *ngIf="isStartDayOfEvent(day, event)">

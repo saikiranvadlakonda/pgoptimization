@@ -103,7 +103,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
     jumpDpath = "";
     ngOnInit() {
         const stateSubscription = this._routerProxy.getViewModel().subscribe((guidancedetail) => {
-            if (guidancedetail) {
+            if (guidancedetail && guidancedetail != null) {
                 this.guidances = this._dataStoreService.getSessionStorageItem("Guidances");
                 if (guidancedetail && guidancedetail.domainPath == undefined) {
                     let state = this._navigationService.getStateByRouteName("guidance-note/guidance-note-detail");
@@ -359,7 +359,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         this.dPath = dpath;
         this._contentService.downloadContent(rendRequest).subscribe((content: any) => {
 
-            if (content && content.isValid) {
+            if (content && content != null && content.isValid) {
                 if (content.mimeType == "text/html") {
                     this.backButton = true;
                     this.guidanceDetailChildContent = content.fileStrContent;
@@ -740,7 +740,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                         subtopic = topic.subTocItem.find(nI => domainPath.split('/')[5] == nI.domainId);
                     } else {
                         topic = selectedPracticeArea.subTocItem.find(item => domainPath.split('/')[3] == item.domainPath.split('/')[3]);
-                        subtopic = (topic !== undefined) ? topic.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId) : undefined;
+                        subtopic = (topic !== undefined) ? topic.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId) : topic.subTocItem.find(nI => domainPath.includes(nI.domainId));
                     }
                     var input = {
                         "subTopicDomainPath": subtopic.domainPath,

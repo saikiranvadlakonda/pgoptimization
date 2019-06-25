@@ -47,7 +47,7 @@ export class PgInterceptor implements HttpInterceptor {
             contentType = request.headers.get('Content-Type');
         }
         this.tokenModel = this._dataStoreService.getSessionStorageItem('userToken');
-        if (contentType !== 'application/x-www-form-urlencoded' && this.tokenModel != null) {
+        if (this.tokenModel != null) {
             let httpHeaders = new HttpHeaders()
                 .append('x-vid', this._location.path())
                 .append('app-name', appName)

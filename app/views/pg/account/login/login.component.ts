@@ -21,10 +21,10 @@ export class LoginComponent implements OnInit {
 
     @Input() userName: string;
     @Input() password: string;
-    // @Output() getLoggedInName: EventEmitter<any> = new EventEmitter();
+    @Input() myLNUrl: string;
+
     constructor(
         private _authService: AuthService,
-        private _userService: UserService,
         private _navigationService: NavigationService,
         private _dataStoreService: DataStoreService,
         private route: ActivatedRoute,
@@ -33,29 +33,21 @@ export class LoginComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        //if (!this._authService.isLoggedIn) {
         this.login();
-        //}
     }
 
     public login(): void {
-
-        this.userName = "test03";
-        this.password = "+Wad+wc0x5ru7Q5x67mbJQ==";
-        this.password = "";
-
-        //this.userName = "test07";
-        //this.password = "/X3VaY6x+mgS9TD/zFZcGA==";
-        var firstParam: string = this.route.snapshot.queryParamMap.get('pgNew');
-        if (firstParam) {
-            firstParam = decodeURIComponent(firstParam);
+        
+        let token: string = this.route.snapshot.queryParamMap.get('pgNew');
+        if (token) {
+            token = decodeURIComponent(token);
         }
-        //this._dataStoreService.setSessionStorageItem('userToken', firstParam);
+        
         if (this.route.snapshot.queryParamMap.keys.length > 0) {
             let subscriberClientId = this.route.snapshot.queryParamMap.get('subscriberClientId');
             let subscriberId = this.route.snapshot.queryParamMap.get('subscriberId');
             let username = this.route.snapshot.queryParamMap.get('userName');
-            var password: string = this.route.snapshot.queryParamMap.get('encPassword');
+            let password: string = this.route.snapshot.queryParamMap.get('encPassword');
             if (password != null) {
                 this.password = decodeURIComponent(password);
                 document.getElementById("myHeader1").style.display = "block";
@@ -77,8 +69,8 @@ export class LoginComponent implements OnInit {
                 if (this.userName != null && (subscriberId || password != null)) {
                     this._authService.login(this.userName, this.password).subscribe((response) => {
                         if (response != null) {
-                            if (firstParam != null)
-                                response.token = firstParam;
+                            if (token != null)
+                                response.token = token;
                             this._dataStoreService.setSessionStorageItem('userToken', response);
                             this._authService.getUserInfo().subscribe(userInfo => {
                                 if (userInfo) {
@@ -86,7 +78,6 @@ export class LoginComponent implements OnInit {
                                     const dpath: string = this.route.snapshot.queryParamMap.get('permalink');
                                     const extDpath: string = this.route.snapshot.queryParamMap.get('extDpath');
                                     if (dpath) {
-                                        //this._contentService.navigateToContent(dpath);
                                         let input = {};
                                         input["permalink"] = dpath;
                                         input["extDpath"] = extDpath;
@@ -112,8 +103,6 @@ export class LoginComponent implements OnInit {
                                                             case PgConstants.constants.ContentPageType.Content:
 
                                                                 this._contentService.showContentByDomainPath(extDpath, "yes", { "title": "Content" });
-                                                               // var newItem = { "domainPath": extDpath, "hasChildren": false, "back": false };
-                                                               // this.navigateToContentView(newItem);
                                                                 break;
                                                             case PgConstants.constants.ContentPageType.PractiseArea:
                                                                 break;
@@ -125,7 +114,7 @@ export class LoginComponent implements OnInit {
 
                                                                 let selectedPA = practiceAreas.find(pa => dpath.indexOf(pa.domainPath) == 0);
                                                                 this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPA);
-                                                                var topic = selectedPA.subTocItem ? selectedPA.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : undefined;
+                                                                var topic = selectedPA.subTocItem ? selectedPA.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPA.subTocItem.find(nI => dpath.includes(nI.domainId));
                                                                 var subTopic = topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
                                                                 var input = undefined;
                                                                 var paTitle = selectedPA.title;
@@ -156,34 +145,20 @@ export class LoginComponent implements OnInit {
                                                                     };
                                                                 }
                                                                 if (subTopic != null && subTopic.type == "ST" && subTopic.domainId == data.contentId) {
-
                                                                     this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
-
                                                                 }
-
                                                                 break;
                                                             case PgConstants.constants.ContentPageType.Topic:
                                                                 break;
                                                             default:
                                                         }
                                                     })
-                                                    
-
                                                 }
                                             });
-                                            
-
-
                                         } else {
                                             this._navigationService.navigate(PgConstants.constants.URLS.Dashboard.Dashboard);
                                         }
-                                    }
-                                        //this._userService.getUserInfo().subscribe((user) => {
-                                    //    if (user.isAuthenticated) {
-                                    //        this._dataStoreService.setSessionStorageItem('userInfo', user);
-                                    //        this._navigationService.navigate(PgConstants.constants.URLS.Dashboard.Dashboard);
-                                    //    }
-                                    //});
+                                    }                                    
                                 }
                             });
 
@@ -191,9 +166,11 @@ export class LoginComponent implements OnInit {
                     });
                 }
                 else {
-                    window.location.href = "http://lngdurindd003.legal.regn.net:85";
+                    window.location.href = this.myLNUrl;
                 }
             }
+        } else {
+            window.location.href = this.myLNUrl;
         }
     }
 

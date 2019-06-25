@@ -29,11 +29,13 @@ export class RecentlyViewedComponent implements OnInit {
 
     getPracticeAreaName(history: any) {
         let practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
-        let practiceArea = practiceAreas.find(pa => history.domainPath.includes(pa.domainPath));
+        let practiceArea = practiceAreas.find(pa => (history && history.domainPath && history.domainPath.includes(pa.domainPath)));
         if (practiceArea != undefined) {
             return practiceArea.title;
-        } else {
+        } else if (history.lmtTitlePath) {
             return history.lmtTitlePath.split("|")[2];
+        } else {
+            return "";
         }
     }
 }

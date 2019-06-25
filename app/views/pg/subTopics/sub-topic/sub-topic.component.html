@@ -33,9 +33,10 @@
 
         </div>
         <div class="col-xs-12 col-lg-12 col-xl-12 col-md-12 col-sm-12" *ngIf="isPDF">
-            <div class="card-box border-radius-0 searchResults p-40">
+            <!--<div class="card-box border-radius-0 searchResults p-40">
                 <iframe [src]="pdfContent | safe: 'resourceUrl' " title="pdfTitle" width="100%" height="800px"></iframe>
-            </div>
+            </div>-->
+            <app-pdf-viewer [pdfContent]="pdfContent"></app-pdf-viewer>
         </div>
         <div class="col-xs-12 col-lg-4 col-xl-3" *ngIf="!isPDF">
             <essentials [essentials]="essentials" (essential)="downloadContent($event)"></essentials>

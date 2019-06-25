@@ -1,6 +1,7 @@
 /** angular modules import */
 import { NgModule, ErrorHandler, APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CalendarModule } from 'angular-calendar';
@@ -101,6 +102,67 @@ import {
   MatInputModule,
   MatToolbarModule
 } from '@angular/material';
+
+
+/*
+@NgModule({
+  declarations: [
+    AppComponent,
+    LoginComponent
+  ],
+  imports: [BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    SharedModule,
+    CalendarModule.forRoot(),
+    StoreModule.forRoot({
+      routerState: routerReducer
+    }),
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument({ maxAge: 25 }),
+    AppRoutingModule,
+    BsDropdownModule.forRoot(),
+    CarouselModule.forRoot(),
+
+    //angular material
+    BrowserAnimationsModule,
+    NoopAnimationsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatExpansionModule,
+    MatAutocompleteModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatGridListModule,
+    MatListModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatTableModule,
+    MatTabsModule,
+    MatTooltipModule,
+    MatStepperModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatToolbarModule,
+    MatTooltip
+}) from '@angular/material';
+*/
+
 
 @NgModule({
     declarations: [

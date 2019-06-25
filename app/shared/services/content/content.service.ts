@@ -59,6 +59,16 @@ export class ContentService {
             );
     };
 
+    public getPDFStream(input): Observable<any> {
+        var url = PgConstants.constants.WEBAPIURLS.GetPdfStream;
+
+        return this.http.get(url + input, { responseType: "arraybuffer" })
+            .pipe(
+                timeout(300000),
+                catchError((error: Response) => Observable.throw(error))
+            );
+    };
+
     ReturnContentType(fileExtension: string) {
         switch (fileExtension) {
             case ".htm":
@@ -253,9 +263,9 @@ export class ContentService {
         if (this.isPgDomainPath(domainId) || isPgSubPracticeAreaItem) {
 
             var paTitle = data["lmtTitlePath"] ? (data["lmtTitlePath"].indexOf("|") == -1 ? data.lmtTitlePath : data.practiceArea) : undefined;
-            
+
             var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
-            var selectedPracticeArea; 
+            var selectedPracticeArea;
 
             if (paTitle == undefined) {
                 selectedPracticeArea = practiceAreas.find(nI => domainId.split('/')[2] == nI.domainId);
@@ -297,7 +307,7 @@ export class ContentService {
                         "domainPath": domainId,
                         "domainId": domainId.split('/')[domainPathLength - 1],
                         "parentDomainId": parentDomainId,
-                        "title": data.name ? data.name : (data['lmtTitlePath']? ((data.lmtTitlePath.split("Guidance|")[1]).split("|")[0]) : (data.title? data.title : "Content")),
+                        "title": data.name ? data.name : (data['lmtTitlePath'] ? ((data.lmtTitlePath.split("Guidance|")[1]).split("|")[0]) : (data.title ? data.title : "Content")),
                         "practiceArea": selectedPracticeArea.title,
                         "topic": topic.title,
                         "subtopic": subtopic,
@@ -468,11 +478,11 @@ export class ContentService {
             var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
             var selectedPracticeArea = practiceAreas.find(nI => paDomainId == nI.domainId);
             this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
-            var topic = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : undefined;
+            var topic = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPracticeArea.subTocItem.find(nI => dpath.includes(nI.domainId));
             var subtopic = topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
 
             if (this.isPgModule(dpath)) {
-                var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : undefined;
+                var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPracticeArea.subTocItem.find(nI => dpath.includes(nI.domainId));
                 topic = paModule.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
                 subtopic = topic.subTocItem.find(nI => dpath.split('/')[5] == nI.domainId);
 

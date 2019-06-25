@@ -71,9 +71,10 @@
     </div>
     <div class="row  guidance-note-page">
         <div class="col-xs-12 col-lg-12 col-xl-12" *ngIf="isPDF">
-            <div class="card-box border-radius-0 searchContent">
+            <!--<div class="card-box border-radius-0 searchContent">
                 <iframe [src]="pdfContent | safe: 'resourceUrl' " title="pdfTitle" width="100%" height="800px"></iframe>
-            </div>
+            </div>-->
+            <app-pdf-viewer [pdfContent]="pdfContent"></app-pdf-viewer>
         </div>
         <div class="col-xs-12" [ngClass]="(essentials?.length == 0 && contentOutlinesList?.length == 0) ? 'col-lg-12 col-xl-12' : 'col-lg-8 col-xl-9'">
             <div class="card-box border-radius-0 guiRefTabs" *ngIf="!guidanceDetail && !isPDF" style="height: 500px;">

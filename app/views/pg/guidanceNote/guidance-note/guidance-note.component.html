@@ -1,6 +1,6 @@
 <div class="guidance-note-page-container">
     <div class="row guidance-note-page gndetail-page">
-        <div class="col-xs-12 col-lg-12 col-xl-12">
+        <!--<div class="col-xs-12 col-lg-12 col-xl-12">
             <div class="breadcrumb-text">
                 <div>
                     You are here: <span><a routerLink="/dashboard">Dashboard</a></span>  >
@@ -8,7 +8,8 @@
                     <span> {{ subTopicTitle }}</span>
                 </div>
             </div>
-        </div>
+        </div>-->
+        <app-bread-crumb [rootArea]="rootArea" [subTopicTitle]="subTopicTitle"></app-bread-crumb>
         <div class="col-xs-12" [ngClass]="essentials?.length == 0 ? 'col-lg-12 col-xl-12' : 'col-lg-8 col-xl-9'">
             <div class="row header-container" *ngIf="!isPDF">
                 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
@@ -91,9 +92,10 @@
 
         </div>
         <div class="col-xs-12 col-lg-12 col-xl-12" *ngIf="isPDF">
-            <div class="card-box border-radius-0 searchContent">
+            <!--<div class="card-box border-radius-0 searchContent">
                 <iframe [src]="pdfContent | safe: 'resourceUrl' " title="pdfTitle" width="100%" height="800px"></iframe>
-            </div>
+            </div>-->
+            <app-pdf-viewer [pdfContent]="pdfContent"></app-pdf-viewer>
         </div>
         <div class="col-xs-12 col-lg-4 col-xl-3 guidance-note-essentials" *ngIf="!isPDF && essentials?.length > 0">
             <!--<div class="col-xs-12 col-lg-4 col-xl-3" *ngIf="!isPDF">-->

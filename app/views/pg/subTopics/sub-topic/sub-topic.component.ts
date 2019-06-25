@@ -219,15 +219,34 @@ export class SubTopicComponent implements OnInit, OnDestroy {
             if (regex.test(data.domainPath)) {
                 window.open(data.domainPath);
             } else {
-                this._contentService.downloadContent(this.rendrContentRequest).subscribe(data => {
+                this._contentService.getPDFStream(this.rendrContentRequest.dpath.split("/").pop()).subscribe(data => {
+                    if (data) {
+                        let TYPED_ARRAY = new Uint8Array(data);
+
+                        const STRING_CHAR = TYPED_ARRAY.reduce((strData, byte) => {
+                            return strData + String.fromCharCode(byte);
+                        }, '');
+                        let base64String = btoa(STRING_CHAR);
+                        this.isPDF = true;
+                        this.pdfContent = "data:application/pdf,base64;"+base64String;
+                    }
                     if (data.mimeType == "application/pdf" && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
                         this.isPDF = true;
-                        this.pdfTitle = data.fileName.replace(".pdf", '');
-                        this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + this.rendrContentRequest.dpath.split("/").pop();
+                        //this.pdfTitle = data.fileName.replace(".pdf", '');
+                        this.pdfContent = data;//PgConstants.constants.WEBAPIURLS.GetPdfStream + this.rendrContentRequest.dpath.split("/").pop();
                     } else {
-                        this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
+                        //this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
                     }
                 });
+                //this._contentService.downloadContent(this.rendrContentRequest).subscribe(data => {
+                //    if (data.mimeType == "application/pdf" && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
+                //        this.isPDF = true;
+                //        this.pdfTitle = data.fileName.replace(".pdf", '');
+                //        this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + this.rendrContentRequest.dpath.split("/").pop();
+                //    } else {
+                //        this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
+                //    }
+                //});
             }
 
         }
@@ -299,18 +318,18 @@ export class SubTopicComponent implements OnInit, OnDestroy {
 
     getRecentlyView() {
         this._historyService.getHistoryItemsByCount(5).subscribe(data => {
-            if (data && data != undefined && data != null && data.length >0 && data[0].isValid)
-            data.forEach(hItem => {
-                if (hItem.lmtTitlePath) {
-                    let titlePath = hItem.lmtTitlePath;
-                    hItem.lmtTitlePath = (titlePath.split('|')).length > 3 ? titlePath.split('|')[2] : titlePath.split('|')[1];
-                    if (titlePath.includes("Income Tax")) {
-                        hItem.lmtTitlePath = "Tax - " + hItem.lmtTitlePath;
-                    } else if (titlePath.includes("Real Estate")) {
-                        hItem.lmtTitlePath = "Real Estate - " + hItem.lmtTitlePath;
+            if (data && data != undefined && data != null && data.length > 0 && data[0].isValid)
+                data.forEach(hItem => {
+                    if (hItem.lmtTitlePath) {
+                        let titlePath = hItem.lmtTitlePath;
+                        hItem.lmtTitlePath = (titlePath.split('|')).length > 3 ? titlePath.split('|')[2] : titlePath.split('|')[1];
+                        if (titlePath && titlePath.includes("Income Tax")) {
+                            hItem.lmtTitlePath = "Tax - " + hItem.lmtTitlePath;
+                        } else if (titlePath && titlePath.includes("Real Estate")) {
+                            hItem.lmtTitlePath = "Real Estate - " + hItem.lmtTitlePath;
+                        }
                     }
-                }
-            });
+                });
             this.recentlyViewed = data;
         });
     }

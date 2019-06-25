@@ -11,21 +11,18 @@ import { FoldersService } from '../../../shared/services/folders/folders.service
 import { CalendarService } from '../../../shared/services/calendar/calendar.service';
 import { PracticeAreaService } from '../../../shared/services/practice-areas/practice-areas.service';
 import { HistoryService } from '../../../shared/services/history/history.service';
-//import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap/modal/modal.module';
 import { ModalModule, CarouselModule } from 'ngx-bootstrap';
 import { WhatsNewService } from '../../../shared/services/whats-new/whats-new.service';
-//import { ModalService } from '../../../shared/components/pg-modal/pg-modal.service';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../../../shared/services/search/search-service';
-
+import { WhatsnewCarouselComponent } from './whatsnew-carousel/whatsnew-carousel.component';
 
 //angular material
 import {
     MatTabsModule,
     MatTooltipModule
 } from '@angular/material';
-
 
 @NgModule({
     imports: [
@@ -41,9 +38,21 @@ import {
         MatTabsModule,
         MatTooltipModule
     ],
-    declarations: [PracticeAreaComponent, HistoryComponent,
-        DashboardComponent, BrowseFoldersComponent],
-    providers: [FoldersService, PracticeAreaService, CalendarService, HistoryService, WhatsNewService, SearchService],
+    declarations: [
+        PracticeAreaComponent,
+        HistoryComponent,
+        DashboardComponent,
+        BrowseFoldersComponent,
+        WhatsnewCarouselComponent
+    ],
+    providers: [
+        FoldersService,
+        PracticeAreaService, 
+        CalendarService, 
+        HistoryService, 
+        WhatsNewService, 
+        SearchService
+    ],
     exports: [
         MatTabsModule
     ]

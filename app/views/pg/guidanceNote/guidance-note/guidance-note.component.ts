@@ -100,7 +100,7 @@ export class GuidanceNoteComponent implements OnInit {
                 var navigation = this._navigationService;
                 viewModel = viewModel.subTopic ? viewModel : this._dataStoreService.getSessionStorageItem("guidanceNote");
                 this.viewModel = viewModel;
-                this.domainId = (this.viewModel.subTopic) ? this.viewModel.subTopic.domainId : this.viewModel.subTopicDomainPath;
+                this.domainId = (this.viewModel.subTopic && this.viewModel.subTopic != null) ? this.viewModel.subTopic.domainId : this.viewModel.subTopicDomainPath;
                 this.practiceArea = viewModel.subTopic.title;
                 if (viewModel.subTopic.redirectedFrom && viewModel.subTopic.redirectedFrom == "folder-detail") {
                     this.redirectedFrom = viewModel.subTopic.redirectedFrom;
@@ -111,9 +111,9 @@ export class GuidanceNoteComponent implements OnInit {
                             this.subTopic = data;
                             this.rootArea = this.viewModel.rootArea;
 
-                            if (this.subTopic.result["documentPathTitles"].length > 0) {
-                                this.rootArea = this.viewModel ? this.viewModel.rootArea : this.subTopic.result["documentPathTitles"][1].title;
-                                this.subTopicTitle = this.subTopic.result["documentPathTitles"][(this.subTopic.result["documentPathTitles"].length - 2)].title;
+                            if (this.subTopic["documentPathTitles"].length > 0) {
+                                this.rootArea = this.viewModel ? this.viewModel.rootArea : this.subTopic["documentPathTitles"][1].title;
+                                this.subTopicTitle = this.subTopic["documentPathTitles"][(this.subTopic["documentPathTitles"].length - 2)].title;
                                 this.title = this.rootArea + ' > ' + this.subTopicTitle;
                                 this.practiceArea = this.subTopicTitle;
                             } else {
@@ -127,18 +127,18 @@ export class GuidanceNoteComponent implements OnInit {
 
                             this.saveFolderTitle = this.practiceArea;
 
-                            if (this.subTopic.result["forms & precedents"] != null) {
-                                this.getEssentials(this.subTopic.result["forms & precedents"], "Forms & precedents");
+                            if (this.subTopic["forms & precedents"] != null) {
+                                this.getEssentials(this.subTopic["forms & precedents"], "Forms & precedents");
                             }
-                            if (this.subTopic.result["checklists"] != null) {
-                                this.getEssentials(this.subTopic.result["checklists"], "Checklists");
+                            if (this.subTopic["checklists"] != null) {
+                                this.getEssentials(this.subTopic["checklists"], "Checklists");
                             }
-                            if (this.subTopic.result["other resources"] != null) {
-                                this.getEssentials(this.subTopic.result["other resources"], "Other resources");
+                            if (this.subTopic["other resources"] != null) {
+                                this.getEssentials(this.subTopic["other resources"], "Other resources");
                             }
                             this.essentials = !this.essentials ? [] : this.essentials;
-                            if (this.subTopic.result.guidance && this.subTopic.result.guidance.length > 0 && this.subTopic.result.guidance[0].isValid) {
-                                this.guidances = this.subTopic.result.guidance;
+                            if (this.subTopic.guidance && this.subTopic.guidance.length > 0 && this.subTopic.guidance[0].isValid) {
+                                this.guidances = this.subTopic.guidance;
                                 this._dataStoreService.setSessionStorageItem("Guidances", this.guidances);
                                 this.guidanceError = (this.guidances.length == 0) ? PgMessages.constants.guidanceNote.noGuidance : undefined;
                             } else {
@@ -146,11 +146,11 @@ export class GuidanceNoteComponent implements OnInit {
                                 this.guidanceError = (Array.isArray(this.guidances)) ? PgMessages.constants.guidanceNote.noGuidance : PgMessages.constants.guidanceNote.error;
                             }
 
-                            this.commentarys = this.subTopic.result.commentary;
-                            this.legislations = this.subTopic.result.legislation;
-                            this.caseLaws = this.subTopic.result["case law"];
-                            if (this.subTopic.result.overview) {
-                                this.subTopic.result.overview.forEach(overview => {
+                            this.commentarys = this.subTopic.commentary;
+                            this.legislations = this.subTopic.legislation;
+                            this.caseLaws = this.subTopic["case law"];
+                            if (this.subTopic.overview) {
+                                this.subTopic.overview.forEach(overview => {
                                     /*if (overview.topicType !== "ST") {
                                         this.paGuidance += overview.rawContent;
                                     }*/
@@ -326,7 +326,7 @@ export class GuidanceNoteComponent implements OnInit {
         var dpath = libContent.dpath == undefined ? libContent.domainPath : libContent.dpath;
         var pathParam;
         var pgsdpath = this.domainId;
-        if ((dpath.indexOf("nilc") != -1 || dpath.indexOf("kilc") != -1 || dpath.indexOf("454f") != -1 ||
+        if ((dpath != null) && (dpath.indexOf("nilc") != -1 || dpath.indexOf("kilc") != -1 || dpath.indexOf("454f") != -1 ||
             dpath.indexOf("sigzc") != -1 || dpath.indexOf("b6q3d") != -1 || dpath.indexOf("dyeed") != -1 || dpath.indexOf("wrg4c") != -1 || dpath.indexOf("owsp") != -1 ||
             dpath.indexOf("ubxe") != -1 || dpath.indexOf("xlvg") != -1 || dpath.indexOf("smkj") != -1 || dpath.indexOf("8vai") != -1 || dpath.indexOf("8vai") != -1 ||
             dpath.indexOf("5gug") != -1 || dpath.indexOf("gpdi") != -1 || dpath.indexOf("fmwg") != -1 || dpath.indexOf("ljxl") != -1) && pgsdpath == undefined) {

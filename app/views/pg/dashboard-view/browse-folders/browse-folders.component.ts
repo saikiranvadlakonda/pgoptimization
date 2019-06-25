@@ -1,6 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewChild, ElementRef, TemplateRef, OnDestroy } from '@angular/core';
-import { FolderInfoViewModel } from '../../../../shared/models/Repository/folderInfo.model';
-import { Observable } from 'rxjs/Observable';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { PgConstants } from '../../../../shared/constants/pg.constants';
 import { StateParams } from '../../../../shared/models/state-params/state-params.model';
@@ -10,8 +8,7 @@ import { PracticeAreaService } from '../../../../shared/services/practice-areas/
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal/modal.module';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { Type } from '@angular/compiler/src/output/output_ast';
-import { SubscriberFolderEntity, FolderEntity, FolderContentEntity } from '../../../../shared/models/folder';
+import { SubscriberFolderEntity, FolderEntity } from '../../../../shared/models/folder';
 import { ErrorContent } from '../../../../shared/models/error-content/error-content.model';
 import { ErrorModalService } from '../../../../shared/services/error-modal/error-modal.service';
 import { PgMessages } from '../../../../shared/constants/messages';
@@ -67,7 +64,6 @@ export class BrowseFoldersComponent implements OnInit, OnDestroy {
 
     modalRef: BsModalRef;
 
-
     ngOnInit() {
     }
 
@@ -79,12 +75,7 @@ export class BrowseFoldersComponent implements OnInit, OnDestroy {
     showMoreFolders() {
         let input = { isFolderDetails: false };
         this._navigationService.navigate(PgConstants.constants.URLS.Folders.MyFolders, new StateParams(input));
-    }
-
-    navigateToFolderDetails(subscriberClientID, clientDescription) {
-        var input = { "subscriberClientID": subscriberClientID, "clientDescription": clientDescription };
-        this._navigationService.navigate(PgConstants.constants.URLS.Folders.FolderDetails, new StateParams(input));
-    }
+    }    
 
     createFolder(event, template: TemplateRef<any>): void {
         this.Createfoldertxt = "";
@@ -95,6 +86,7 @@ export class BrowseFoldersComponent implements OnInit, OnDestroy {
         };
         this.newFolder = true;
     }
+
     saveCreatFolder = function () {
         this.newClientFolder.isValid = null;
         if (!this.newClientFolder.clientDescription || this.newClientFolder.clientDescription.trim() == '') {
@@ -121,84 +113,21 @@ export class BrowseFoldersComponent implements OnInit, OnDestroy {
             });
         }
     }
+
     onKeyDown(event, folder, val) {
         if (event.keyCode == 13) {
             if (val == 'New') {
                 this.saveCreatFolder();
-            }
-            if (val == 'Edit') {
-                //this.editClient(folder);
-            }
+            }            
         }
     }
+
     cancelCreateClient() {
         this.newFolder = false;
         this.newClientFolder.clientDescription = "";
         this.newClientFolder.isValid = null;
     }
-    openModal(template: TemplateRef<any>) {
-
-        this.modalRef = this.modalService.show(template, { backdrop: 'static', keyboard: false });
-    }
-
-    getFoldersMainFolderCount(subscriberClientId: number): number {
-        let count = 0;
-
-        var mainFolder = this.folderInfo.find(f => f.subscriberClientId == subscriberClientId);
-
-        if (mainFolder && mainFolder.parentFolders) {
-            count += mainFolder.parentFolders.length;
-            mainFolder.parentFolders.forEach(p => {
-                count += this.getFoldersCount(p.folders);
-            });
-        }
-        return count;
-    }
-
-    getFilesMainFolderCount(subscriberClientId: number): number {
-        let count = 0;
-        var mainFolder = this.folderInfo.find(f => f.subscriberClientId == subscriberClientId);
-        if (mainFolder && mainFolder.parentFolders) {
-            mainFolder.parentFolders.forEach(p => {
-                count += p.files.length;
-                count += this.getFilesCount(p.folders);
-            });
-        }
-        return count;
-    }
-
-
-    getFoldersCount(folders: FolderEntity[]): number {
-        let folderCount = 0;
-        folderCount += folders.length;
-        folders.forEach(f => {
-            if (f.folders) {
-                folderCount += f.folders.length;
-                f.folders.forEach(sf => {
-                    if (sf.folders)
-                        folderCount += this.getFoldersCount(sf.folders);
-                });
-            }
-        });
-        return folderCount;
-    }
-
-    getFilesCount(folders: FolderEntity[]): number {
-        let filesCount = 0;
-
-        folders.forEach(f => {
-            filesCount += f.files.length;
-            if (f.folders) {
-                f.folders.forEach(sf => {
-                    filesCount += sf.files.length;
-                    if (sf.folders)
-                        filesCount += this.getFilesCount(sf.folders);
-                });
-            }
-        });
-        return filesCount;
-    }
-
+    
     ngOnDestroy() {
         this.newFolder = null;
         this.newClientFolder.clientDescription = "";

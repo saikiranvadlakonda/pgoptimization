@@ -160,7 +160,7 @@ export class ContentComponent implements OnInit {
 
     back() {
         let previous = this._navigationService.getPreviousRoute();
-        if (previous && previous.previousRoute && (previous.previousRoute.startsWith('/permalink-view')
+        if (previous && previous != null && previous.previousRoute && (previous.previousRoute.startsWith('/permalink-view')
             || previous.previousRoute.startsWith('/guidance-note/guidance-note-detail')
             || previous.previousRoute.startsWith('/login'))
            ) {
@@ -328,30 +328,7 @@ export class ContentComponent implements OnInit {
         doc.innerHTML = html;
         return doc.innerHTML == html;
     }
-    buildNewHTML(input: string): string {
-        var regex1 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...','PGS/ContentView.aspx[?]dpath[=]`);
-        var regex2 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...', 'Library/ContentView.aspx[?]dpath[=]`);
-        var regex3 = new RegExp(`src[=]"/Content/ContentResponse.aspx[?]dpath[=]`);
-        var regex4 = new RegExp(`openMultiViewLibContent`);
-        var regex5 = new RegExp(`openLibContent`);
-        var regex6 = new RegExp(`onclick="`);
-        
-        input = input.replace(new RegExp(regex1, 'g'), `(click)="openDContent('`);
-        input = input.replace(new RegExp(regex2, 'g'), `(click)="openDContent('`);
-        input = input.replace(new RegExp(regex4, 'g'), `openMultiViewLibContent`);
-        //input = input.replace(new RegExp(regex5, 'g'), `openLibContent`);
-        //input = input.replace(new RegExp(regex6, 'g'), `(click)="`);
-        input = input.replace(new RegExp(`onclick="window.parent.openLibContent`, 'g'), `(click)="openLibContent`);
-
-        input = input.replace(new RegExp(`href="#`, 'g'), `class="underLine`);
-        // input = input.replace(new RegExp('[^\u0000-\u007F]', 'g'), ' ');
-        input = input.replace(new RegExp('.jpg"', 'g'), `.jpg'"`);
-        input = input.replace(new RegExp(regex3, 'g'), `[image-src]="'`);
-        input = input.replace(new RegExp('.JPG"', 'g'), `.JPG'"`);
-        input = input.replace(new RegExp('.png"', 'g'), `.png'"`);
-        return input;
-  }
-
+    
   isPADPath(domainPath: string, domainId: string) {
         var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
         var dPathLength = domainPath.split('/').length;
@@ -366,6 +343,8 @@ export class ContentComponent implements OnInit {
 
         return false;
     }
+
+
     openMultiViewLibContent(domainPath: string, selectedTabName: string, selectedTabIndex: string, isMultiView: boolean, domainId: string) {
       this.previousNewItems.push(this.newItem);
       this.setCurrentNewItem(domainPath, "false");
@@ -416,7 +395,7 @@ export class ContentComponent implements OnInit {
                               var allPAs = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
                               var spa = allPAs.find(nI => domainPath.split('/')[3] == nI.domainId);
                               var paTitle = spa.title;
-                              var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => domainPath.split('/')[3] == nI.domainId) : undefined;
+                              var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => domainPath.split('/')[3] == nI.domainId) : selectedPracticeArea.subTocItem.find(nI => domainPath.includes(nI.domainId));
                               topic = paModule.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId);
                               subtopic = topic.subTocItem.find(nI => domainPath.split('/')[5] == nI.domainId);
                               var guidancedetail = {
