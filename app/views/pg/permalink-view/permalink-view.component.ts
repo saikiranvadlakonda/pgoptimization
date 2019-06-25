@@ -115,7 +115,7 @@ export class PermalinkViewComponent implements OnInit {
                                                             var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
                                                             var selectedPracticeArea = practiceAreas.find(nI => paDomainId == nI.domainId);
                                                             this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
-                                                            var topic1 = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPracticeArea.subTocItem.find(nI => dpath.includes(nI.domainId));
+                                                            var topic1 = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
                                                             var subtopic = topic1.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
                                                             var paTitle = selectedPracticeArea.title;
                                                             if (selectedPracticeArea.domainId == 'b2ioc' || selectedPracticeArea.domainId == 'nor6d') {
