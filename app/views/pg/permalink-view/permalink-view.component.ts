@@ -20,8 +20,8 @@ import { GuidanceNoteService } from '../../../shared/services/guidance-note/guid
 import { PagerService } from '../../../shared/services/pager/pager.service';
 
 @Component({
-  selector: 'permalink-view',
-  templateUrl: './permalink-view.component.html',
+    selector: 'permalink-view',
+    templateUrl: './permalink-view.component.html',
     styleUrls: ['./permalink-view.component.scss'],
     providers: [ContentService, GuidanceNoteService]
 })
@@ -119,9 +119,9 @@ export class PermalinkViewComponent implements OnInit {
                                                             var subtopic = topic1.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
                                                             var paTitle = selectedPracticeArea.title;
                                                             if (selectedPracticeArea.domainId == 'b2ioc' || selectedPracticeArea.domainId == 'nor6d') {
-                                                                var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPracticeArea.subTocItem.find(nI => dpath.includes(nI.domainId));
-                                                                topic1 = paModule.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
-                                                                subtopic = topic1.subTocItem.find(nI => dpath.split('/')[5] == nI.domainId);
+                                                                var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
+                                                                topic1 = paModule.subTocItem ? paModule.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId) : {};
+                                                                subtopic = topic1.subTocItem ? topic1.subTocItem.find(nI => dpath.split('/')[5] == nI.domainId) : {};
                                                                 var spa = allPAs.find(nI => dpath.split('/')[3] == nI.domainId);
                                                                 paTitle = spa.title;
 
@@ -169,7 +169,7 @@ export class PermalinkViewComponent implements OnInit {
                                                                     var newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
                                                                     this.navigateToContentView(newItem);
                                                                 }
-                                                                
+
                                                             } else {
                                                                 if (selectedPracticeArea.domainId == 'b2ioc' || selectedPracticeArea.domainId == 'nor6d') {
                                                                     var newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
@@ -177,7 +177,7 @@ export class PermalinkViewComponent implements OnInit {
                                                                 } else {
                                                                     this.getGNdetailData(inputdata, guidancedetail);
                                                                 }
-                                                            }                                                           
+                                                            }
                                                         }
                                                         else {
                                                             this.showContent();
@@ -191,8 +191,8 @@ export class PermalinkViewComponent implements OnInit {
 
                                                         let selectedPA = practiceAreas.find(pa => dpath.indexOf(pa.domainPath) == 0);
                                                         this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPA);
-                                                        var topic = selectedPA.subTocItem ? selectedPA.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : selectedPA.subTocItem.find(nI => dpath.includes(nI.domainId));
-                                                        var subTopic = topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
+                                                        var topic = selectedPA.subTocItem ? selectedPA.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
+                                                        var subTopic = topic.subTocItem ? topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId) : {};
                                                         var input = undefined;
                                                         if (selectedPA.domainId == 'b2ioc' || selectedPA.domainId == 'nor6d') {
                                                             var pamodule = subTopic;
@@ -224,7 +224,7 @@ export class PermalinkViewComponent implements OnInit {
                                                                 "practiceArea": subTopic.title,
                                                                 "rootArea": selectedPA.title,
                                                                 "subTopic": subTopic,
-                                                                "fromLib" : fromLib == 'yes'? true:false
+                                                                "fromLib": fromLib == 'yes' ? true : false
                                                             };
                                                         }
                                                         if (subTopic != null && subTopic.type == "ST" && subTopic.domainId == data.contentId) {
@@ -232,7 +232,7 @@ export class PermalinkViewComponent implements OnInit {
                                                             this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
 
                                                         }
-                                                        
+
                                                         break;
                                                     case PgConstants.constants.ContentPageType.Topic:
                                                         break;
@@ -317,15 +317,15 @@ export class PermalinkViewComponent implements OnInit {
         //input["extDpath"] = dPath.join("/");
         //this._contentService.GetPermaLinkView(input).subscribe(data => {
 
-            this._contentService.GetPermaLinkViewData(input).subscribe(data => {
-                if (data) {
-                    data.fileStrContent = this._contentService.buildHtml(data.fileStrContent);
-                    this.downloadContentInfo = data;
-                    this.title = this.downloadContentInfo.fileName ? this.downloadContentInfo.fileName.replace(this.downloadContentInfo.fileExtension, "") : "";
-                }
-            });
+        this._contentService.GetPermaLinkViewData(input).subscribe(data => {
+            if (data) {
+                data.fileStrContent = this._contentService.buildHtml(data.fileStrContent);
+                this.downloadContentInfo = data;
+                this.title = this.downloadContentInfo.fileName ? this.downloadContentInfo.fileName.replace(this.downloadContentInfo.fileExtension, "") : "";
+            }
+        });
         //});
-        
+
     }
     openLibContent(domainPath: string, selectedTabName: string, selectedTabIndex: string) {
         this.openLContent(domainPath);
@@ -414,10 +414,10 @@ export class PermalinkViewComponent implements OnInit {
 
     downloadEssentials(data) {
         let input = {};
-        input["dpath"]= data.domainPath;
+        input["dpath"] = data.domainPath;
         input["hasChildren"] = (data.hasChildren) ? "true" : "false";
         this._contentService.downloadContent(input).subscribe(data => {
             this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
         });
-    } 
+    }
 }
