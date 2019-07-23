@@ -1,0 +1,32 @@
+<ng-template #permaLinkModal let-close="close">
+  <div class="modal-header">
+      <h5 class="modal-title">
+          Permalink Created
+          <button type="button" class="close pull-right" (click)="closeModal()">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </h5>
+
+  </div>
+  <div class="modal-body ">
+      <div id="permaLinkContent">
+          <div>
+              <div style="padding-bottom: 15px;">
+                  You can use the following URL to link directly to
+                  <div style="text-overflow: ellipsis; overflow: hidden;">
+                      <strong title="{{ permaTitle }}">{{ permaTitle }} </strong>
+                  </div>
+              </div>
+
+              <div class="row">
+                  <div class="col-md-12">
+                      <input id="permalinkContent" [value]="permaLink" class="form-control">
+                  </div>
+              </div>
+              <div>
+                  <kbd>Ctrl</kbd> + <kbd>C</kbd> will copy this to your clipboard
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template>

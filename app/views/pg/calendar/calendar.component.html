@@ -1,10 +1,6 @@
 <div class="calendar-container">
     <div class="row guidance-note-page calendar-page breadcrumb-n-back-row">
-        <div class="col-xs-12 col-lg-12 col-xl-12">
-            <div class="breadcrumb-text">
-                <div>You are here: <span><a routerLink="/dashboard">Dashboard</a></span> > Calendar</div>
-            </div>
-        </div>
+        <app-bread-crumb [title]="'Calendar'"></app-bread-crumb>
         <div class="col-xs-12 col-lg-12 col-xl-12">
             <div class="row header-container">
                 <div class="col-md-12 col-lg-8">
@@ -12,7 +8,7 @@
                         <div class="table-row">
                             <div class="table-cell">
                                 <span class="folderBackMain pull-left" routerLink="/dashboard">
-                                    <i class="fa fa-angle-left angleLeft leftarrowBackButton"></i>
+                                    <span class="fa fa-angle-left angleLeft leftarrowBackButton pg-icon"></span>
                                 </span>
                             </div>
                             <div class="table-cell">
@@ -54,7 +50,7 @@
                     <div class="calendar-mon-nav-tr">
                         <div class="calendar-mon-nav-td">
                             <span class="preivous-mon-btn" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="viewDateChanged()">
-                                <i class="fa fa-angle-left"></i>
+                                <span class="fa fa-angle-left pg-icon"></span>
                             </span>
                         </div>
                         <div class="calendar-mon-nav-td">
@@ -63,7 +59,7 @@
                         </div>
                         <div class="calendar-mon-nav-td">
                             <span class="preivous-mon-btn" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="viewDateChanged()">
-                                <i class="fa fa-angle-right"></i>
+                                <span class="fa fa-angle-right pg-icon"></span>
                             </span>
                         </div>
                     </div>
@@ -100,12 +96,12 @@
                               [(viewDate)]="viewDate"
                               (viewDateChange)="viewDateChanged()">
                             <span class="left-caret">
-                                <i class="fa fa-caret-left"></i>
+                                <span class="fa fa-caret-left pg-icon"></span>
                             </span>
                         </span>
                     </div>
                     <div class="col-xs-8 text-center">
-                        <span class="date-string">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }} <i class="fa fa-chevron-down" *ngIf="view === 'month'"></i></span>
+                        <span class="date-string">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }} <span class="fa fa-chevron-down pg-icon" *ngIf="view === 'month'"></span></span>
                     </div>
                     <div class="col-xs-2">
                         <span class="mobi-next-button"
@@ -114,7 +110,7 @@
                               [(viewDate)]="viewDate"
                               (viewDateChange)="viewDateChanged()">
                             <span class="right-caret">
-                                <i class="fa fa-caret-right"></i>
+                                <span class="fa fa-caret-right pg-icon"></span>
                             </span>
                         </span>
                     </div>

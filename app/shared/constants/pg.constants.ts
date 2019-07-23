@@ -3,17 +3,16 @@ import BackendHost from './backendhost';
 
 export class PgConstants {
 
-  public static constants = {
-    
+    public static constants = {
 
         WEBAPIURLS: {
 
-        GetPracticeAreas: BackendHost.getInstance().getHost() + 'api/secured/practiceArea/getPracticeAreas',
+            GetPracticeAreas: BackendHost.getInstance().getHost() + 'api/secured/practiceArea/getPracticeAreas',
             GetPracticeAreasOnly: BackendHost.getInstance().getHost() + 'api/secured/practiceArea/getPracticeAreasByZoneId',
             GetSearchResults: BackendHost.getInstance().getHost() + 'api/secured/search/getResults',
             GetSubTopic: BackendHost.getInstance().getHost() + 'api/secured/topic/getSubTopic',
             GetHomeContentForPracticeArea: BackendHost.getInstance().getHost() + 'api/secured/practiceArea/getContentForPracticeArea',
-            GetHomeContentForSubTopic: BackendHost.getInstance().getHost() + 'api/secured/practiceArea/getHomeContentForSubTopic',
+            GetHomeContentForSubTopic: BackendHost.getInstance().getHost() + 'api/secured/topic/getHomeContentForSubTopic',
             GetHistoryItems: BackendHost.getInstance().getHost() + 'api/secured/History/getHistoryItems',
             GetAllHistoryItems: BackendHost.getInstance().getHost() + 'api/secured/History/getAllHistoryItems',
             GetCalendarEvents: BackendHost.getInstance().getHost() + 'api/secured/Calendar/getCalendarEvents',
@@ -31,8 +30,6 @@ export class PgConstants {
             DeleteFolderFile: BackendHost.getInstance().getHost() + 'api/secured/Repository/DeleteDocumentByID',
             DeleteFolder: BackendHost.getInstance().getHost() + 'api/secured/Repository/DeleteFolderByID',
             DeleteClient: BackendHost.getInstance().getHost() + 'api/secured/Repository/DeleteClientByID',
-            GetAllEssential: BackendHost.getInstance().getHost() + 'api/secured/practiceArea/getAllEssential',
-            GetEssential: BackendHost.getInstance().getHost() + 'api/secured/practiceArea/getEssential',
             GetWhatsNew: BackendHost.getInstance().getHost() + 'api/secured/WhatsNew/getWhatNewForPracticeArea',
             GetAllWhatsNew: BackendHost.getInstance().getHost() + 'api/secured/WhatsNew/getAllWhatNew',
             Authenticate: BackendHost.getInstance().getHost() + 'api/anon/account/token',
@@ -55,13 +52,15 @@ export class PgConstants {
             GetContentType: BackendHost.getInstance().getHost() + 'api/secured/content/getContentType',
             GetPermalinkContentViewData: BackendHost.getInstance().getHost() + 'api/secured/Document/getPermalinkContentViewData',
             FindNewsItemContentType: BackendHost.getInstance().getHost() + 'api/secured/WhatsNew/findNewsItemContentType',
-            HasAccessToContent: BackendHost.getInstance().getHost() + 'api/secured/content/hasAccessToContent',
+            HasAccessToContent: BackendHost.getInstance().getHost() + 'api/secured/content/checkSubscriptionsBySessionId',
             GetWhatsNewDetail: BackendHost.getInstance().getHost() + 'api/secured/WhatsNew/getWhatsNewDetail',
             FindSubscribedNews: BackendHost.getInstance().getHost() + 'api/secured/WhatsNew/FindSubscribedNews',
             RedirectToLib: BackendHost.getInstance().getHost() + 'api/anon/account/RedirectToLibrary',
             LogSearchContentViewRequest: BackendHost.getInstance().getHost() + 'api/secured/analytics/logSearchContentViewRequest',
-            GetPdfStream: '/api/secured/content/getPDFStream/',
-            GetSearchFilters:  BackendHost.getInstance().getHost() + 'api/secured/search/getSearchFilters',
+            GetPdfStream: BackendHost.getInstance().getHost() + '/api/anon/account/getPDFStream/',
+            GetSearchFilters: BackendHost.getInstance().getHost() + 'api/secured/search/getSearchFilters',
+            GetAllEssentialsByPage: BackendHost.getInstance().getHost() + 'api/secured/practiceArea/getEssentialsByPage',
+            GetEssentialsCount: BackendHost.getInstance().getHost() + 'api/secured/practiceArea/getEssentialsCount'
         },
 
         URLS: {
@@ -103,7 +102,7 @@ export class PgConstants {
                 ContentView: '/content-view'
             },
             PermalinkView: {
-                Permalink:'permalink-view'
+                Permalink: 'permalink-view'
             }
         },
 
@@ -142,10 +141,33 @@ export class PgConstants {
             IMPD: "importantCls"
         },
         ContentPageType: {
-            Content : 0,
-            PractiseArea : 1,
-            Topic : 2,
-            SubTopic : 3
+            Content: 0,
+            PractiseArea: 1,
+            Topic: 2,
+            SubTopic: 3
+        },
+        Images: {
+            EssentialIcons: {
+                pdfIcon: "dist/assets/images/pdf.png",
+                wordIcon: "dist/assets/images/wordIcon.png",
+                excelIcon: "dist/assets/images/spreadSheetIcon.svg",
+                webIcon: "dist/assets/images/web-icon.png"
+            },
+            HeaderImages: {
+                Logo: "dist/assets/images/LN.svg",
+                dropDownPGIcon: "dist/assets/images/1-020.png",
+                dropDownLibraryIcon: "dist/assets/images/1-01.png",
+                dropDownAssureIcon: "dist/assets/images/1-03.png"
+            },
+            FooterImages: {
+                lnIcon: "dist/assets/images/LexisNexis1.png",
+                relIcon: "dist/assets/images/relx.png"
+            },
+            DAImages: {
+                lockImage: "dist/assets/images/lock.png"
+            },
+            LNLogo: "dist/assets/images/LexisNexis_logo.png"
+
         }
 
     };

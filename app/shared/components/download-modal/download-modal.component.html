@@ -1,0 +1,42 @@
+<ng-template #downloadModal let-close="close">
+  <div class="modal-header">
+      <h5 class="modal-title">
+          Download file to your computer
+          <button type="button" class="close pull-right" (click)="closeModal()">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </h5>
+
+  </div>
+  <div class="modal-body ">
+      <div mat-dialog-content>
+          <div class="form-group">
+              <label for="textinput" class="control-label">Title</label>
+              <input type="text" class="form-control" id="textinput" placeholder="" [(ngModel)]="fileTitle" required>
+              <p *ngIf="!isValidFileTitle" style="color:red;">Please enter a title</p>
+          </div>
+
+          <div class="form-group">
+              <label for="radios-inline" class="control-label">Format</label><br />
+              <mat-radio-group [(ngModel)]="fileFormat">
+                  <div>
+                      <mat-radio-button value="pdf">PDF<img class="filesIconW"
+                              src="{{pgConstants.Images.EssentialIcons.pdfIcon}}" alt="PDF File"
+                              style="width: 25px;margin-right: 20px;margin-left:5px;"></mat-radio-button>
+                      &nbsp;
+                      <mat-radio-button value="rtf">RTF<img class="filesIconW"
+                              src="{{pgConstants.Images.EssentialIcons.wordIcon}}" alt="Word File"
+                              style="width: 25px;margin-left:5px;"></mat-radio-button>
+                  </div>
+
+              </mat-radio-group>
+          </div>
+      </div>
+      <div>
+          <div class="row">
+              <button class="btn btn-primary pull-left" (click)="validate()">Download</button>
+              <button class="btn btn-primary pull-right" (click)="closeModal()">Cancel</button>
+          </div>
+      </div>
+  </div>
+</ng-template>

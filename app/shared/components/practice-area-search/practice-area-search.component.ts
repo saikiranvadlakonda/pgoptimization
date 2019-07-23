@@ -11,6 +11,7 @@ import { PracticeAreaService } from '../../services/practice-areas/practice-area
 import { DataStoreService } from '../../services/data-store/data-store.service';
 import { TocItemViewModel } from '../../models/practiceAreas/tocItem.model';
 import { SearchService } from '../../services/search/search-service';
+import { PgAlertModalComponent } from '../pg-alert-modal/pg-alert-modal.component';
 
 
 @Component({
@@ -20,22 +21,23 @@ import { SearchService } from '../../services/search/search-service';
 })
 export class PracticeAreaSearchComponent implements OnInit {
 
-
     searchParamters: SearchParameters = new SearchParameters();
-
     searchTerm: string = '';
     practiceAreas: any[] = [];
     searchPracticeAreas: any[] = [];
     selectedPracticeAreas: any[] = [];
     SearchPreFilters: string = '';
     status: { isopen: boolean } = { isopen: false };
+    modalRef: BsModalRef;
+    modalAlertRef: BsModalRef;
+
     @ViewChild('modalContent') modalContent: TemplateRef<any>;
     @ViewChild('modalContentAlert') modalContentAlert: TemplateRef<any>;
     @ViewChild('searchInput') searchInput: ElementRef;
+    @ViewChild(PgAlertModalComponent) pgAlertModalComponent: PgAlertModalComponent;
     @Output() onCloseMobiSearchModal: EventEmitter<any> = new EventEmitter<any>();
     @Input() focusOn: boolean;
-    modalRef: BsModalRef;
-    modalAlertRef: BsModalRef;
+
     toggleDropdown($event: MouseEvent): void {
         $event.preventDefault();
         $event.stopPropagation();
@@ -70,12 +72,12 @@ export class PracticeAreaSearchComponent implements OnInit {
         let searchPAs = this._dataStoreService.getSessionStorageItem("searchFilters");
 
         this.searchPracticeAreas = this.practiceAreas.map(practicearea => {
-                return {
-                    title: practicearea.key,
-                    isSelected: true,
-                    issubscribed: true
-                }
-            });
+            return {
+                title: practicearea.key,
+                isSelected: true,
+                issubscribed: true
+            }
+        });
         this.searchPracticeAreas.forEach(pa => this.selectedPracticeAreas.push(pa));
     }
     setParameter() {
@@ -91,15 +93,15 @@ export class PracticeAreaSearchComponent implements OnInit {
             var selectedCount = this.selectedPracticeAreas.length;
             this.searchTerm = this.searchInput.nativeElement.value;
             if (this.searchTerm == '' || selectedCount == 0) {
-                if (this.searchTerm == '')
-                    this.modalAlertRef = this.modalService.show(this.modalContentAlert, { backdrop: 'static', keyboard: false });
-                else {
-                    if (selectedCount == 0)
-                        this.modalAlertRef = this.modalService.show(this.modalContentAlert, { backdrop: 'static', keyboard: false });
+                if (this.searchTerm == '') {
+                    this.showAlert();
+                } else {
+                    if (selectedCount == 0) {
+                        this.showAlert();
+                    }
                 }
 
-            }
-            else {
+            } else {
                 let filters = '';
                 if (this.selectedPracticeAreas.length > 0) {
                     this.SearchPreFilters = 'practicearea[FTS]' + this.selectedPracticeAreas.map(x => x.title).join('|');
@@ -113,7 +115,7 @@ export class PracticeAreaSearchComponent implements OnInit {
             }
         } else {
             //modalContentAlert
-            this.modalAlertRef = this.modalService.show(this.modalContentAlert, { backdrop: 'static', keyboard: false });
+            this.showAlert();
             document.getElementById("searchTextInput").focus();
 
         }
@@ -137,7 +139,7 @@ export class PracticeAreaSearchComponent implements OnInit {
     selectAllPracticeArea() {
         this.searchPracticeAreas.forEach(p => p.isSelected = true);
         this.selectedPracticeAreas = [];
-        this.searchPracticeAreas.map(pa => this.selectedPracticeAreas.push(pa));
+        this.searchPracticeAreas.forEach(pa => this.selectedPracticeAreas.push(pa));
         this.SearchPreFilters = '';
     }
 
@@ -154,7 +156,7 @@ export class PracticeAreaSearchComponent implements OnInit {
         } else {
             this.modalRef = this.modalService.show(template, { class: 'search-modal' });
         }
-        
+
     }
 
     populatePracticeAreas() {
@@ -180,10 +182,6 @@ export class PracticeAreaSearchComponent implements OnInit {
         this.searchInput.nativeElement.focus();
 
     }
-    closeModal(template: TemplateRef<any>) {
-        if (this.modalAlertRef != undefined && this.modalAlertRef != null)
-            this.modalAlertRef.hide();
-    }
 
     openHelpModal(template): void {
         this.modalAlertRef = this.modalService.show(template, { backdrop: 'static', keyboard: false });
@@ -202,12 +200,12 @@ export class PracticeAreaSearchComponent implements OnInit {
             if (this.searchTerm == '')
                 //alert("Enter search Term");
                 //this.openModal(this.modalContentAlert);
-                this.modalAlertRef = this.modalService.show(this.modalContentAlert, { backdrop: 'static', keyboard: false });
+                this.showAlert();
             else {
                 if (selectedCount == 0)
                     //alert("Select atleast one practice area");
                     //this.openModal(this.modalContentAlert);
-                    this.modalAlertRef = this.modalService.show(this.modalContentAlert, { backdrop: 'static', keyboard: false });
+                    this.showAlert();
             }
 
         } else {
@@ -216,9 +214,22 @@ export class PracticeAreaSearchComponent implements OnInit {
 
     }
 
-    closeAllModals() {
-        if (this.modalAlertRef != undefined && this.modalAlertRef != null)
-            this.modalAlertRef.hide();
+    showAlert(): void {
+        let modalOptions: any = { backdrop: 'static', keyboard: false };
+        let messages: string[] = [];
+        if (this.searchTerm.trim().length == 0) {
+            messages.push("Please enter search terms.");
+        } 
+        if (this.searchTerm.trim().length > 0 && this.searchTerm.trim().length < 3) {
+            messages.push("Please enter atleast three characters.");
+        } 
+        if (this.searchTerm.trim().length != 0 && this.selectedPracticeAreas.length == 0) {
+            messages.push("Please select at least one Practice Area to filter your search by.");
+        }
+        this.pgAlertModalComponent.openModal(modalOptions, messages);
+    }
+
+    onCloseAlert(): void {
         if (this.modalRef != undefined && this.modalRef != null)
             this.modalRef.hide();
         if (this.searchTerm.trim().length == 0) {

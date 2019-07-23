@@ -13,7 +13,7 @@ export class EssentialsComponent implements OnInit {
     @Input() essentials;
     @Output() essential: EventEmitter<any> = new EventEmitter<any>();
     @Input() subTopics: TocItemViewModel[];
-
+    pgConstants = PgConstants.constants;
     length: number = 5;
 
     constructor(
@@ -36,7 +36,7 @@ export class EssentialsComponent implements OnInit {
                 this.essentials.push(el);
             });
         })
-
+       
     }
 
     onClick(essential) {

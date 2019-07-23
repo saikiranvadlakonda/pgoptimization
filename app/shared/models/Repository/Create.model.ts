@@ -1,9 +1,9 @@
 export class CreateFolerViewModel {
     public Createfolder: string;
-    public clientID: number;
+    public clientId: number;
     public folderName: string;
-    public parentFolderID: string;
-    public folderID: string;
+    public parentFolderId: string;
+    public folderId: string;
     public subscriberClientId: number;
     public clientDescription: string;
     public url: string;

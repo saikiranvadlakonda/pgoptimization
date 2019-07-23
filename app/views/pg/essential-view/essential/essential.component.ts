@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { EssentialService } from '../../../../shared/services/essential/essential-service';
 import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
 import { TocItemViewModel } from '../../../../shared/models/practiceAreas';
-import { Essential, Topic, ContentDomainEntity } from '../../../../shared/models/essential';
+import { Essential, Topic, ContentDomainEntity, EssentialFilters } from '../../../../shared/models/essential';
 import { ContentService } from '../../../../shared/services/content/content.service';
 import { RenderContentRequest } from '../../../../shared/models/dashboard/content-request.model';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -16,6 +16,8 @@ import { PgMessages } from '../../../../shared/constants/messages';
 import { ErrorContent } from '../../../../shared/models/error-content/error-content.model';
 import { ErrorModalService } from '../../../../shared/services/error-modal/error-modal.service';
 import { PagerService } from '../../../../shared/services/pager/pager.service';
+import { SaveToFolderModalComponent } from '../../../../shared/components/save-to-folder-modal/save-to-folder-modal.component';
+import { PgAlertModalComponent } from '../../../../shared/components/pg-alert-modal/pg-alert-modal.component';
 
 @Component({
     selector: 'app-essential',
@@ -23,6 +25,40 @@ import { PagerService } from '../../../../shared/services/pager/pager.service';
     styleUrls: ['./essential.component.css']
 })
 export class EssentialComponent implements OnInit {
+
+    isPDF: boolean = false; pdfContent: any; pdfTitle: string = "";
+    filteredEssentials: any[] = [];
+    essentialsList: Essential[];
+    curPage: number = 1;
+    pageSize: number = 10;
+    selectedPracticeArea;
+    topics: Topic[];
+    pages;
+    searchEssential: string = '';
+    checkedEssential: ContentDomainEntity[] = [];
+    fileTitle: string = ''; fileFormat: any; downloadPath: string = "";
+    isValidFileTitle: boolean = true;
+    downloadModalRef: BsModalRef;
+    documentType: any = [
+        { name: "forms & precedents", displayName: "Forms and Precedents", isSelected: false, count: 0 },
+        { name: "checklists", displayName: "Check Lists", isSelected: false, count: 0 },
+        { name: "other resources", displayName: "Other Resources", isSelected: false, count: 0 }
+    ];
+    totalPages: number = 0;
+    error: string;
+    pgMessages: any = PgMessages.constants;
+    loadFolders: boolean = false;
+    saveToFolderContent;
+    modalAlertRef: BsModalRef;
+    modalRef: BsModalRef;
+    isCollapsedChange: boolean = true;
+    pgConstants: any = PgConstants.constants;
+    pagesCount: number = 0;
+
+    @ViewChild('modalContent') modalContent: TemplateRef<any>;
+    @ViewChild('modalContentAlert') modalContentAlert: TemplateRef<any>;
+    @ViewChild(SaveToFolderModalComponent) saveToFolderModalComponent: SaveToFolderModalComponent;
+    @ViewChild(PgAlertModalComponent) pgAlertModalComponent: PgAlertModalComponent;
 
     constructor(private _essentialService: EssentialService,
         private _dataStoreService: DataStoreService,
@@ -34,139 +70,117 @@ export class EssentialComponent implements OnInit {
         private _pagerService: PagerService
     ) { }
 
-    subTopics: TocItemViewModel[];
-    isPDF: boolean = false; pdfContent: any; pdfTitle: string = "";
-    topic: TocItemViewModel;
-    essentials;
-    filteredEssentials: any[];
-    essentialsList: Essential[];
-    curPage: number = 1;
-    pageSize: number = 10;
-    startEssentialIndex: number;
-    selectedEssentialElements: string[] = [];
-    selectedPracticeArea;
-    selectedSubTopic;
-    topics: Topic[];
-    pages;
-    searchEssential: string;
-    rendrContentRequest: RenderContentRequest = new RenderContentRequest();
-    checkedEssential: ContentDomainEntity[] = [];
-    fileTitle: string = ''; fileFormat: any; downloadPath: string = "";
-    isValidFileTitle: boolean = true;
-    downloadModalRef: BsModalRef;
-    documentType = [
-        { name: "forms & precedents", displayName: "Forms and Precedents", isSelected: false, count: 0 },
-        { name: "checklists", displayName: "Check Lists", isSelected: false, count: 0 },
-        { name: "other resources", displayName: "Other Resources", isSelected: false, count: 0 }
-    ];
-
-    isTopicSelected: boolean = true;
-    selectedDocumentType;
-    error: string;
-    pgMessages: any = PgMessages.constants;
-    loadFolders: boolean = false;
-    saveToFolderContent;
-    modalAlertRef: BsModalRef;
-    modalRef: BsModalRef;
-    filterByTopics: boolean = false;
-    filterByDOCT: boolean = false;
-    filterBySWINSR: boolean = false;
-    isCollapsedChange: boolean = true;
-
-    @ViewChild('modalContent') modalContent: TemplateRef<any>;
-    @ViewChild('modalContentAlert') modalContentAlert: TemplateRef<any>;
     ngOnInit() {
-        this.subTopics = [];
         this.selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
-
-        this.selectedPracticeArea.subTocItem.forEach(s => {
-            this.subTopics.push(s);
-        });
-        this.setStartEssentialIndex();
         this.getAllEssentials(true);
-        this.selectedDocumentType = ["forms & precedents", "checklists", "other resources"];
-        this.scrollTop();//window.scrollTo(0, 0);
+        this.scrollTop();
     }
 
-    setStartEssentialIndex() {
-        this.startEssentialIndex = (this.curPage * this.pageSize) - this.pageSize;
-    }
+
 
     getAllEssentials(isLoadTopicsCount: boolean = false) {
-        this._essentialService.getAllEssential(this.subTopics).subscribe((essentials: any) => {
-            if (essentials && essentials.length > 0) {
-                if (essentials[0].isValid) {
-                    this.essentialsList = essentials;
-                    this.setEssentialData(this.essentialsList);
-                    if (isLoadTopicsCount)
-                        this.getTopics();
-                    this.error = undefined;
+        let paName = this.selectedPracticeArea.title;
+        if (this.selectedPracticeArea.type == "PA-MD") {
+            paName = this.selectedPracticeArea.actualTitle;
+        }
+
+        this._essentialService.getEssentialsCount({ practiceAreaName: paName }).subscribe(allFilters => {
+            let aggrFilters = this._essentialService.aggregateEssentials(allFilters);
+            if (aggrFilters.topics != undefined) {
+                this.topics = Object.keys(aggrFilters.topics).map(topic => {
+                    return { title: topic, isSelected: true, count: aggrFilters.topics[topic]['total'], topic: topic, isTopic: true, topicData: aggrFilters.topics[topic] };
+                });
+            } else
+                this.topics = [];
+
+            if (aggrFilters.documentTypes != undefined) {
+                this.documentType = Object.keys(aggrFilters.documentTypes).map(docTitle => {
+                    return { title: docTitle, isSelected: true, count: aggrFilters.documentTypes[docTitle], isTopic: false, topic: docTitle };
+                });
+            } else
+                this.documentType = [];
+
+            this._essentialService.getAllEssentialsByPage({ topics: this.topics.concat(this.documentType), page: this.curPage, size: this.pageSize, practiceAreaName: paName }).subscribe((essentials) => {
+                if (essentials && essentials.length > 0) {
+                    if (essentials[0].isValid) {
+                        this.essentialsList = essentials;
+                        this.setEssentialData(this.essentialsList);
+                        this.error = undefined;
+                    } else {
+                        this.essentialsList = [];
+                        this.error = PgMessages.constants.essentials.error;
+                    }
                 } else {
                     this.essentialsList = [];
-                    this.setEssentialData(this.essentialsList);
-                    this.error = PgMessages.constants.essentials.error;
+                    this.error = (Array.isArray(essentials)) ? PgMessages.constants.essentials.noEssentials : PgMessages.constants.essentials.error;
                 }
-            } else {
-                this.essentialsList = [];
-                this.setEssentialData(this.essentialsList);
-                this.error = (Array.isArray(essentials)) ? PgMessages.constants.essentials.noEssentials : PgMessages.constants.essentials.error;
-            }
-            this.scrollTop();//window.scrollTo(0, 0);
+                this.scrollTop();
+            });
         });
     }
 
 
     setEssentialData(topics, setDocumentTypeChecked: boolean = true) {
-        this.essentials = [];
-        if (topics) {
-            topics.forEach(topic => {
-                if (topic.essentials) {
-                    topic.essentials.forEach(e => {
-                        e.subContentDomains.forEach(s => {
-                            s.eType = topic.pageType;
-                            s.guidance = topic.subTopicName;
-                            this.essentials.push(s);
-                        });
-                    });
-                }
-            });
-
-            //this.setTopicChecked(topics);
-            if (setDocumentTypeChecked)
-                this.getDocumentTypeCount(topics, setDocumentTypeChecked);
-            this.updatePagination();
-        }
+        this.updatePagination();
     }
 
-    onSearchQueryEnter(event: any): void {
-        if (event.keyCode == 13) {
-            this.updatePagination();
-        }
+    onSearchQueryEnter(searchQuery: string): void {
+        this.isCollapsedChange = !this.isCollapsedChange;
+        this.updatePagination(searchQuery);
     }
 
-    updatePagination(): void {
-        this.setToPage(1);
+    updatePagination(searchQuery?: string): void {
+        if (searchQuery) {
+            this.searchEssential = searchQuery;
+        } else {
+            this.searchEssential = '';
+        }
+        let eventData: any = {
+            page: this.curPage,
+            fromNav: false
+        };
+        this.setToPage(eventData);
         this.pages = Array.from(new Array(this.numberOfPages()), (val, index) => index + 1);
     }
 
     numberOfPages(): number {
-        let filteredEssentials = this._filterByPropertyPipe.transform(this.essentials, this.searchEssential, 'title');
+        let filteredEssentials = this._filterByPropertyPipe.transform(this.essentialsList, this.searchEssential, 'title');
         this.filteredEssentials = filteredEssentials;
+        if (this.searchEssential != undefined && this.searchEssential != null && this.searchEssential.trim().length == 0) {
+            let total = 0;
+            this.documentType.forEach(doc => {
+                this.topics.forEach(topic => {
+                    if (topic.isSelected && doc.isSelected && topic.topicData[doc.title]) {
+                        total += topic.topicData[doc.title];
+                    }
+                });
+            });
+
+            this.totalPages = total;
+            return Math.ceil(total / this.pageSize);
+        }
+
         this.checkedEssential = [];
         this.unSelectAllEssentials();
-        return Math.ceil(filteredEssentials.length / this.pageSize);
+        this.pagesCount = Math.ceil(filteredEssentials.length / this.pageSize);
+        return this.pagesCount;
     };
 
     getNumberOfPages(): number {
-        return Math.ceil(this.filteredEssentials.length / this.pageSize);
+        return this.numberOfPages();
     }
 
     onPageSizeChange(size) {
         this.pageSize = size;
         this.curPage = 1;
-        this.setStartEssentialIndex();
-        this.pages = Array.from(new Array(this.numberOfPages()), (val, index) => index + 1);
-        this.scrollTop();//window.scrollTo(0, 0);
+        let selectedTopics = this.topics.filter(topic => topic.isSelected);
+        let paName = this.selectedPracticeArea.title;
+        if (this.selectedPracticeArea.type == "PA-MD") {
+            paName = this.selectedPracticeArea.actualTitle;
+        }
+        let input = { topics: selectedTopics.concat(this.documentType.filter(doc => doc.isSelected)), page: this.curPage, size: this.pageSize, practiceAreaName: paName };
+        this.fetchEssentials(input);
+
     }
 
     get displayingCount(): number {
@@ -181,7 +195,11 @@ export class EssentialComponent implements OnInit {
         if (this.curPage > 1) {
             this.curPage--;
             this.scrollTop();
-            this.setToPage(this.curPage);
+            let eventData: any = {
+                page: this.curPage,
+                fromNav: true
+            };
+            this.setToPage(eventData);
         }
     }
 
@@ -189,108 +207,59 @@ export class EssentialComponent implements OnInit {
         if (this.curPage != this.numberOfPages()) {
             this.curPage++;
             this.scrollTop();
-            this.setToPage(this.curPage);
+            let eventData: any = {
+                page: this.curPage,
+                fromNav: true
+            };
+            this.setToPage(eventData);
         }
     }
 
-    getTopics() {
-        this.topics = [];
-        this.selectedPracticeArea.subTocItem.forEach(t => {
-            this.topics.push({ title: t.title, isSelected: true, count: this.getEssentialCount(t.title) });
-        });
-    }
-
-    getEssentialCount(topicName: string) {
-        var count = 0;
-        var topics = this.essentialsList.filter(s => s.topicName.toLowerCase() == topicName.toLowerCase());
-        topics.forEach(t => {
-            if (t.essentials) {
-                t.essentials.forEach(e => {
-                    count = count + e.subContentDomains.length;
-                });
-            }
-        });
-        return count;
-    }
-
-    getDocumentTypeCount(data, setDocumentTypeChecked) {
-        this.documentType.forEach(dt => {
-            var count = 0;
-            var topics = this.essentialsList.filter(s => s.pageType.toLowerCase() == dt.name.toLowerCase());
-            topics.forEach(t => {
-                if (t.essentials) {
-                    t.essentials.forEach(e => {
-                        count = count + e.subContentDomains.length;
-                    });
-                }
-            });
-            dt.count = count;
-            if (setDocumentTypeChecked) {
-                if (dt.count > 0)
-                    dt.isSelected = true;
-                else
-                    dt.isSelected = false;
-            }
-        });
-    }
-
-    setTopicChecked(topics) {
-        let uniqueTopics = topics.reduce((x, y) => x.findIndex(e => e.title == y.title) < 0 ? [...x, y] : x, [])
-        uniqueTopics.forEach(tp => {
-            this.topics.find(t => t.title == tp.topicName).isSelected = true;
-        })
-    }
-
-    setDocumentType(name: string, checked) {
-        this.documentType.find(n => n.name.toLowerCase() == name.toLowerCase()).isSelected = checked;
+    setDocumentType(eventData: any) {
+        this.documentType.find(n => n.title.toLowerCase() == eventData.title.toLowerCase()).isSelected = eventData.isChecked;
         var filteredEssentialList = [];
         this.documentType.forEach(d => {
             if (d.isSelected) {
-                var eFiltered = this.essentialsList.filter(e => e.pageType.toLowerCase() == d.name.toLowerCase());
+                var eFiltered = this.essentialsList.filter(e => e.pageType.toLowerCase() == d.title.toLowerCase());
                 if (eFiltered) {
-                    eFiltered.forEach(ef => { filteredEssentialList.push(ef); });
+                    //eFiltered.forEach(ef => { filteredEssentialList.push(ef); });
                 }
             }
         });
 
-        this.setEssentialData(filteredEssentialList, false);
     }
 
     setAllDocumentType() {
         var filteredEssentialList = [];
         this.documentType.forEach(d => {
             d.isSelected = true;
-            var eFiltered = this.essentialsList.filter(e => e.pageType.toLowerCase() == d.name.toLowerCase());
-            if (eFiltered) {
-                eFiltered.forEach(ef => { filteredEssentialList.push(ef); });
-            }
         });
-        this.setEssentialData(filteredEssentialList, false);
     }
 
-    setSeletedTopic(title: string, checked: boolean) {
-        this.topics.find(t => t.title == title).isSelected = checked;
-        this.isTopicSelected = true;
+    setSeletedTopic(eventData: any) {
+        this.topics.find(t => t.title == eventData.title).isSelected = eventData.isChecked;
     }
 
-    SelectAllTopics() {
+    selectAllTopics() {
         this.topics = this.topics.map(t => {
             t.isSelected = true;
             return t;
         });
-        this.isTopicSelected = true;
     }
 
     getEssentialsForSelectedTopics() {
-        this.subTopics = [];
-        this.topics.forEach(t => {
-            if (t.isSelected) {
-                var topic = (this.selectedPracticeArea.subTocItem.find(s => s.title == t.title));
-                this.subTopics.push(topic);
-            }
-        });
-        this.getAllEssentials();
-        this.collapseSearch();
+        this.checkedEssential = [];
+        let selectedTopics = this.topics.filter(topic => topic.isSelected);
+        let selectedDocTypes = this.documentType.filter(doc => doc.isSelected);
+        this.curPage = 1;
+        let paName = this.selectedPracticeArea.title;
+        if (this.selectedPracticeArea.type == "PA-MD") {
+            paName = this.selectedPracticeArea.actualTitle;
+        }
+        let input = { topics: selectedTopics.concat(selectedDocTypes), page: this.curPage, size: this.pageSize, practiceAreaName: paName };
+        this.fetchEssentials(input);
+        if (this._pagerService.isMobile)
+            this.collapseSearch();
     }
 
     clearAllTopics() {
@@ -298,22 +267,18 @@ export class EssentialComponent implements OnInit {
             t.isSelected = false;
             return t;
         });
-        /*this.selectedPracticeArea.subTocItem.forEach(s => {
-            this.subTopics.push(s);
-        });
-        this.getAllEssentials();*/
-        this.isTopicSelected = false;
     }
 
-    downLoadContent(domainpath, hasChildren, forceDownload = false) {
-        this.rendrContentRequest.dpath = domainpath;
-        this.rendrContentRequest.hasChildren = hasChildren;
-        this._contentService.downloadContent(this.rendrContentRequest).subscribe(data => {
+    downloadContent(eventData: any) {
+        let renderContentRequest: RenderContentRequest = new RenderContentRequest();
+        renderContentRequest.dpath = eventData.domainpath ? eventData.domainpath : eventData.subTopicDomainPath;
+        renderContentRequest.hasChildren = eventData.hasChildren;
+        this._contentService.downloadContent(renderContentRequest).subscribe(data => {
             if (data !== null) {
-                if (data.mimeType == "application/pdf" && !forceDownload && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
+                if (data.mimeType == "application/pdf" && !eventData.forceDownload && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
                     this.isPDF = true;
                     this.pdfTitle = data.fileName ? data.fileName.replace(".pdf", '') : '';
-                    this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + this.rendrContentRequest.dpath.split("/").pop();
+                    this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + renderContentRequest.dpath.split("/").pop();
                     this.scrollTop();
                 } else {
                     this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
@@ -335,84 +300,90 @@ export class EssentialComponent implements OnInit {
         this.unSelectAllEssentials();
     }
 
-    openModal(template: TemplateRef<any>, essential) {
-        var content = { "title": essential.title, "url": essential.domainPath, "searchResult": null };
+    openSaveToFolderModal(essential: any): void {
+        let content = { "title": essential.title, "url": essential.subTopicDomainPath, "searchResult": null };
+        let modalOptions = { class: 'modal-lg folder-modal', backdrop: 'static', keyboard: false };
         this.saveToFolderContent = JSON.parse(JSON.stringify(content));
-        this.getFoldersAll(template);
+        this.saveToFolderModalComponent.openModal(modalOptions);
     }
 
-    openModalMultiEssentials(template: TemplateRef<any>) {
+    openModalMultiEssentials() {
         if (!this.checkedEssential || this.checkedEssential.length == 0) {
-            this.modalAlertRef = this.modalService.show(this.modalContentAlert, { backdrop: 'static', keyboard: false });
+            this.showAlert();
         } else {
-            var content = { "title": "", "url": "", "searchResult": null, "essentialResult": this.checkedEssential };
+            let content = { "title": "", "url": "", "searchResult": null, "essentialResult": this.checkedEssential };
+            let modalOptions = { class: 'modal-lg folder-modal', backdrop: 'static', keyboard: false };
             content.title = this.checkedEssential.map(d => { return d.title; }).toLocaleString();
             this.saveToFolderContent = JSON.parse(JSON.stringify(content));
-            this.getFoldersAll(template);
+            this.saveToFolderModalComponent.openModal(modalOptions);
         }
     }
 
+    saveFileToFolder(eventData: any): void { }
 
-    getFoldersAll(template) {
-        this.loadFolders = true;
-        this.modalRef = this.modalService.show(template, { class: 'modal-lg folder-modal', backdrop: 'static', keyboard: false });
-    }
-
-    onPopUpCloseClick(isSaved) {
+    onCloseSaveToFolderModal(isSaved: any): void {
         if (isSaved) {
             this.checkedEssential = [];
             this.unSelectAllEssentials();
         }
-        this.modalRef.hide();
     }
 
     addToDownloadQueue(essentialElementId: string, result: any): void {
         (<HTMLInputElement>document.getElementById(essentialElementId)).checked = true;
-        this.essentialChecked(true, result, true);
+        let eventData: any = {
+            isChecked: true,
+            result: result,
+            isCallFromAddToDownload: true
+        }
+        this.essentialChecked(eventData);
     }
 
-    essentialChecked(isChecked, result, isCallFromAddToDownload) {
-        if (isCallFromAddToDownload && result.isChecked)
+    essentialChecked(eventData: any) {
+        if (eventData.isCallFromAddToDownload && eventData.result.isChecked)
             return;
 
         if (!this.checkedEssential)
             this.checkedEssential = [];
 
-        if (isChecked) {
-            this.checkedEssential.push(result);
-            this.filteredEssentials[this.filteredEssentials.findIndex(s => s == result)]['isChecked'] = true;
+        if (eventData.isChecked) {
+            this.checkedEssential.push(eventData.result);
+            this.filteredEssentials[this.filteredEssentials.findIndex(s => s == eventData.result)]['isChecked'] = true;
         } else {
-            this.checkedEssential.splice(this.checkedEssential.findIndex(s => s == result), 1);
-            this.filteredEssentials[this.filteredEssentials.findIndex(s => s == result)]['isChecked'] = false;
+            this.checkedEssential.splice(this.checkedEssential.findIndex(s => s == eventData.result), 1);
+            this.filteredEssentials[this.filteredEssentials.findIndex(s => s == eventData.result)]['isChecked'] = false;
         }
     }
 
     openTab(essential) {
-        if (essential.domainPath.indexOf("http") == 0) {
-            window.open(essential.domainPath);
+        if (essential.subTopicDomainPath.indexOf("http") == 0) {
+            window.open(essential.subTopicDomainPath);
         }
 
         this.checkedEssential = [];
         this.unSelectAllEssentials();
     }
 
-    essentialsList1 = [{ "topicName": "Legal and compliance", "subTopicName": "Establishing compliance", "pageType": "forms & precedents", "essentials": [{ "parentDomainId": null, "domainId": null, "title": "Establishing a compliance function", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Compliance charter", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/sp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Compliance charter training strategy", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/rp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Compliance policy and procedure", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/tp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "The content structure of the compliance charter  ", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Sample authority clause ", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/qhzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Sample scope clause", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/uhzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Risk management methodology clause ", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/thzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Sample reporting clause ", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/shzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Sample implementation clause", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/rhzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Compliance charter", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/sp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Compliance charter training strategy", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/rp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Compliance policy and procedure", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/tp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Risk", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Compliance charter training strategy", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/rp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "How to draft policies procedures and training strategies", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Compliance policy and procedure", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/tp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Compliance charter training strategy", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/rp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Compliance charter", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/sp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Policy or procedure application form", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/up9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Acknowledgement of understanding sample clause", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/qp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Survey on policies and training", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/c7yle/vp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }] }, { "topicName": "Legal and compliance", "subTopicName": "Legal", "pageType": "forms & precedents", "essentials": [{ "parentDomainId": null, "domainId": null, "title": "Legal department standards ", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Legal department policy and procedure ", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/0p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Legal department training strategy", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/1p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Satisfaction survey", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/3p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Example of a request form", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/zp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Standards of the legal department", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/4p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Dealing with requests ", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Legal department policy and procedure", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/0p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Dealing with requests sample clause", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/yp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Example of a request form", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/zp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Satisfaction survey", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/3p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Legal department training strategy", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/1p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Sample legal standards clause", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/iqjne", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Contract drafting and signing", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Legal department policy and procedure", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/0p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Reporting clause", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/2p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "The contract register", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Contract register and contract management systems", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/xp9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Legal department policy and procedure", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/0p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Legal department training strategy", "isSubscribed": false, "domainPath": "7psvc/46yle/66yle/86yle/wp9me/1p9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }] }, { "topicName": "Legal and compliance", "subTopicName": "Establishing compliance", "pageType": "checklists", "essentials": null }, { "topicName": "Legal and compliance", "subTopicName": "Legal", "pageType": "checklists", "essentials": null }, { "topicName": "Legal and compliance", "subTopicName": "Establishing compliance", "pageType": "other resources", "essentials": [{ "parentDomainId": null, "domainId": null, "title": "Establishing a compliance function", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Example of an organogram ", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/1hzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Example of a risk matrix", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/2hzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Compliance function structure", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/0hzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Example of a compliance risk profile", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/jr9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Implementation plan guidelines", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/kr9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Compliance function summary", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/krjne", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "The content structure of the compliance charter  ", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Example of an organogram ", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/1hzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Compliance function structure ", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/0hzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Implementation plan guidelines", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/kr9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Risk", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Example of a risk matrix", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/2hzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "How to draft policies procedures and training strategies", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Implementation plan guidelines", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/g7yle/kr9me", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }] }, { "topicName": "Legal and compliance", "subTopicName": "Legal", "pageType": "other resources", "essentials": [{ "parentDomainId": null, "domainId": null, "title": "Legal department standards ", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Code of Conduct for Legal Practitioners", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/h7yle/3hzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "Contract drafting and signing", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Contract register", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/h7yle/rjzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }, { "parentDomainId": null, "domainId": null, "title": "The contract register", "isSubscribed": false, "domainPath": null, "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": [{ "parentDomainId": null, "domainId": null, "title": "Contract register", "isSubscribed": false, "domainPath": "7psvc/46yle/76yle/f7yle/h7yle/rjzle", "hasChildren": false, "hasModule": false, "topicType": null, "zoneId": 0, "subscriberId": 0, "contentLevel": 0, "rawContent": null, "mimeType": null, "returnOrphan": false, "domainIdList": null, "subContentDomains": null, "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }], "contentFilePath": null, "contentUsername": null, "contentPassword": null, "isValid": true, "suggestionString": null, "message": null, "resultType": 0 }] }]
 
-
-    openFileDownloadModal(template: TemplateRef<any>) {
+    openFileDownloadModal() {
         //this.fileTitle = this.practiceArea;
         if (!this.checkedEssential || this.checkedEssential.length == 0) {
-            this.modalAlertRef = this.modalService.show(this.modalContentAlert, { backdrop: 'static', keyboard: false });
+            this.showAlert();
             //alert("Please make a selection");
         } else {
             var content = { "title": "", "url": "", "searchResult": null, "essentialResult": this.checkedEssential };
             content.title = this.checkedEssential.map(d => { return d.title; }).toLocaleString();
             this.checkedEssential.forEach(essential => {
-                if (essential.domainPath.indexOf("http") == 0) {
+                if (essential.subTopicDomainPath.indexOf("http") == 0) {
                     this.openTab(essential);
                 }
                 else {
-                    this.downLoadContent(essential.domainPath, essential.hasChildren, true);
+                    let eventData: any = {
+                        domainpath: essential.subTopicDomainPath,
+                        hasChildren: essential.hasChildren,
+                        forceDownload: true
+                    };
+                    this.downloadContent(eventData);
+                
                 }
             });
             this.checkedEssential = [];
@@ -422,7 +393,6 @@ export class EssentialComponent implements OnInit {
 
     validate() {
         if (this.checkedEssential.length > 0 && this.fileTitle != undefined && this.fileTitle != null && this.fileTitle.trim() != '') {
-            this.checkedEssential.forEach;
             this.isValidFileTitle = true;
             var fileData = new RenderContentRequest();
             fileData.downloadContent = "true";
@@ -446,29 +416,33 @@ export class EssentialComponent implements OnInit {
         this.downloadModalRef.hide();
     }
 
-    setToPage(page) {
-        this.scrollTop();//window.scrollTo(0, 0);
-        this.curPage = page;
-        this.setStartEssentialIndex();
+    setToPage(eventData: any) {
+        if (eventData.fromNav) {
+            this.scrollTop();
+            this.curPage = eventData.page;
+            let selectedTopics = this.topics.filter(topic => topic.isSelected);
+            let paName = this.selectedPracticeArea.title;
+            if (this.selectedPracticeArea.type == "PA-MD") {
+                paName = this.selectedPracticeArea.actualTitle;
+            }
+            let input = { topics: selectedTopics.concat(this.documentType.filter(doc => doc.isSelected)), page: this.curPage, size: this.pageSize, practiceAreaName: paName };
+            this.fetchEssentials(input);
+        } else {
+            this.scrollTop();
+            this.curPage = eventData.page;
+        }
     }
 
     clearSearch(): void {
-        this.searchEssential = undefined;
+        this.searchEssential = '';
         this.checkedEssential = [];
         this.unSelectAllEssentials();
         this.updatePagination();
     }
 
     navigateToPracticeAreaSubTopics(): void {
-        //this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(this.selectedPracticeArea));
         let previousRoute = this._navigationService.getPreviousRoute();
         this._navigationService.navigate(previousRoute.previousRoute, this._navigationService.getStateParams(previousRoute.previousRoute), undefined, true);
-    }
-
-    onSaveToFolderClick(): void {
-        this.onPopUpCloseClick(true);
-        this.checkedEssential = [];
-        this.unSelectAllEssentials();
     }
 
     unSelectAllEssentials(): void {
@@ -480,44 +454,54 @@ export class EssentialComponent implements OnInit {
 
     scrollTop() {
         this._pagerService.setPageView();
-        /*
-        let scrollEle = document.getElementById('newpg');
-        if (window.navigator.userAgent.indexOf("Edge") == -1)
-            scrollEle.scrollTo(0, 0);
-        else
-            scrollEle.scrollTop = 0;
-        */
     }
 
-    expandOrMinimizeFbyT() {
-        if (this.filterByTopics) {
-            this.filterByTopics = false;
-        } else {
-            this.filterByTopics = true;
-        }
-    }
-
-    expandOrMinimizeFbyDOCT() {
-        if (this.filterByDOCT) {
-            this.filterByDOCT = false;
-        } else {
-            this.filterByDOCT = true;
-        }
-    }
-    expandOrMinimizeSWinSR() {
-        if (this.filterBySWINSR) {
-            this.filterBySWINSR = false;
-        } else {
-            this.filterBySWINSR = true;
-        }
-    }
 
     collapseSearch() {
-        //this.isCollapsedChange.emit(false);
         if (this.isCollapsedChange) {
             this.isCollapsedChange = false;
         } else {
             this.isCollapsedChange = true;
         }
     }
+
+    fetchEssentials(input) {
+        this._essentialService.getAllEssentialsByPage(input).subscribe(essentials => {
+            if (essentials && essentials.length > 0) {
+                if (essentials[0].isValid) {
+                    this.essentialsList = essentials;
+                    this.filteredEssentials = essentials;
+                    if (this.checkedEssential.length > 0) {
+                        this.checkedEssential.forEach(chEss => {
+                            this.filteredEssentials.filter(ess => ess.title == chEss.title).forEach(ess => {
+                                ess.isChecked = true;
+                                console.log(ess);
+                            });
+                        });
+                    }
+                    this.pages = Array.from(new Array(this.numberOfPages()), (val, index) => index + 1);
+                    this.scrollTop();
+                    this.error = undefined;
+                } else {
+                    this.essentialsList = [];
+                    this.filteredEssentials = [];
+                    this.error = PgMessages.constants.essentials.error;
+                }
+            } else {
+                this.essentialsList = [];
+                this.filteredEssentials = [];
+                //this.setEssentialData(this.essentialsList);
+                this.error = (Array.isArray(essentials)) ? PgMessages.constants.essentials.noEssentials : PgMessages.constants.essentials.error;
+            }
+        });
+    }
+
+    showAlert(): void {
+        let modalOptions: any = { backdrop: 'static', keyboard: false };
+        let messages: string[] = [];
+        messages.push("Please select atleast one essential.");
+        this.pgAlertModalComponent.openModal(modalOptions, messages);
+    }
+
+    onCloseAlert(): void { }
 }

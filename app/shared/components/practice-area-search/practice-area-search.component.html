@@ -1,41 +1,33 @@
-
 <div class="input-group hdsearch">
     <div class="input-group-btn paSearchFilters m-hide" dropdown #dropdown="bs-dropdown" [autoClose]="false" [isOpen]="status.isopen" (isOpenChange)="change($event)" placement="top">
         <button type="button" dropdownToggle class="btn btn-default input-lg filterButton" (click)="openModal(modalContent)">
-            <span>Filters <i class="zmdi zmdi-chevron-down"></i></span>
+            <span>Filters <span class="zmdi zmdi-chevron-down pg-icon"></span></span>
         </button>
     </div>
     <div class="input-group-btn hidden-lg-up">
         <button type="button" data-dismiss="modal" (click)="setParameter()" class="btn btn-danger input-lg serachButtonDiv m-searchbtninm">
-            <i class="fa fa-search searchIcon" aria-hidden="true"></i>
+            <span class="fa fa-search searchIcon pg-icon" aria-hidden="true"></span>
         </button>
     </div>
     <div class="search-input-container">
         <input type="text" class="form-control input-lg filterInputForm" placeholder="Enter your search here" [(ngModel)]="searchTerm" (keypress)="forceSearch($event)" #searchInput id="searchTextInput">
 
-        <i class="fa fa-question help-icon hidden-md-down" (click)="openHelpModal(helpModal)"></i>
-        <i class="fa fa-close close-icon hidden-lg-up" *ngIf="searchTerm.trim().length>0" (click)="clearText()"></i>
-        <!--<p class="closeX"> x </p>-->
+        <span class="fa fa-question help-icon hidden-md-down pg-icon" (click)="openHelpModal(helpModal)"></span>
+        <span class="fa fa-close close-icon hidden-lg-up pg-icon" *ngIf="searchTerm.trim().length>0" (click)="clearText()"></span>
     </div>
     <div class="input-group-btn hidden-md-down">
         <button type="button" data-dismiss="modal" (click)="setParameter()" class="btn btn-danger input-lg serachButtonDiv m-searchbtninm">
             &nbsp;&nbsp;
-            <i class="fa fa-search searchIcon" aria-hidden="true"></i>&nbsp;&nbsp;
+            <span class="fa fa-search searchIcon pg-icon" aria-hidden="true"></span>&nbsp;&nbsp;
         </button>
     </div>
 </div>
 
 <ng-template #modalContent let-close="close">
-    <!--<div class="modal-header">
-      <button type="button" class="close" (click)="modalRef.hide()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>-->
     <div class="modal-body header-search-filter">
         <div class="practisetypesaved">
             <div class="row">
                 <div class="col-md-3 col-sm-3 col-xs-3 browse_hist_fav_tabs speech-bubble">
-                    <!-- <div class="arrow bottom right"></div>  -->
                     <div class="practiseArea hsftitle">Practice Areas</div>
                     <div class="arrow bottom right"></div>
                 </div>
@@ -44,7 +36,6 @@
                     <a class="selectall"><span (click)="deSelectAllPracticeArea()">Deselect all</span></a>
                 </div>
             </div>
-
         </div>
         <div class="serachListBlock">
             <ng-container *ngFor="let practicearea of searchPracticeAreas; let i = index">
@@ -76,40 +67,13 @@
                 </ul>
             </ng-container>
         </div>
-        <!--<div class="searchMainDiv">
-          <button class="btn btn-default pull-right" (click)="setParameter()">Search</button>
-        </div>-->
         <div class="modal-footer text-right">
-            <button class="btn btn-primary" (click)="applyNSearch()">Search </button> <!--<button class="btn btn-primary" (click)="modalRef.hide()">Cancel</button>-->
+            <button class="btn btn-primary" (click)="applyNSearch()">Search </button>
         </div>
     </div>
 </ng-template>
 
-<ng-template #modalContentAlert let-close="close">
-    <div class="modal-header">
-        <h5 class="modal-title">
-            Alert <button type="button" class="close pull-right" (click)="modalAlertRef.hide()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </h5>
-
-    </div>
-    <div class="modal-body">
-        <div class="row">
-            <div class="col-md-12">
-                <span *ngIf="searchTerm.trim().length==0">Please enter search terms.</span>
-                <span *ngIf="searchTerm.trim().length > 0 && searchTerm.trim().length < 3">Please enter atleast three characters.</span>
-                <span *ngIf="searchTerm.trim().length!=0 && selectedPracticeAreas.length==0">Please select at least one Practice Area to filter your search by.</span>
-            </div>
-
-        </div>
-
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary btn-primary" (click)="closeAllModals()" *ngIf="searchTerm.trim().length==0">OK</button>
-        <button type="button" class="btn btn-outline-secondary btn-primary" (click)="modalAlertRef.hide()" *ngIf="(searchTerm.trim().length!=0 && selectedPracticeAreas.length==0) || (searchTerm.trim().length > 0 && searchTerm.trim().length < 3)">OK</button>
-    </div>
-</ng-template>
+<app-pg-alert-modal (onCloseModal)="onCloseAlert()"></app-pg-alert-modal>
 
 <ng-template #helpModal let-close="close">
     <div class="modal-header">
@@ -123,7 +87,7 @@
     <div class="modal-body helpModal">
         <div class="row">
             <div class="col-md-12">
-                <p> The <b>General Text search</b> field supports the use of the following "boolean" search operators, which can be combined in any order as required. Please take note that the <b>General Text search</b> field is the only field that supports these operators.</p>
+                <p> The <strong>General Text search</strong> field supports the use of the following "boolean" search operators, which can be combined in any order as required. Please take note that the <strong>General Text search</strong> field is the only field that supports these operators.</p>
             </div>
         </div>
         <div class="row">
@@ -181,8 +145,5 @@
                 </div>
             </div>
         </div>
-        <!--<div class="modal-footer text-right">
-            <button class="btn btn-primary" (click)="closeModal()">Ok </button> <button class="btn btn-primary" (click)="modalRef.hide()">Cancel</button>
-        </div>-->
     </div>
 </ng-template>

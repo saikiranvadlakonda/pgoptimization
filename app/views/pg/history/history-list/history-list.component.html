@@ -1,10 +1,11 @@
 <div class="history-container">
     <div class="row whatsNewPage">
-        <div class="col-xs-12 col-lg-12 col-xl-12">
+        <app-bread-crumb [title]="'History'"></app-bread-crumb>
+        <!--<div class="col-xs-12 col-lg-12 col-xl-12">
             <div class="breadcrumb-text">
                 <div>You are here: <span><a routerLink="/dashboard">Dashboard</a></span> > History</div>
             </div>
-        </div>
+        </div>-->
         <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
             <h4 class="pageTitle">History</h4>
         </div>
@@ -13,7 +14,7 @@
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-5 col-xl-5 mobi-searchWhatsNew">
             <div class="searchWhatsNew">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="zmdi zmdi-search"></i></span><input class="form-control" type="text" placeholder="SEARCH HISTORY" [(ngModel)]="searchHistory" />
+                    <span class="input-group-addon"><span class="zmdi zmdi-search pg-icon"></span></span><input class="form-control" type="text" placeholder="SEARCH HISTORY" [(ngModel)]="searchHistory" />
                 </div>
             </div>
         </div>
@@ -53,7 +54,6 @@
                                     </ul>
                                 </div>
                             </div>
-
                         </li>
                     </ul>
                 </div>
@@ -72,18 +72,14 @@
                             <p class="card-text">
                                 <small class="text-muted">{{historyItem.dateBadge+" - "}}{{historyItem.date | date:'mediumTime'}}</small>
                             </p>
-
                             <h4 class="card-title pointer" (click)="navigateToHistory(historyItem)">{{historyItem?.name}}</h4>
-
                         </li>
                     </ul>
                 </ng-container>
                 <ng-container *ngIf="sortedList?.length==0 || (sortedList | filterByProperty : searchHistory: 'name')?.length == 0">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item text-center">
-
                             <p class="card-text no-records-error"> {{ historyError ? historyError : pgMessages.history.noHistory }}</p>
-
                         </li>
                     </ul>
                 </ng-container>
@@ -94,48 +90,4 @@
             <button type="button" class="btn btn-default" *ngIf="(sortedList | filterByProperty : searchHistory: 'name')?.length > 4 && showMore == false" (click)="showLessHistItems()">SHOW LESS</button>
         </div>
     </div>
-
-    <!--<div class="container-fluid " *ngIf="historyItems?.length>0">
-        <div class="mainDivContainer">
-
-
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="paLeftMainDiv">
-                        <ng-container *ngIf="sortedList?.length">
-                            <div class="whatsNewDiv" *ngFor="let historyItem of sortedList | filter : searchHistory">
-                                <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div class="whatsnewTime">
-                                            {{historyItem?.dateBadge | uppercase}}
-                                        </div>
-                                        <div class="pointer whatsnewHead" (click)="navigateToHistory(historyItem)">
-                                            {{historyItem?.name}}
-                                        </div>
-                                        <div class="whatsnewContent">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="sortedList?.length==0">
-                            <div class="whatsNewDiv">
-                                <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div class="whatsnewTime">
-                                        </div>
-                                        <div class="whatsnewHead">
-                                            No History found for selected Category
-                                        </div>
-                                        <div class="whatsnewContent">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </ng-container>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>-->
 </div>

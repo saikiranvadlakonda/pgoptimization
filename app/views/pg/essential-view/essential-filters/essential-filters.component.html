@@ -1,0 +1,84 @@
+<div class="card-box border-radius-0 searchfilters p-40 filter-top-p" *ngIf="!isPDF">
+  <div class="tilebox-two eventHeader" *ngIf="!isMobiResolution">
+    <h4 class="m-b-10"><span>FILTER</span></h4>
+    <hr class="hrline" />
+  </div>
+
+  <div class="filtersearchHeadDiv filterHeader" *ngIf="isMobiResolution">
+    <div class="searchwithinresult essentials-p">
+      <p (click)="onCollapseSearch()">
+        Filter Essentials
+        <span class="PlusDiv pull-right cross-icon"> X</span>
+      </p>
+    </div>
+  </div>
+  <hr *ngIf="isMobiResolution" />
+
+  <div class="filtersearchHeadDiv">
+    <div class="searchwithinresult essentials-p">
+      <p>Search within results </p>
+    </div>
+    <div id="custom-search-input-top" class="FilterSearch">
+      <input type="text" class="form-control input-lg downloadsSearchInput img-responsive"
+        placeholder="Enter your search here" [(ngModel)]="searchEssential" (keyup)="onSearchQueryEnter($event)" />
+      <a *ngIf="searchEssential?.trim().length > 0" class="practiceAreaCrossMark filter-clear ng-star-inserted"
+        style="display:table-cell;padding-right:9px;cursor:pointer;color:#EA1C2C;vertical-align:middle"
+        (click)="onClearSearch()">X</a>
+      <span class="input-group-btn">
+        <button class="btn btn-info btn-lg searchbutton" type="button" (click)="onUpdatePagination()">
+          <span class="fa fa-search Filtersearchbutton pg-icon"></span>
+        </button>
+      </span>
+    </div>
+  </div>
+
+  <div class="filterpracticearea">
+    <p *ngIf="isTopicSelected">
+      Topics <span class="subTopicsSelectAll pull-right" (click)="onClearAllTopics()">CLEAR ALL</span>
+      <span class="subTopicsSelectAll pull-right ng-star-inserted" style="padding:0px 5px;">/</span>
+      <span class="subTopicsSelectAll pull-right" (click)="onGetEssentialsForSelectedTopics()">APPLY</span>&nbsp;
+    </p>
+    <p *ngIf="!isTopicSelected">
+      Topics <span class="subTopicsSelectAll pull-right" (click)="onSelectAllTopics()">SELECT
+        ALL</span>&nbsp;
+    </p>
+  </div>
+  <div class="paNameSubDiv">
+    <ul class="list-group">
+      <ng-container *ngFor="let topic of topics">
+        <li class="list-group-item d-flex justify-content-between align-items-center" *ngIf="topic.count > 0">
+          <div class="checkbox">
+            <input type="checkbox" id="checkbox100" [checked]="topic.isSelected"
+              (change)="onSetSeletedTopic(topic.title, $event.currentTarget.checked)" />
+            <label for="checkbox2">
+              <span class="badge badge-primary badge-pill pull-right">({{ topic.count }})</span>
+              {{topic.title}}
+            </label>
+          </div>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+  <hr />
+
+
+  <div class="filterpracticearea">
+    <p>Document Type <span class="subTopicsSelectAll pull-right" (click)="onSetAllDocumentType()"> SELECT
+        ALL</span></p>
+  </div>
+  <div class="paNameSubDiv">
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of documentType">
+        <div class="checkbox">
+          <input type="checkbox" class="form-check-input filtercheckbox" id="checkbox100" [checked]="doc.isSelected"
+            (change)="onSetDocumentType(doc.title, $event.currentTarget.checked)" />
+          <label for="checkbox2">
+            <span class="badge badge-primary badge-pill pull-right">({{doc.count}})</span>
+            {{doc.title}}
+          </label>
+
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

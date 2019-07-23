@@ -1,0 +1,203 @@
+<div class="table-responsive my-folders m-hide">
+  <table class="contentbrowsertble">
+    <thead>
+      <tr>
+        <th>NAME</th>
+        <th>DATE CREATED</th>
+        <th>LAST UPDATED</th>
+        <th>EDIT FOLDER</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="!folders">
+        <td colspan="5">
+          <div class="folderIconDetailMain">
+            <div class="dateTimeContent">Loading...</div>
+          </div>
+        </td>
+      </tr>
+      <tr *ngFor="let folder of folders | slice:0:((foldersSize && foldersSize < folders?.length) ? foldersSize : (folders?.length))">
+        <td>
+          <div class="folderIconDetailMain" *ngIf="folder?.isNewFolder">
+            <div class="folderIconIndetail">
+              <span class="icon-folder-alt icons pg-icon"></span>
+            </div>
+            <div class="fileNameCount" *ngIf="folder?.isNewFolder">
+              <div class="folderName p-l-0">
+                <input type="text" name="name" value="" [(ngModel)]="folder.clientDescription" class="form-control"
+                  (keydown)="onKeyDown($event, folder, 'New')" *ngIf="fromRoot; else forSubFolders" />
+                <ng-template #forSubFolders>
+                  <input type="text" name="name" value="" [(ngModel)]="folder.folderName" class="form-control"
+                    (keydown)="onKeyDown($event, folder, 'New')" />
+                </ng-template>
+                <div *ngIf="folder.isValid == false" class="validate">Folder Name is required</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="folderIconDetailMain" *ngIf="!folder?.isNewFolder">
+            <div class="folderIconIndetail">
+              <span class="icon-folder-alt icons pg-icon"></span>
+            </div>
+            <div class="fileNameCount" *ngIf="!folder?.isNewFolder && !folder?.isEnableEdit"
+              (click)="onShowFolderDetails(folder)">
+              <div class="folderName p-l-0">{{folder.folderName ? folder.folderName : folder.clientDescription}}</div>
+              <div class="noOfFolders">{{folder.folderCount}} Folder(s), {{folder.fileCount}} File(s)</div>
+            </div>
+            <div class="fileNameCount" *ngIf="folder?.isEnableEdit">
+              <div class="folderName p-l-0">
+                <input type="text" name="name" value="" [(ngModel)]="folder.clientDescription" class="form-control"
+                  (keydown)="onKeyDown($event, folder, 'Edit')" *ngIf="fromRoot; else forSubFolders2" />
+                <ng-template #forSubFolders2>
+                  <input type="text" name="name" value="" [(ngModel)]="folder.folderName" class="form-control"
+                    (keydown)="onKeyDown($event, folder, 'Edit')" />
+                </ng-template>
+                <div *ngIf="folder.isValid == false" class="validate">Folder Name is required</div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="dateTimeContent">{{folder?.dateCreated | date}}</div>
+        </td>
+        <td>
+          <div class="dateTimeContent" *ngIf="!folder?.isNewFolder">{{getDays(folder?.lastAccessedDate)}} </div>
+          <div class="dateTimeContent" *ngIf="folder?.isNewFolder"> - </div>
+        </td>
+        <td>
+          <span *ngIf="folder?.isNewFolder" class="fa fa-save editPencilButton pointer pg-icon"
+            (click)="onAddNewClient(folder)" title="Create Folder"></span>
+          <span *ngIf="folder?.isNewFolder" class="fa fa-close cancel editPencilButton pointer pg-icon"
+            (click)="onCancelCreateClientFolder()" title="Cancel"></span>
+
+          <span *ngIf="folder?.isEnableEdit" class="fa fa-save editPencilButton pointer pg-icon"
+            (click)="onEditClient(folder)"></span>
+          <span *ngIf="folder?.isEnableEdit" class="fa fa-close cancel editPencilButton pointer pg-icon"
+            (click)="onCancelEdit(folder)"></span>
+
+
+          <div class="btn-group folderbtn-group" dropdown placement="bottom right"
+            *ngIf="!folder?.isNewFolder && !folder?.isEnableEdit && !forSearch">
+            <button id="button-alignment" dropdownToggle type="button" class="btn folderListBtn"
+              aria-controls="dropdown-alignment">
+              <span class="fa fa-ellipsis-h pg-icon" aria-hidden="true"></span>
+            </button>
+            <ul id="dropdown-alignment" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu"
+              aria-labelledby="button-alignment">
+              <li role="menuitem" (click)="onEnableEdit(folder)"><a class="dropdown-item">Rename</a></li>
+              <li role="menuitem" (click)="onDeleteClient(folder)"><a class="dropdown-item">Delete</a></li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="folders?.length == 0">
+        <td colspan="5" style="text-align: left">
+          <br />
+          <br />
+          <p class="noOfFilesinFolder nofilesmsg">{{ error }}</p>
+          <br />
+          <br />
+        </td>
+      </tr>
+      <tr *ngIf="foldersSize < folders?.length && folders?.length > 5" class="showMore">
+        <td colspan="5" style="border:none;text-align: center;">
+          <div>
+            <p class="folderListTitle" (click)="onShowMoreFolders()">SHOW MORE</p>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="foldersSize >= folders?.length && folders?.length > 5" class="showMore">
+        <td colspan="5" style="border:none;text-align: center;">
+          <div>
+            <p class="folderListTitle" (click)="onShowLessFolders()">SHOW LESS</p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="mobileFoldersView d-hide">
+  <div class="foldersListHeader">
+    <div class="row">
+      <div class="col-md-12">
+        <h2 class="header-title">Folders</h2>
+      </div>
+    </div>
+  </div>
+  <div class="folderListItems">
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="folders-list">
+          <li class="folder-item"
+            *ngFor="let folder of folders | slice:0:((foldersSize && foldersSize < folders?.length) ? foldersSize : (folders?.length))">
+            <span class="folder-icon" [ngClass]="{ 'align-top': folder?.isEnableEdit || folder?.isNewFolder }">
+              <span class="icon-folder-alt icons pg-icon"></span>
+            </span>
+            <div class="folder-details" [ngClass]="{ 'align-top': folder?.isEnableEdit || folder?.isNewFolder }">
+              <div (click)="onShowFolderDetails(folder)" *ngIf="!folder?.isEnableEdit && !folder?.isNewFolder">
+                <span class="folder-name">{{ folder.folderName ? folder.folderName : folder.clientDescription }}</span>
+                <span class="folder-mod-details">Modified: {{ folder?.lastAccessedDate | date: 'MMM dd, y' }}</span>
+              </div>
+              <div *ngIf="folder?.isEnableEdit && !forSearch">
+                <input type="text" name="name" value="" [(ngModel)]="folder.clientDescription" class="form-control"
+                  (keydown)="onKeyDown($event, folder, 'Edit')" *ngIf="fromRoot; else forSubFolders3" />
+                <ng-template #forSubFolders3>
+                  <input type="text" name="name" value="" [(ngModel)]="folder.folderName" class="form-control"
+                    (keydown)="onKeyDown($event, folder, 'Edit')" />
+                </ng-template>
+                <div *ngIf="folder.isValid == false" class="validate">Folder Name is required</div>
+              </div>
+              <div *ngIf="folder?.isNewFolder && !forSearch">
+                <input type="text" name="name" value="" [(ngModel)]="folder.clientDescription" class="form-control"
+                  (keydown)="onKeyDown($event, folder, 'New')" *ngIf="fromRoot; else forSubFolders4" />
+                <ng-template #forSubFolders4>
+                  <input type="text" name="name" value="" [(ngModel)]="folder.folderName" class="form-control"
+                    (keydown)="onKeyDown($event, folder, 'New')" />
+                </ng-template>
+                <div *ngIf="folder.isValid == false" class="validate">Folder Name is required</div>
+              </div>
+            </div>
+
+            <div class="folder-actions" [ngClass]="{ 'align-top': folder?.isEnableEdit || folder?.isNewFolder }"
+              *ngIf="!forSearch">
+              <div class="btn-group" dropdown placement="bottom right"
+                *ngIf="!folder?.isEnableEdit && !folder?.isNewFolder">
+                <button id="button-alignment" dropdownToggle type="button" class="btn pointer"
+                  aria-controls="dropdown-alignment">
+                  <span class="fa fa-ellipsis-v pg-icon" aria-hidden="true"></span>
+                </button>
+                <ul id="dropdown-alignment" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu"
+                  aria-labelledby="button-alignment">
+                  <li role="menuitem" (click)="onEnableEdit(folder)"><a class="dropdown-item">Rename</a></li>
+                  <li role="menuitem" (click)="onDeleteClient(folder)"><a class="dropdown-item">Delete</a></li>
+                </ul>
+              </div>
+              <div *ngIf="folder?.isEnableEdit">
+                <span class="fa fa-save editPencilButton pointer pg-icon" (click)="onEditClient(folder)"></span>
+                <span class="fa fa-close cancel editPencilButton pointer pg-icon" (click)="onCancelEdit(folder)"></span>
+              </div>
+              <div *ngIf="folder?.isNewFolder">
+                <span class="fa fa-save editPencilButton pointer pg-icon" (click)="onAddNewClient(folder)"
+                  title="Create Folder"></span>
+                <span class="fa fa-close cancel editPencilButton pointer pg-icon" (click)="onCancelCreateClientFolder()"
+                  title="Cancel"></span>
+              </div>
+            </div>
+          </li>
+          <li class="folder-item" *ngIf="folders?.length == 0">
+            <p class="nofolders-error">{{ error }}</p>
+          </li>
+        </ul>
+        <div class="show-more-folders" *ngIf="foldersSize < folders?.length && folders?.length > 5">
+          <p class="show-less text-center" (click)="onShowLessFolders()">Show
+            less</p>
+        </div>
+        <div class="show-more-folders" *ngIf="foldersSize >= folders?.length && folders?.length > 5">
+          <p class="show-less text-center" (click)="onShowLessFolders()">Show
+            less</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

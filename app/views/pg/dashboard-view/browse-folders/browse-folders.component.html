@@ -1,6 +1,6 @@
 <div class="p-20 tilebox-two foldersHeader">    
     <a (click)="createFolder($event.event,modalContent)" [ngClass]="(!newFolder)? 'btn btn-sm btn-custom waves-effect waves-light pull-xs-right folderbtn pointer' : 'btn btn-sm btn-custom waves-effect waves-light pull-xs-right folderbtn pointer disableCursor'"
-      ><i class="zmdi zmdi-plus"></i> New Folder</a>
+      ><span class="zmdi zmdi-plus pg-icon"></span> New Folder</a>
     <h4 class="m-b-10"><span data-plugin="counterup">Browse Folders</span></h4>
     <h6 class="text-muted  m-b-15">{{folderInfo?.length > 3 ? 3 : folderInfo?.length }} of {{folderInfo?.length}}</h6>
     <hr class="hrline" />
@@ -25,7 +25,7 @@
                 <td colspan="2">
                     <div class="p-20 tilebox-three pointer">
                         <div class="bg-icon pull-xs-left">
-                            <i class="ion-ios7-folder pull-xs-left"></i>
+                            <span class="ion-ios7-folder pull-xs-left pg-icon"></span>
                         </div>
                         <div class="text-xs-left">
                             <input type="text" name="name" value="" [(ngModel)]="newClientFolder.clientDescription" class="form-control" (keydown)="onKeyDown($event,newClientFolder,'New')" style="width: 80%;" />
@@ -34,15 +34,15 @@
                     </div>
                 </td>
                 <td>
-                    <i class="fa fa-save editPencilButton pointer" (click)="saveCreatFolder()" title="Create Folder" style="font-size:20px;"></i>
-                    <i class="fa fa-close cancel editPencilButton pointer" (click)="cancelCreateClient()" title="Cancel" style="font-size:20px;"></i>
+                    <span class="fa fa-save editPencilButton pointer pg-icon" (click)="saveCreatFolder()" title="Create Folder" style="font-size:20px;"></span>
+                    <span class="fa fa-close cancel editPencilButton pointer pg-icon" (click)="cancelCreateClient()" title="Cancel" style="font-size:20px;"></span>
                 </td>
             </tr>
             <tr *ngFor="let folder of folderInfo | slice: 0:3; let i = index">
                 <td>
                     <div class="p-20 tilebox-three pointer" *ngIf="folderInfo[i]">
                         <div class="bg-icon pull-xs-left">
-                            <i class="ion-ios7-folder pull-xs-left"></i>
+                            <span class="ion-ios7-folder pull-xs-left pg-icon"></span>
                         </div>
                         <div class="text-xs-left" (click)="showFolderDetails(folder)">
                             <h2 class="m-b-10"><span data-plugin="counterup">{{folderInfo[i].clientDescription}}</span></h2>

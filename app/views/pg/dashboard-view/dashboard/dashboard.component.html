@@ -1,13 +1,11 @@
 <div class="row">
     <div class="col-lg-1"><p class="p-20 header-bottom"></p></div>
 </div>
-
 <div class="row dashboard-page-title">
     <div class="col-xs-12">
         <h5>Dashboard</h5>
     </div>
 </div>
-
 <div class="row row-eq-height">
     <div class="col-xs-12 col-lg-8 col-xl-8">
         <div class="card-box dashboard-tabs border-radius-0 p-0">
@@ -28,7 +26,6 @@
                 <mat-tab label="Calendar">
                     <div class="new-calendar">
                         <div class="row calendar-page m-0 calendar-top-line">
-                            <!--Added by saikiran for month navigation at dashboard-->
                             <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12 text-center calendar-header">
                                 <h4>
                                     <span class="previousButton clarrows ft" mwlCalendarPreviousView
@@ -36,7 +33,7 @@
                                           [(viewDate)]="viewDate"
                                           (viewDateChange)="viewDateChanged()">
                                         <span class="leftArrowMain">
-                                            <i class="fa fa-angle-left  leftarrowBackButton"></i>
+                                            <span class="fa fa-angle-left leftarrowBackButton pg-icon"></span>
                                         </span>
                                     </span>
                                     <span>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</span>
@@ -46,7 +43,7 @@
                                           [(viewDate)]="viewDate"
                                           (viewDateChange)="viewDateChanged()">
                                         <span class="leftArrowMain">
-                                            <i class="fa fa-angle-right  leftarrowBackButton"></i>
+                                            <span class="fa fa-angle-right leftarrowBackButton pg-icon"></span>
                                         </span>
                                     </span>
                                 </h4>
@@ -59,12 +56,12 @@
                                               [(viewDate)]="viewDate"
                                               (viewDateChange)="viewDateChanged()">
                                             <span class="left-caret">
-                                                <i class="fa fa-caret-left"></i>
+                                                <span class="fa fa-caret-left pg-icon"></span>
                                             </span>
                                         </span>
                                     </div>
                                     <div class="col-xs-8 text-center">
-                                        <span class="date-string">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }} <i class="fa fa-chevron-down"></i></span>
+                                        <span class="date-string">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }} <span class="fa fa-chevron-down pg-icon"></span></span>
                                     </div>
                                     <div class="col-xs-2">
                                         <span class="mobi-next-button"
@@ -73,7 +70,7 @@
                                               [(viewDate)]="viewDate"
                                               (viewDateChange)="viewDateChanged()">
                                             <span class="right-caret">
-                                                <i class="fa fa-caret-right"></i>
+                                                <span class="fa fa-caret-right pg-icon"></span>
                                             </span>
                                         </span>
                                     </div>
@@ -82,7 +79,6 @@
                         </div>
                         <div class="row m-0 calendar-body">
                             <div class="col-xl-12">
-
                                 <ng-template #customCellTemplate
                                              let-day="day"
                                              let-locale="locale"
@@ -106,7 +102,6 @@
                                                  [tooltipAppendToBody]="tooltipAppendToBody">
                                             </div>
                                         </div>
-
                                         <div class="cal-day-number text-center">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</div>
                                         <ng-container *ngFor="let event of day?.events | slice: 0:1">
                                             <div class="cal-day-notes" [ngClass]="event?.eventCss" [style.width.%]="getCalDayWidth(day, event)" *ngIf="isStartDayOfEvent(day, event)">
@@ -115,7 +110,7 @@
                                         </ng-container>
                                     </div>
                                 </ng-template>
-                                
+
                                 <mwl-calendar-month-view [viewDate]="viewDate"
                                                          [events]="events"
                                                          (click)="navigateToCalendar()"
@@ -127,86 +122,24 @@
                 </mat-tab>
             </mat-tab-group>
         </div>
-    </div><!-- end col-->
-
+    </div>
     <div class="col-xs-12 col-lg-4 col-xl-4">
-        <div class="card-box border-radius-0 whats-new-content">
-            <div class="p-20 tilebox-two foldersHeader">
-                <div class="pull-xs-right folderbtn">
-                   
-                </div>
-                <h6 class="text-muted  m-b-15">
-                    {{whatsNewCarouselNum}} of 3
-                </h6>
-                <h4 class="m-b-10">
-                    <span data-plugin="counterup">What's new</span>
-                </h4>
-                <hr />
-            </div>
-
-            <carousel [noWrap]="noWrapSlides" (activeSlideChange)="updateSlideIndex($event)" *ngIf="newItems?.length > 0">
-                <!-- Wrapper for carousel items -->
-                <slide>
-                    <app-whatsnew-carousel [newItems]="newItems" [pageStart]=0 [pageEnd]=2></app-whatsnew-carousel>
-                </slide>
-                <slide>
-                    <app-whatsnew-carousel [newItems]="newItems" [pageStart]=2 [pageEnd]=4></app-whatsnew-carousel>
-                </slide>
-                <slide>
-                    <app-whatsnew-carousel [newItems]="newItems" [pageStart]=4 [pageEnd]=6></app-whatsnew-carousel>
-                </slide>                
-
-            </carousel>
-            <div *ngIf="newItems?.length == 0">
-                <p>{{ whatsNewError }}</p>
-            </div>
-            <p class="showmore m-hide"><a class="pointer" (click)="showAllWhatsNew()" *ngIf="newItemsLoaded">show more</a></p>
-            <p class="mobi-showmore d-hide"><a class="pointer" (click)="showAllWhatsNew()" *ngIf="newItemsLoaded">Show more</a></p>
-        </div>
-    </div><!-- end col-->
+        <app-whatsnew-carousel [newItems]="newItems" [whatsNewError]="whatsNewError" [newItemsLoaded]="newItemsLoaded" (showMoreWhatsNew)="showAllWhatsNew($event)"></app-whatsnew-carousel>
+    </div>
 </div>
-<!-- end row -->
 <div class="clearfix m-hide"><p>&nbsp;</p></div>
 <div class="row row-eq-height" *ngIf="practiceAreas">
     <div class="col-xs-12 col-md-12 col-lg-6 col-xl-6">
         <div class="card-box border-radius-0 browseFolders-widget p-0">
             <div class="inbox-widget nicescroll my-folders under-browse-folders" *ngIf="folderInfo">
-
                 <browse-folders [folderInfo]="folderInfo" [error]="foldersError" (reloadFolders)="getFolders()"
                                 (showMore)="navigateToMyFolders=true">
-
                 </browse-folders>
-
             </div>
         </div>
-    </div><!-- end col-->
-
+    </div>
     <div class="col-xs-12 col-md-12 col-lg-6 col-xl-6">
-        <div class="card-box border-radius-0 eventsBlock">
-            <div class="p-20 tilebox-two eventHeader">
-                <!--<a routerLink="/calendar" class="btn btn-sm btn-custom waves-effect waves-light pull-xs-right folderbtn"><i class="zmdi zmdi-alarm-plus"></i><b class="pluse">+</b> New Event</a>-->
-                <h4 class="m-b-10"><span data-plugin="counterup">Events</span></h4>
-                <h6 class="text-muted text-uppercase m-b-15 m-hide">&nbsp;</h6>
-                <hr class="hrline" />
-            </div>
-            <ng-container *ngFor="let event of bEvents|slice: 0:3">
-                <div class="event-txt-content evBlock p-20">
-                    <p class="font-600 m-b-5">{{event.start | date: 'dd MMM. yyyy'}}</p>
-                    <h4 class="header-title m-t-0 m-b-20">{{event.title}} <span class="text-secondary pull-right"><span class="label label-pill label-default">{{event.eventType}}</span></span></h4>
-                </div>
-            </ng-container>
-            <p *ngIf="bEvents?.length==0" class="no-events-mgs">{{ eventsError }}</p>
-            <div class="showMoreMainFolder showmorebtn-m-t text-center mins">
-                <div class="showMoreTxtFolder pointer" routerLink="/calendar">Show More</div>
-            </div>
-            <div class="show-more-events text-center">
-                <p class="pointer" routerLink="/calendar">Show more</p>
-            </div>
-        </div>
-    </div><!-- end col-->
-
+        <app-events [calenderEvents]="calenderEvents" [eventsError]="eventsError"></app-events>
+    </div>
 </div>
-<!-- end row -->
 <div class="clearfix m-hide"><p>&nbsp;</p></div>
-
-

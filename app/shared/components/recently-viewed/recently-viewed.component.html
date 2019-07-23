@@ -1,17 +1,20 @@
-<div class="card-box border-radius-0 whats-new-content essentials recentlyViewed" *ngIf="recentlyViewed && recentlyViewed.length > 0">
+<div class="card-box border-radius-0 whats-new-content essentials recentlyViewed">
     <div class="p-20 tilebox-two foldersHeader">
         <h6 class="text-muted m-b-15 this-category-title">In this category</h6>
         <h4 class="header-title m-t-0 m-b-20"><span data-plugin="counterup">You recently viewed</span> <span class="pull-right viewall pointer"><a (click)="viewAll()">View All</a></span></h4>
     </div>
-
-    <div class="whatNew-txt-content p-20 card-box tilebox-two" *ngFor="let recentlyView of recentlyViewed | slice: 0:3">
-        <div (click)="onRecentlyViewedClick(recentlyView)">
-            <div>
-                <p><span class="label label-pill label-default">{{getPracticeAreaName(recentlyView)}}</span></p>
-                <h5 class="m-t-0 pointer">{{recentlyView.name}}</h5>
-                <p class="font-600 m-b-5 datev" *ngIf="recentlyView?.date">{{recentlyView?.date|date: 'd LLL, yyyy'}} - {{recentlyView?.dateBadge}}</p>
-                <p class="font-600 m-b-5 datev" *ngIf="recentlyView.date=='undefined'?true:false">{{recentlyView?.dateBadge}}</p>
+    <ng-container *ngIf="recentlyViewed">
+        <div class="whatNew-txt-content p-20 card-box tilebox-two" *ngFor="let recentlyView of recentlyViewed | slice: 0:3">
+            <div (click)="onRecentlyViewedClick(recentlyView)">
+                <div>
+                    <p><span class="label label-pill label-default">{{getPracticeAreaName(recentlyView)}}</span></p>
+                    <h5 class="m-t-0 pointer">{{recentlyView.name}}</h5>
+                    <p class="font-600 m-b-5 datev" *ngIf="recentlyView?.date">{{recentlyView?.date|date: 'd LLL, yyyy'}} - {{recentlyView?.dateBadge}}</p>
+                    <p class="font-600 m-b-5 datev" *ngIf="recentlyView.date=='undefined'?true:false">{{recentlyView?.dateBadge}}</p>
+                </div>
             </div>
         </div>
-    </div>
+    </ng-container>
+    <div class="whatNew-txt-content p-20 card-box tilebox-two" *ngIf="recentlyViewed == undefined || recentlyViewed == null">Loading...</div>
+    <div class="whatNew-txt-content p-20 card-box tilebox-two" *ngIf="recentlyViewed && recentlyViewed.length==0"><div><p>No history recorded</p></div></div>
 </div>

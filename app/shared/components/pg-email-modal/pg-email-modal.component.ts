@@ -6,7 +6,7 @@ import { EmailContent } from '../../../shared/models/email-modal/email-modal.mod
 import { DataStoreService } from '../../../shared/services/data-store/data-store.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-
+import { PgConstants } from '../../constants/pg.constants';
 
 @Component({
     selector: 'pg-email-modal',
@@ -20,7 +20,7 @@ export class PgEmailModalComponent implements OnInit {
     @ViewChild('emailSuccessfulAlert') emailSuccessfulAlert: TemplateRef<any>;
     emailSuccessfulAlertRef: BsModalRef;
     emailData: EmailContent;
-
+    pgConstants = PgConstants.constants;
     constructor(private modalService: EmailModalService,
         public dialog: MatDialog,
         private bsModalService: BsModalService,
@@ -82,6 +82,7 @@ export class EmailMatContentModal {
         @Inject(MAT_DIALOG_DATA) public data: EmailContent) { }
 
     showValidationMsg: boolean = false;
+    pgConstants = PgConstants.constants;
 
     get isRecepientValid(): boolean {
         var isValidRecepient = true;

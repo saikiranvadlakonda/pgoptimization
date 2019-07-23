@@ -1,9 +1,4 @@
 <div class="folder-container">
-    <!--<div class="form-group" *ngIf="isSaveToFolder">
-        <label for="title">Title</label>
-        <input type="email" class="form-control" id="title" placeholder="Title" [(ngModel)]="saveToFolderContent.title">
-        <div *ngIf="saveToFolderContent.title == undefined || saveToFolderContent.title == ''" class="validate"> Please enter the title</div>
-    </div>-->
     <div class="form-group row edit-name-section" *ngIf="isSaveToFolder">
         <label for="inputEmail3" class="col-sm-1 form-control-label">Title <span class="text-danger">*</span></label>
         <div class="col-sm-11" *ngIf="isEditTitle">
@@ -14,11 +9,10 @@
             <p class="form-control-label" style="margin: 0px;">
                 {{ saveToFolderContent.title }}
                 <span class="" style="padding-left:5px" *ngIf="!isEditTitle">
-                    <i class="fa fa-edit editIcon pointer" title="Edit the file name" (click)="isEditTitle = !isEditTitle"></i>
+                    <span class="fa fa-edit editIcon pointer pg-icon" title="Edit the file name" (click)="isEditTitle = !isEditTitle"></span>
                 </span>
             </p>
         </div>
-
     </div>
     <div class="row folders-details my-folders folder-parent" *ngIf="isSaveToFolder && selectedFolders?.length>0">
         <div class="col-xs-12 col-lg-12 col-xl-12 col-md-12" [ngClass]="isSaveToFolder?'p-0':''">
@@ -32,35 +26,6 @@
                     </ng-container>
                 </div>
             </div>
-            <!--<h4 class="pageTitle p-l-0 m-t-10">
-                <span class="folderBackMain" *ngIf="selectedFolders?.length>0">
-                    <i class="fa fa-angle-left angleLeft backArrowButton" (click)="navigateToParentFolder()"></i>
-                </span>
-                <span class="folderName pointer" *ngIf="!isEnableFolderEdit">{{breadCrumb}}</span>
-                <ng-container *ngFor="let folder of selectedFolders;let i=index">
-                    {{i>0?' > ':''}}
-                    <span class="folderName pointer" (click)="navigateToThisFolder(folder)">
-                        {{folder?.folderName}}
-                    </span>
-                </ng-container>
-
-
-            </h4>-->
-            <!--<div class="col-sm-4 col-md-4 col-lg-4 text-right">
-                <span class="foldersButton" *ngIf="false" (click)="OnSaveToFolderClick()">
-                    <span class="fa fa-download saveButton boxshadow"></span>
-                </span>
-                <span class="foldersButton" *ngIf="false">
-                    <span class="ti-settings  saveButton boxshadow cog"></span>
-                </span>
-                <span class="foldersButton" *ngIf="false" (click)="deleteFolder()">
-                    <span class="fa fa-trash saveButton boxshadow"></span>
-                </span>
-                <span class="foldersButton" *ngIf="false">
-                    <span class="icon-action-redo icons saveButton boxshadow sharei"></span>
-                </span>
-            </div>-->
-
         </div>
     </div>
     <app-folders-list *ngIf="currentSelection == 'ClientList'"
@@ -69,6 +34,7 @@
                       (addNewClientFolder)="onNewClientAdd($event)"
                       (editClientFolder)="onClientFolderEdit($event)"
                       (deleteClientFolder)="onClientFolderDelete($event)"
+                      (navigateToContent)="navigateToContent($event)"
                       [isSaveToFolder]="isSaveToFolder"
                       [error]="folderError">
     </app-folders-list>
@@ -85,6 +51,7 @@
                        (saveToFolder)="onSaveToFolder($event)"
                        (fileDelete)="onFileDelete($event)"
                        (popUpClose)="popUpCloseClick($event)"
+                       (navigateToContent)="navigateToContent($event)"
                        [folderError]="folderDetailsError"
                        [fileError]="folderDetailsFileError">
     </app-folder-detail>

@@ -7,10 +7,13 @@ import { CalendarComponent } from './calendar.component';
 import { CalendarService } from '../../../shared/services/calendar/calendar.service';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap/modal/modal.module';
 import { ModalModule } from 'ngx-bootstrap';
+import { SharedModule } from '../../../shared/shared.module';
+
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
+        SharedModule,
         NgbModalModule.forRoot(),
         CalendarModule.forRoot(),
         RouterModule.forChild([

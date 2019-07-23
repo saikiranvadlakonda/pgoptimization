@@ -26,8 +26,8 @@
         <div class="form-group file-icon-img">
             <label for="radios-inline" class="control-label">Format</label><br />
             <mat-radio-group [(ngModel)]="data.Format">
-                <mat-radio-button value="pdf">PDF<img class="filesIconW" src="dist/assets/images/pdf.png" ></mat-radio-button>
-                <mat-radio-button value="rtf">RTF<img class="filesIconW" src="dist/assets/images/wordIcon.png" ></mat-radio-button>
+                <mat-radio-button value="pdf">PDF<img class="filesIconW" src="{{pgConstants.Images.EssentialIcons.pdfIcon}}" alt="PDF File" ></mat-radio-button>
+                <mat-radio-button value="rtf">RTF<img class="filesIconW" src="{{pgConstants.Images.EssentialIcons.wordIcon}}" alt="Word File" ></mat-radio-button>
             </mat-radio-group>
         </div>
         <div class="form-group row">

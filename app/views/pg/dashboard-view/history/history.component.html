@@ -51,14 +51,12 @@
                             <div class="pointer historyItemDate">{{historyItems[i+1].dateBadge+" - "}}{{historyItems[i+1].date | date:'mediumTime'}}</div>
                         </div>
                     </div>
-
                 </ng-container>
             </div>
             <div *ngIf="historyItems?.length == 0">
                 <p>{{ error }}</p>
             </div>
         </div>
-        <!--</div>-->
     </div>
     <div class="showMore m-hide" (click)="showHistoryList()" *ngIf="historyItems?.length > 0">show more</div>
     <div class="mobi-showMore text-center d-hide" *ngIf="historyItems?.length > 0"><span (click)="showHistoryList()">Show more</span></div>

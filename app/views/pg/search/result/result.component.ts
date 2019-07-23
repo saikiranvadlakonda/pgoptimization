@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChange, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { SearchResultModel, SearchParameters, searchedParameters } from '../../../../shared/models/search';
 
 
@@ -54,7 +54,6 @@ export class ResultComponent implements OnInit {
         this.selectedSort.emit(value);
     }
 
-
     setPage(pageNumber: number) {
         if ((this.pager.currentPage == 1 && pageNumber == 0) || (this.pager.currentPage == this.pager.totalPages && pageNumber == this.pager.totalPages)) {
             return;
@@ -64,7 +63,7 @@ export class ResultComponent implements OnInit {
 
     onTitleClick(result: SearchResultModel, i: number) {
         const pagerank = (this.pager.pageSize * (this.pager.currentPage - 1)) + (i + 1);
-        this.selectedDomainPath.emit({result, pagerank});//('zb/' + dPath.substring(0, dPath.lastIndexOf('/')));
+        this.selectedDomainPath.emit({result, pagerank});
     }
 
     searchResultChecked(isChecked, result) {
@@ -118,11 +117,8 @@ export class ResultComponent implements OnInit {
     }
 
     setReadMoreContentLines() {
-
         var ele = window.document.getElementById('resCntDecrp').offsetWidth;
         this.wc = ele + 70;
         return ele + 70;
     }
-
-
 }

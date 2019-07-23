@@ -24,6 +24,10 @@ import { PgSpinnerSpecificComponent } from './components/pg-spinner-component-sp
 import { PGContentViewComponent } from './components/pg-content-view/pg-content-view.component';
 import { PgFolderTreeviewComponent } from './components/pg-folder-treeview/pg-folder-treeview.component';
 import { PgFolderTreeviewChildComponent } from './components/pg-folder-treeview-child/pg-folder-treeview-child.component';
+import { BreadCrumbComponent } from './components/bread-crumb/bread-crumb.component';
+import { PdfViewerComponent } from './components/pdf-viewer/pdf-viewer.component';
+import { SaveToFolderModalComponent } from './components/save-to-folder-modal/save-to-folder-modal.component';
+import { DownloadModalComponent } from './components/download-modal/download-modal.component';
 
 // Directives
 import { CompileDirective } from './directives/compile.directive';
@@ -49,8 +53,10 @@ import { ErrorModalComponent } from './components/pg-error-modal/error-modal.com
 import { SearchService } from './services/search/search-service';
 import { BackToTopComponent } from './components/back-to-top/back-to-top.component';
 import { BackToTopDirective } from './directives/back-to-top.directive';
-import { BreadCrumbComponent } from './components/bread-crumb/bread-crumb.component';
-import { PdfViewerComponent } from './components/pdf-viewer/pdf-viewer.component';
+import { PermalinkModalComponent } from './components/permalink-modal/permalink-modal.component';
+import { PgAlertModalComponent } from './components/pg-alert-modal/pg-alert-modal.component';
+import { FoldersComponent } from './components/folders/folders/folders.component';
+import { FilesComponent } from './components/folders/files/files.component';
 
 const sharedComponents = [
     AppHeader1Component,
@@ -81,11 +87,17 @@ const sharedComponents = [
     FolderContainerComponent,
     FoldersListComponent,
     FolderDetailComponent,
+    FoldersComponent,
+    FilesComponent,
     ErrorModalComponent,
     BackToTopComponent,
     BackToTopDirective,
     BreadCrumbComponent,
-    PdfViewerComponent
+    PdfViewerComponent,
+    SaveToFolderModalComponent,
+    DownloadModalComponent,
+    PermalinkModalComponent,
+    PgAlertModalComponent
 ];
 
 @NgModule({

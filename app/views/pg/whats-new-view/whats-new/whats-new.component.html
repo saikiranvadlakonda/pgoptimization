@@ -1,10 +1,11 @@
 <div class="whats-new-container">
     <div class="row whatsNewPage">
-        <div class="col-xs-12 col-lg-12 col-xl-12">
+        <app-bread-crumb  [title]="'News'"></app-bread-crumb>
+        <!--<div class="col-xs-12 col-lg-12 col-xl-12">
             <div class="breadcrumb-text">
                 <div>You are here: <span><a routerLink="/dashboard">Dashboard</a></span> > News</div>
             </div>
-        </div>
+        </div>-->
         <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
             <h4 class="pageTitle">What's new</h4>
         </div>
@@ -13,7 +14,7 @@
         <div class="col-sm-6  col-xs-6 col-md-4 col-lg-6 col-xl-6 whatsNewSearch-container">
             <div class="searchWhatsNew">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="zmdi zmdi-search"></i></span><input class="form-control" type="text" placeholder="SEARCH NEWS" [(ngModel)]="searchText" />
+                    <span class="input-group-addon"><span class="zmdi zmdi-search pg-icon"></span></span><input class="form-control" type="text" placeholder="SEARCH NEWS" [(ngModel)]="searchText" />
                 </div>
             </div>
         </div>
@@ -34,22 +35,6 @@
                         </div>
                     </div>
                 </div>
-                <!--Below is for sort drop down, for future scope we are keeping it-->
-                <!--<div class="col-sm-4">
-                  <ul class="nav navbar-nav navbar-brand-dropdown pull-right">
-                    <li class="dropdown">
-                      <div class="form-group shortBy">
-                        <label>SORTY BY </label>
-                        <span class="paTitle shortByBlcok pointer">
-                          <span (click)="sort()">Most Recent</span>
-                          <span class="glyphicon glyphicon-sort-by-attributes" *ngIf="asc"></span>
-                          <span class="glyphicon glyphicon-sort-by-attributes-alt p-r-8" *ngIf="!asc"></span>
-                        </span>
-                      </div>
-
-                    </li>
-                  </ul>
-                </div>-->
             </div>
         </div>
     </div>

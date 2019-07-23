@@ -1,0 +1,15 @@
+<ng-template #saveToFolderModal let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">
+      Save document reference to client folder
+      <button type="button" class="close pull-right" (click)="onCloseModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </h5>
+  </div>
+  <div class="modal-body ">
+    <app-folder-container *ngIf="loadFolders" [isSaveToFolder]="true"
+      (selectedSaveToFolder)="onSaveToFolder($event)" (popUpClose)="onCloseModal($event)"
+      [saveToFolderContent]="saveToFolderContent"></app-folder-container>
+  </div>
+</ng-template>

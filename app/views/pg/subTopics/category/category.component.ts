@@ -30,14 +30,7 @@ export class CategoryComponent implements OnInit {
     getSubTopics(selectedPracticeArea) {
         this.subTopicLength = 9;
         this.paSubTopics = [];
-        /*selectedPracticeArea.subTocItem.forEach(topic => {
-            if (topic.type === 'TP') {
-                this.paSubTopics = [...this.paSubTopics, topic];
-            } else {
-                this.paModules = [...this.paModules, topic];
-            }
-        });*/
-
+        
         selectedPracticeArea.subTocItem.forEach(topic => {
             if (topic.title.toLowerCase() != "introduction")
             if (topic.type === 'TP') {
@@ -70,21 +63,6 @@ export class CategoryComponent implements OnInit {
     showSubTopicsOfModule(paModule: TocItemViewModel) {
         this.getSubTopics(paModule);
         this.isSubTopicViewEnabled = true;
-    }
-
-    /*showMoreSubtopic() {
-        this.subTopicLength = this.subTopics.length;
-    }
-
-    showLessSubtopic() {
-        this.subTopicLength = 12;
-    }*/
-
-    toggleShowMoreModules(isShowMore: boolean): void {
-        if (isShowMore)
-            this.modulesLength = this.paModules.length;
-        else
-            this.modulesLength = 15;
     }
 
     toggleShowMoreSubTopics(): void {

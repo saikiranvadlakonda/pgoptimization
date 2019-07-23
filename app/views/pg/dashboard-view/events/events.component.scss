@@ -1,0 +1,25 @@
+.showMoreMainFolder {
+    position: absolute;
+    bottom: 25px;
+    margin: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    width: 100%;
+}
+.showMoreTxtFolder {
+  background-color: rgba(224, 233, 241, 0.2);
+  color: rgba(0,0,0,0.7);
+  font-weight: bold;
+  border-radius: 0px;
+  display: inline-block;
+  padding-top: 6px;
+  padding-right: 100px;
+  padding-bottom: 4px;
+  padding-left: 100px;
+  border-color: #DFE0E4;
+  border-width: 1pt;
+  border-style: solid;
+  text-align: center;
+  cursor:pointer;
+}

@@ -4,14 +4,14 @@
             <div class="col-xs-5 col-lg-4 col-xl-4 logo-pa-contianer">
                 <div class="row">
                     <div class="col-xs-12 col-lg-6 col-xl-6" style="cursor:pointer; outline: none">
-                        <div class="pgImage4 logo d-hide" (click)="closeMenu()" routerLink="/dashboard"><a><img src="dist/assets/images/LN.SVG" /></a></div>
+                        <div class="pgImage4 logo d-hide" (click)="closeMenu()" routerLink="/dashboard"><a><img src="{{pgConstants.Images.HeaderImages.Logo}}" alt="Lexis Nexis" /></a></div>
                         <div class="back-to-classic-container m-hide" id="backToClassicBtn" (click)="loadClassicView()" style="display:none;">
                             <span class="backToClassicTxt">Back to Old Practical Guidance</span>
                         </div>
                     </div>
                     <div class="col-xs-12 col-lg-6 col-xl-6 m-hide practiceAreaBtn">
                         <div class="navbar-toggle collapsed practiceAreasSubDiv" (click)="openPADropdown()" aria-expanded="false">
-                            <i class="zmdi zmdi-format-subject pointer breadcrumb-icon" style="outline: none"></i>
+                            <span class="zmdi zmdi-format-subject pointer breadcrumb-icon pg-icon" style="outline: none"></span>
                             <a class="routerClass pa-hamburger-link-text">
                                 <span class="practiceAreasTxt">Practice Areas</span>
                             </a>
@@ -21,7 +21,7 @@
                                 <div class="col-md-12">
                                     <div class="pa-dropdown-header-content">
                                         <span class="header-text">All Practice Area</span>
-                                        <span class="pull-right pa-dd-close-icon pointer" (click)="isPaDropdownCollapsed = !isPaDropdownCollapsed"><i class="fa fa-times"></i></span>
+                                        <span class="pull-right pa-dd-close-icon pointer" (click)="isPaDropdownCollapsed = !isPaDropdownCollapsed"><span class="fa fa-times pg-icon"></span></span>
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +59,6 @@
             <div class="col-xs-7 col-lg-4 col-xl-4 menu-col">
                 <div>
                     <div class="m-navbar-toggle pull-right">
-
                         <!-- Mobile menu toggle-->
                         <div class="navbar-toggle collapsed" (click)="openMobiMenu()" aria-expanded="false">
                             <div class="lines">
@@ -70,28 +69,28 @@
                         </div>
                     </div>
 
-                    <button class="btn waves-effect waves-light d-hide m-show pull-right m-searchbtn" type="button" (click)="openMobiSearch(modalContent)"><i class="zmdi zmdi-search"></i> Search</button>
+                    <button class="btn waves-effect waves-light d-hide m-show pull-right m-searchbtn" type="button" (click)="openMobiSearch(modalContent)"><span class="zmdi zmdi-search pg-icon"></span> Search</button>
                 </div>
                 <div id="navigation" class="searchNavi collapse navbar-collapse navbarResponsive" [collapse]="isCollapsed">
                     <!-- Navigation Menu-->
                     <ul class="navigation-menu text-right search-menu m-hide">
                         <li>
-                            <a href="javascript:void(0)" (click)="navigateToFolders()"><i class="zmdi zmdi-folder"></i> <span> Folders </span> </a>
+                            <a href="javascript:void(0)" (click)="navigateToFolders()"><span class="zmdi zmdi-folder pg-icon"></span> <span> Folders </span> </a>
                         </li>
                         <li class="has-submenu">
-                            <a href="javascript:void(0)" (click)="navigateToCalendar()" class="pointer"><i class="zmdi zmdi-calendar"></i> <span> Calendar </span> </a>
+                            <a href="javascript:void(0)" (click)="navigateToCalendar()" class="pointer"><span class="zmdi zmdi-calendar pg-icon"></span> <span> Calendar </span> </a>
                         </li>
 
                         <li class="has-submenu">
-                            <a class="pointer" (click)="getAllWhatsNews()"><i class="zmdi zmdi-view-dashboard"></i> <span> What's New </span> </a>
+                            <a class="pointer" (click)="getAllWhatsNews()"><span class="zmdi zmdi-view-dashboard pg-icon"></span> <span> What's New </span> </a>
                         </li>
                     </ul>
                     <ul class="mobi-menu-header d-hide">
                         <li>
-                            <div class="pgImage4 logo d-hide" (click)="closeMenu()" routerLink="/dashboard"><a><img src="dist/assets/images/LN.SVG" /></a></div>
+                            <div class="pgImage4 logo d-hide" (click)="closeMenu()" routerLink="/dashboard"><a><img src="{{pgConstants.Images.HeaderImages.Logo}}" alt="Lexis Nexis" /></a></div>
                         </li>
                         <li class="text-right">
-                            <span class="close-icon" (click)="closeMenu()"><i class="fa fa-times"></i></span>
+                            <span class="close-icon" (click)="closeMenu()"><span class="fa fa-times pg-icon"></span></span>
                         </li>
                     </ul>
                     <div class="navigation-menu text-right mobi-menu d-hide">
@@ -116,7 +115,7 @@
                             <li>
                                 <a class="text-right pointer" (click)="openPracticeAreasMenu()">
                                     <span class="pull-left"> Practice Areas </span>
-                                    <i class="fa fa-chevron-right"></i>
+                                    <span class="fa fa-chevron-right pg-icon"></span>
                                 </a>
                             </li>
                         </ul>
@@ -124,7 +123,7 @@
                             <li>
                                 <a class="text-right pointer" (click)="redirectToLibrary()">
                                     <span class="pull-left"> Go to Library </span>
-                                    <i class="fa fa-external-link"></i>
+                                    <span class="fa fa-external-link pg-icon"></span>
                                 </a>
                             </li>
 
@@ -156,13 +155,13 @@
                         <ul class="mobi-menu-pa" *ngIf="showPracticeAreas && !isShowSubTopics">
                             <li>
                                 <a class="back-link pointer" (click)="showPracticeAreas = false">
-                                    <i class="fa fa-chevron-left"></i> <span>Back</span>
+                                    <span class="fa fa-chevron-left pg-icon"></span> <span>Back</span>
                                 </a>
                             </li>
                             <li *ngFor="let practiceArea of practiceAreas">
                                 <p class="pointer" (click)="showSubTopics(practiceArea)">
                                     <span [ngClass]="{ 'not-subscribed' : !practiceArea.isSubscribed }"> {{ practiceArea.title }} </span>
-                                    <i class="fa fa-chevron-right"></i>
+                                    <span class="fa fa-chevron-right pg-icon"></span>
                                 </p>
                             </li>
                         </ul>
@@ -170,7 +169,7 @@
                         <ul class="mobi-menu-pa-sub-topics" *ngIf="isShowSubTopics">
                             <li>
                                 <a class="back-link pointer" (click)="isShowSubTopics = false">
-                                    <i class="fa fa-chevron-left"></i> <span>Back</span>
+                                    <span class="fa fa-chevron-left pg-icon"></span> <span>Back</span>
                                 </a>
                                 <a class="viewAll-link pull-right pointer" (click)="navigateToSubtopics()">
                                     <span>View All</span>
@@ -180,7 +179,7 @@
                                 <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)">
                                     <ngb-panel id="mainpanel-{{i}}">
                                         <ng-template ngbPanelTitle>
-                                            <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ topic.title }}</span></span>
+                                            <span class="title-container"><span class="fa fa-chevron-down pg-icon"></span> <span class="title">{{ topic.title }}</span></span>
                                         </ng-template>
                                         <ng-template ngbPanelContent>
                                             <ul class="subtopic-links">
@@ -203,15 +202,8 @@
 
     </div>
 </div>
-<ng-template #modalContent let-close="close">
-    <!--<div class="modal-header" style="display:none;">
-        <h5 class="modal-title">
-            Create Folder <button type="button" class="close pull-right" (click)="modalRef.hide()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </h5>
 
-    </div>-->
+<ng-template #modalContent let-close="close">
     <div class="modal-body">
         <practice-area-search (onCloseMobiSearchModal)="closeMobieSearchModal()" [focusOn]="true"></practice-area-search>
     </div>

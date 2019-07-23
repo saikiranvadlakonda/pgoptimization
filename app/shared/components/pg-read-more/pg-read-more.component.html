@@ -4,15 +4,12 @@
       <p class="readMoreContent readMoreContentBlock" [innerHTML]="text | truncate: limit"></p>
       <label for="post-1" class="read-more-trigger readMoreContentPlus">
         <span class="overviewReadmore" (click)="toggleText()" [innerHTML]="linkText || readMoreLabelText"></span>
-        <!--<i class="zmdi zmdi-plus" (click)="toggleText()" [innerHTML]="linkText || readMoreLabelTex"></i>-->
       </label>
-
     </div>
     <div [hidden]="!truncatedText">
       <p class="readMoreContent readMoreContentBlock" [innerHTML]="text"></p>
       <label for="post-1" class="read-more-trigger">
         <span class="overviewReadmore" (click)="toggleText()" [innerHTML]="linkText || readMoreLabelText"></span>
-        <!--<i class="icons8-simple-arrow overviewReadmore"></i>-->
       </label>
     </div>
   </div>

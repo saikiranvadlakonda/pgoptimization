@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, Optional } from '@angular/core';
 import { SearchService } from '../../../../shared/services/search/search-service';
 import { RouterProxy } from '../../../../store/router/proxy/router.proxy';
 import { SearchModel } from '../../../../shared/models/search';
@@ -16,14 +16,14 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { FoldersService } from '../../../../shared/services/folders/folders.service';
 import { CreateFolerViewModel } from '../../../../shared/models/Repository/Create.model';
 import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
-import { SearchResultModel } from '../../../../shared/models/search';
 import { CompileDirective } from '../../../../shared/directives/compile.directive';
 import { PracticeAreaSearchComponent } from '../../../../shared/components/practice-area-search/practice-area-search.component';
 import { WhatsNewService } from '../../../../shared/services/whats-new/whats-new.service';
-import { SafePipe } from '../../../../shared/pipes/safe/safe.pipe';
 import { PgMessages } from '../../../../shared/constants/messages';
-import {ContentViewRequest} from "../../../../shared/models/analytics/contentViewRequest.model";
-import {ContentViewReqService} from "../../../../shared/services/analytics/content-view-req.service";
+import { ContentViewRequest } from "../../../../shared/models/analytics/contentViewRequest.model";
+import { ContentViewReqService } from "../../../../shared/services/analytics/content-view-req.service";
+import { SaveToFolderModalComponent } from '../../../../shared/components/save-to-folder-modal/save-to-folder-modal.component';
+import { PgAlertModalComponent } from '../../../../shared/components/pg-alert-modal/pg-alert-modal.component';
 
 @Component({
     selector: 'app-search-result',
@@ -31,32 +31,20 @@ import {ContentViewReqService} from "../../../../shared/services/analytics/conte
     styleUrls: ['./search-result.component.css']
 })
 export class SearchResultComponent implements OnInit, OnDestroy {
-    isCollapsed = true;
     @ViewChild(CompileDirective) compile: CompileDirective;
+    @ViewChild(PracticeAreaSearchComponent) searchInput: PracticeAreaSearchComponent;
+    @ViewChild('modalContentAlert') modalContentAlert: TemplateRef<any>; modalAlertRef: BsModalRef;
+    @ViewChild(SaveToFolderModalComponent) saveToFolderModalComponent: SaveToFolderModalComponent;
+    @ViewChild(PgAlertModalComponent) pgAlertModalComponent: PgAlertModalComponent;
+
+    isCollapsed = true;
     private subscriptions: Subscription = new Subscription();
     searchParams: SearchParameters = new SearchParameters();
     routerState$: Observable<StateParams>;
-    @ViewChild(PracticeAreaSearchComponent) searchInput: PracticeAreaSearchComponent;
-    @ViewChild('modalContentAlert') modalContentAlert: TemplateRef<any>; modalAlertRef: BsModalRef;
-    constructor(
-        private _routerProxy: RouterProxy,
-        private _navigationService: NavigationService,
-        private _searchService: SearchService,
-        private _pagerService: PagerService,
-        private _contentService: ContentService,
-        private modalService: BsModalService,
-        private _foldersService: FoldersService,
-        private _dataStoreService: DataStoreService,
-        private _whatsNewService: WhatsNewService,
-        private _contentViewReqService: ContentViewReqService) {
-
-        this.routerState$ = this._routerProxy.getRouterState();
-    }
     isPDF = false; pdfContent: any; pdfTitle: string = "";
     searchResults: SearchModel;
     // pager object
     pager: any = {};
-
     // paged items
     pagedItems: any[];
     renderContentRequest: RenderContentRequest = new RenderContentRequest();
@@ -72,6 +60,21 @@ export class SearchResultComponent implements OnInit, OnDestroy {
     error: string;
     pgMessages: any = PgMessages.constants;
 
+    constructor(
+        private _routerProxy: RouterProxy,
+        private _navigationService: NavigationService,
+        private _searchService: SearchService,
+        private _pagerService: PagerService,
+        private _contentService: ContentService,
+        private modalService: BsModalService,
+        private _foldersService: FoldersService,
+        private _dataStoreService: DataStoreService,
+        private _whatsNewService: WhatsNewService,
+        private _contentViewReqService: ContentViewReqService) {
+
+        this.routerState$ = this._routerProxy.getRouterState();
+    }
+
     ngOnInit() {
         const stateSubscription = this.routerState$.subscribe((state) => {
             if (state) {
@@ -85,14 +88,13 @@ export class SearchResultComponent implements OnInit, OnDestroy {
                 } catch (e) {
 
                 }
-                
+
                 (window.document.getElementById("searchTextInput") as HTMLInputElement).value = state.viewModel.SearchTerm;
                 this.searchParams = state.viewModel;
                 this.getSeachResults(state.viewModel);
                 this.scrollTop();
             }
         });
-
         this.subscriptions.add(stateSubscription);
     }
 
@@ -100,13 +102,10 @@ export class SearchResultComponent implements OnInit, OnDestroy {
         if (page < 1 || page > (this.pager.totalPages == 0 ? 1 : this.pager.totalPages)) {
             return;
         }
-
         // get pager object from service
-
         this.pager = this._pagerService.getPager(+this.searchResults.resultSet.totalHits, page, this.searchParams.Size);
         // get current page of items
         this.pagedItems = this.searchResults.searchResults;
-        //.slice(this.pager.startIndex, this.pager.endIndex + 1);
     }
 
     getSeachResults(params) {
@@ -140,64 +139,49 @@ export class SearchResultComponent implements OnInit, OnDestroy {
     }
 
     onPageChange(pageNumber: number) {
-        this.scrollTop();//window.scrollTo(0, 0);
+        this.scrollTop();
         this.searchParams = { ...this.searchParams, PageNumber: pageNumber - 1 };
         this.setSearchParams();
     }
-    practiceAreaClick(filters: string) {
-        this.searchParams = { ...this.searchParams, Filters: filters, PageNumber: 0 };
-        this.setSearchParams();
-    }
-    topicClick(filters: string) {
+
+    searchBySelectedFilters(filters: string) {
         this.searchParams = { ...this.searchParams, Filters: filters, PageNumber: 0 }
         this.setSearchParams();
     }
 
-    subTopicClick(filters: string) {
-        this.searchParams = { ...this.searchParams, Filters: filters, PageNumber: 0 }
-        this.setSearchParams();
-    }
-    documentTypeClick(filters: string) {
-        this.searchParams = { ...this.searchParams, Filters: filters, PageNumber: 0 }
-        this.setSearchParams();
-    }
     narrowSearchClick(narrowSearchTerms: any) {
         this.searchParams = { ...this.searchParams, NarrowSearchTerms: narrowSearchTerms.narrowSearchTerms, OriginalNarrowSearchTerm: narrowSearchTerms.originalNarrowText }
         this.setSearchParams();
     }
 
     setSearchParams() {
-        //this._routerProxy.dispatchRouterAction(PgConstants.constants.URLS.Header2.SearchResults, new StateParams(this.searchParams));
         this.getOnlySearchResults(this.searchParams);
     }
 
     ngOnDestroy() {
         var ind = <HTMLInputElement>document.querySelector("input.filterInputForm");
         ind.value = "";
-        //this.searchInput.searchTerm = "";
         this.subscriptions.unsubscribe();
     }
 
     onSearchResultClick(clickedItem: any) {
         const result = clickedItem.result;
-
         const docTypes = [];
         docTypes.push(result.lnDocumentTypes);
-    
         const titlepath = result.lmtTitlePath.split("|");
-        const itemTitle =  titlepath[titlepath.length -1];
-    
+        const itemTitle = titlepath[titlepath.length - 1];
+
         let contentViewReq: ContentViewRequest = {
             documentTypes: docTypes,
             primarySearchRecordRank: clickedItem.pagerank,
             correlationId: this.searchResults.searchCorrelationId,
-            domainPath: result.lmtIDPath,
+            domainPath: result.lmtIdPath,
             domainTitle: itemTitle,
             primarySearchDisplayTitle: itemTitle
         };
-        this._contentViewReqService.logSearchContentViewRequest(contentViewReq).subscribe(() => {});
-              
-        var dPath = result.lmtIDPath;
+        this._contentViewReqService.logSearchContentViewRequest(contentViewReq).subscribe(() => { });
+
+        var dPath = result.lmtIdPath;
         if (result.lnDocumentTypes.toLowerCase() == "news" ||
             result.lnDocumentTypes.toLowerCase() == "breaking news" ||
             result.lnDocumentTypes.toLowerCase() == "recent cases") {
@@ -206,13 +190,12 @@ export class SearchResultComponent implements OnInit, OnDestroy {
                 dPath = "zb/" + dPath;
             }
             this._whatsNewService.findNewsItemContentType({ domainPath: dPath }).subscribe(data => {
-                if (data.isPdf) {
+                if (data.isPdf && data.isPdf.toLowerCase() == "true") {
                     window.open(data.link);
                 } else {
                     this.displayContent(dPath, result);
                 }
             });
-            //handleNewsRouting
         } else if (result.lnDocumentTypes.toLowerCase() == "guidance") {
             var pathLen = 7;
 
@@ -221,26 +204,19 @@ export class SearchResultComponent implements OnInit, OnDestroy {
             }
             if (dPath.split('/').length > pathLen) {
                 dPath = dPath.substring(0, dPath.lastIndexOf('/'));
-            } else {
-                dPath = dPath;
-            }
+            } 
+
             if (dPath.indexOf("zb/") != 0 && dPath.indexOf("zb/") == -1) {
                 dPath = "zb/" + dPath;
             }
-            result.lmtIDPath = dPath;
+            result.lmtIdPath = dPath;
             if (result.lmtTitlePath.indexOf("PGS|") == 0) {
-                if (result.lmtIDPath.split("/").length == 8) {
-                    result.lmtIDPath = result.lmtIDPath.split("/", 7).join("/");
+                if (result.lmtIdPath.split("/").length == 8) {
+                    result.lmtIdPath = result.lmtIdPath.split("/", 7).join("/");
                 }
             }
             this.renderContentRequest.searchTerms = (window.document.getElementById("searchTextInput") as HTMLInputElement).value;
-
             this._contentService.navigateToContent(result);
-            //this._contentService.downloadContent(this.renderContentRequest).subscribe(data => {
-            //    this.contentHTML = this._contentService.buildHtml(data.src);
-            //    this.contentHTML = this.contentHTML.replace("<br />", ``);
-            //    this.isSubContent = true;
-            //});
         } else {
             if (dPath.indexOf("zb/") != 0 && dPath.indexOf("zb/") == -1) {
                 dPath = "zb/" + dPath;
@@ -258,27 +234,12 @@ export class SearchResultComponent implements OnInit, OnDestroy {
                 } else {
                     this.displayContent(dPath, result);
                 }
-
             } else {
                 this.displayContent(dPath, result);
             }
         }
+    }
 
-    }
-    buildNewHTML(input: string): string {
-        var regex1 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...','PGS/ContentView.aspx[?]dpath[=]`);
-        var regex2 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...', 'Library/ContentView.aspx[?]dpath[=]`);
-        var regex3 = new RegExp(`src[=]"/Content/ContentResponse.aspx[?]dpath[=]`);
-        input = input.replace(new RegExp(regex1, 'g'), `(click)="openDContent('`);
-        input = input.replace(new RegExp(regex2, 'g'), `(click)="openDContent('`);
-        input = input.replace(new RegExp(`href="#`, 'g'), `class="underLine`);
-        // input = input.replace(new RegExp('[^\u0000-\u007F]', 'g'), ' ');
-        input = input.replace(new RegExp('.jpg"', 'g'), `.jpg'"`);
-        input = input.replace(new RegExp(regex3, 'g'), `[image-src]="'`);
-        input = input.replace(new RegExp('.JPG"', 'g'), `.JPG'"`);
-        input = input.replace(new RegExp('.png"', 'g'), `.png'"`);
-        return input;
-    }
     openDContent(domainPath: string) {
         if (domainPath.indexOf('#') !== -1)
             domainPath = domainPath.split('#')[0];
@@ -301,129 +262,89 @@ export class SearchResultComponent implements OnInit, OnDestroy {
         rendRequest.hasChildren = hasChildren
 
         this._contentService.downloadContent(rendRequest).subscribe((content: any) => {
-
             if (content && content.isValid) {
                 if (content.mimeType == "text/html") {
-                    this.contentHTML = content.fileStrContent;
-                    this.contentHTML = this.buildNewHTML(this.contentHTML);
-                    this.contentHTML = this.contentHTML.replace("<br />", ``);
-                    this.isSubContent = true;
-                    if (this.compile) {
-                        this.compile.compile = this.contentHTML;
-                        this.compile.compileContext = this;
-                        this.compile.compRef.changeDetectorRef.detectChanges();
-                        this.compile.ngOnChanges();
-                    }
-
+                    this.buildHTML(content, null);
                     this.pdfTitle = (content.fileName ? (content.fileName.replace(content.fileExtension, '')) : '');
                 } else
                     this._contentService.downloadattachment(content.fileContent, content.fileName, content.mimeType);
             } else {
-                this.contentHTML = content.fileStrContent;
-                this.contentHTML = this.buildNewHTML(this.contentHTML);
-                this.contentHTML = this.contentHTML.replace("<br />", ``);
-                this.isSubContent = true;
-                if (this.compile) {
-                    this.compile.compile = this.contentHTML;
-                    this.compile.compileContext = this;
-                    this.compile.compRef.changeDetectorRef.detectChanges();
-                    this.compile.ngOnChanges();
-                }
-
+                this.buildHTML(content, null);
             }
         });
-
-
     }
 
-    showFolderModal(modal) {
-        if (this.checkedResults && this.checkedResults.length > 0)
-            this.openModal(modal);
-        else
-            //alert('Please make a selection');
-            this.modalAlertRef = this.modalService.show(this.modalContentAlert, { backdrop: 'static', keyboard: false });
+    buildHTML(content, type) {
+        this.contentHTML = content.fileStrContent;
+        this.contentHTML = this.contentHTML.replace("<br />", ``);
+        this.isSubContent = true;
+        if (type) {
+            this.isPDF = false;
+            this.scrollTop();
+        }
+        if (this.compile) {
+            this.compile.compile = this.contentHTML;
+            this.compile.compileContext = this;
+            this.compile.compRef.changeDetectorRef.detectChanges();
+            this.compile.ngOnChanges();
+        }
     }
 
-    openModal(template: TemplateRef<any>) {
-        this.getFoldersAll(template);
-    }
-
-    folderInfo;
-    selectedMainFolder;
-    selectedSubsciberClientId;
-    mainFolder;
-    selFolder;
-    getFoldersAll(template) {
-        var content = { "title": "", "url": "", "searchResult": this.checkedResults };
+    openSaveToFolderModal(): void {
         if (this.checkedResults && this.checkedResults.length > 0) {
-            var fileTitle = "";
+            let content = { "title": "", "url": "", "searchResult": this.checkedResults };
+            let modalOptions = { class: 'modal-lg folder-modal', backdrop: 'static', keyboard: false };
+            let fileTitle = "";
             this.checkedResults.forEach(cR => {
-                var title = "";
+                let title = "";
                 title = cR.title.replace(new RegExp(`<span class='SearchHIT'>`, 'g'), "");
                 title = title.replace(new RegExp(`</span>`, 'g'), "");
                 fileTitle += (title + ", ");
             });
             fileTitle = fileTitle.replace(/,\s*$/, '');
             content.title = fileTitle.trim();
+            this.saveToFolderContent = JSON.parse(JSON.stringify(content));
+            this.saveToFolderModalComponent.openModal(modalOptions);
+        } else {
+            this.showAlert();
         }
-        this.saveToFolderContent = JSON.parse(JSON.stringify(content));
-        this.loadFolders = true;
-        this.modalRef = this.modalService.show(template, { class: 'modal-lg folder-modal', backdrop: 'static', keyboard: false });
     }
 
-    onParentFolderSelect(subscriberClientId) {
-        this.selectedSubsciberClientId = subscriberClientId;
-        this.selectedMainFolder = this.folderInfo.find(f => f.subscriberClientId == subscriberClientId);
-        this.mainFolder = {
-            "zoneId": this.selectedMainFolder.zoneId,
-            "subscriberId": this.selectedMainFolder.subscriberId,
-            "subscriberClientId": this.selectedMainFolder.subscriberClientId,
-            "lastAccessedDate": this.selectedMainFolder.lastAccessedDate,
-            "dateCreated": this.selectedMainFolder.dateCreated,
-            "clientDescription": this.selectedMainFolder.clientDescription,
-            "isSelected": false
-        };
-    }
+    folderInfo;
+    selectedMainFolder;
+    selectedSubsciberClientId;
+    mainFolder;
 
-    onSaveToFolderClick(folder) {
-        this.selFolder = folder;
-        this.SaveFile();
-    }
-
-    SaveFile() {
-        if (this.selFolder) {
+    saveFileToFolder(folder: any): void {
+        if (folder) {
             this.checkedResults.forEach(r => {
                 var createFolder = new CreateFolerViewModel();
-                createFolder.subscriberClientId = this.selFolder.subscriberClientID;
-                createFolder.folderID = this.selFolder.folderNameID;
-                createFolder.url = r.lmtIDPath;
+                createFolder.subscriberClientId = folder.subscriberClientID;
+                createFolder.folderId = folder.folderNameID;
+                createFolder.url = r.lmtIdPath;
                 r.title = r.title.replace(new RegExp(`<span class='SearchHIT'>`, 'g'), "");
                 r.title = r.title.replace(new RegExp(`</span>`, 'g'), "");
                 createFolder.title = r.title;
 
                 this._foldersService.CreateDocument(createFolder).subscribe(data => {
-                    this.modalRef.hide();
+                    this.saveToFolderModalComponent.onCloseModal(true);
                 });
             });
         }
         else
             //alert("Please select a folder");
-            this.modalAlertRef = this.modalService.show(this.modalContentAlert, { backdrop: 'static', keyboard: false });
+            this.showAlert();
     }
+
+    onCloseSaveToFolderModal(eventData: any): void { }
 
     onSearchResultChecked(result) {
         this.checkedResults = result;
     }
 
-    onPopUpCloseClick() {
-        this.modalRef.hide();
-    }
-
     getOnlySearchResults(params) {
         this._searchService.getSearchResults(params).subscribe(data => {
             this.searchResults = data;
-            //this._dataStoreService.setSessionStorageItem("practiceAreaPrefilters", data.navigationEntries.find(f => f.name == 'practicearea').navigationElements);
-            // initialize to page 1
             this.setPage(params.PageNumber + 1);
         });
     }
@@ -437,30 +358,18 @@ export class SearchResultComponent implements OnInit, OnDestroy {
 
         this._contentService.downloadContent(rendRequest).subscribe(data => {
             if (data.mimeType == "text/html") {
-                this.contentHTML = data.fileStrContent;//this._contentService.buildHtml((data.fileStrContent));
-                this.contentHTML = this.buildNewHTML(this.contentHTML);
-                this.contentHTML = this.contentHTML.replace("<br />", ``);
-                this.isSubContent = true;
-                this.isPDF = false;
-                this.scrollTop();//window.scrollTo(0, 0);
+                this.buildHTML(data, 'displayContent');
                 this.pdfTitle = (data.fileName ? (data.fileName.replace(data.fileExtension, '')) : '');
-                if (this.compile != undefined) {
-                    this.compile.compile = this.contentHTML;
-                    this.compile.compileContext = this;
-                    this.compile.compRef.changeDetectorRef.detectChanges();
-                    this.compile.ngOnChanges();
-                }
             }
             else {
                 if (data.mimeType == "application/pdf") {
                     this.isPDF = true;
                     this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + rendRequest.dpath.split("/").pop();
                     this.pdfTitle = data.fileName;
-                    this.scrollTop();//window.scrollTo(0, 0);
+                    this.scrollTop();
                 } else {
                     this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
                 }
-
             }
         });
     }
@@ -474,15 +383,15 @@ export class SearchResultComponent implements OnInit, OnDestroy {
         let scrollEle = document.getElementById('newpg');
         if (/msie\s|trident\/|edge\//i.test(window.navigator.userAgent)) {
             if (this._pagerService.mobiView) {
-                window.scrollTo(0,0);
-            }else
-            scrollEle.scrollTop = 0;
+                window.scrollTo(0, 0);
+            } else
+                scrollEle.scrollTop = 0;
         }
         else {
             if (this._pagerService.mobiView) {
                 window.scrollTo(0, 0);
-            }else
-            scrollEle.scrollTo(0, 0);
+            } else
+                scrollEle.scrollTo(0, 0);
         }
     }
 
@@ -499,4 +408,13 @@ export class SearchResultComponent implements OnInit, OnDestroy {
 
     doDidYouMeanSearch() {
     }
+
+    showAlert(): void {
+        let modalOptions: any = { backdrop: 'static', keyboard: false };
+        let messages: string[] = [];
+        messages.push("Please make a selection.");
+        this.pgAlertModalComponent.openModal(modalOptions, messages);
+    }
+
+    onCloseAlert(): void { }
 }

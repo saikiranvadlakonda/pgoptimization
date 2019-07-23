@@ -25,7 +25,6 @@ export class WhatsNewComponent implements OnInit {
 
     ngOnInit() {
         if (this.news != undefined) {
-            //this._whatsNewService.getWhatsNew(this.whatsNewInput).subscribe(data => {
             let data = this.news;
             if (data !== null) {
                 let newsList = [];
@@ -44,7 +43,6 @@ export class WhatsNewComponent implements OnInit {
                 this.news = [];
                 this.error = PgMessages.constants.whatsNew.error;
             }
-            // });
         }
     }
 

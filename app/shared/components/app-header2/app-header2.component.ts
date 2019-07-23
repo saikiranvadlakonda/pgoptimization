@@ -35,7 +35,7 @@ export class AppHeader2Component implements OnInit {
     isShowSubTopics: boolean = false;
     selectedPracticeArea: TocItemViewModel;
     activeIds: string[] = [];
-
+    pgConstants = PgConstants.constants;
     constructor(private modal: NgbModal, private modalService: BsModalService, private _navigationService: NavigationService,
         private _dataStoreService: DataStoreService, private _whatsNewService: WhatsNewService, private _practiceAreaService: PracticeAreaService, private _authService: AuthService ) { }
 

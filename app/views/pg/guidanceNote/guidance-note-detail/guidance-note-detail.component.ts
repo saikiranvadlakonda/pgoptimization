@@ -6,9 +6,7 @@ import { NavigationService } from '../../../../shared/services/navigation/naviga
 import { PgConstants } from '../../../../shared/constants/pg.constants';
 import { StateParams } from '../../../../shared/models/state-params/state-params.model';
 import { Observable } from 'rxjs/Observable';
-import { GuidanceNoteService } from '../../../../shared/services/guidance-note/guidance-note.service';
 import { ContentService } from '../../../../shared/services/content/content.service';
-import { EssentialsComponent } from '../../../../shared/components/essentials/essentials.component';
 import { RenderContentRequest } from '../../../../shared/models/dashboard/content-request.model';
 import { Base64 } from 'js-base64';
 import { CompileDirective } from '../../../../shared/directives/compile.directive';
@@ -26,25 +24,58 @@ import { ErrorContent } from '../../../../shared/models/error-content/error-cont
 import { PagerService } from '../../../../shared/services/pager/pager.service';
 import { SafePipe } from '../../../../shared/pipes/safe/safe.pipe';
 import { ContentSafePipe } from '../../../../shared/pipes/content-safe/content-safe.pipe';
-
+import { SaveToFolderModalComponent } from '../../../../shared/components/save-to-folder-modal/save-to-folder-modal.component';
+import { DownloadModalComponent } from '../../../../shared/components/download-modal/download-modal.component';
+import { PermalinkModalComponent } from '../../../../shared/components/permalink-modal/permalink-modal.component';
 
 @Component({
     selector: 'guidance-note-detail',
     templateUrl: './guidance-note-detail.component.html',
     styleUrls: ['./guidance-note-detail.component.css']
 })
+
 export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, AfterContentInit {
-    @ViewChild(EssentialsComponent) essentialComponent: EssentialsComponent;
     @ViewChild(CompileDirective) compile: CompileDirective;
     @ViewChild(ImageDirective) imagesrc: ImageDirective;
-    private subscriptions: Subscription = new Subscription(); scrollVal;
+    @ViewChild(SaveToFolderModalComponent) saveToFolderModalComponent: SaveToFolderModalComponent;
+    @ViewChild(DownloadModalComponent) downloadModalComponent: DownloadModalComponent;
+    @ViewChild(PermalinkModalComponent) permalinkModalComponent: PermalinkModalComponent;
+
+    private subscriptions: Subscription = new Subscription();
+    essentials;
+    guidances;
+    practiceArea: string = "";
+    rootArea: string = "";
+    isPDF: boolean = false;
+    pdfTitle: string = "";
+    pdfContent: string = "";
+    guidanceDetail: string = "";
+    guidanceHeader: string = "";
+    authorNames: string = "";
+    showGuidanceDetail: boolean = false;
+    contentOutlinesList: any[] = [];
+    saveToFolderContent: any;
+    rendrContentRequest: RenderContentRequest = new RenderContentRequest();
+    showGuidanceDetailChildContent: boolean = false;
+    guidanceDetailChildContent: string = "";
+    viewModel: any;
+    domainId: string = ""; permaLink: string = "";
+    isGuidanceNote: boolean = true;
+    isMultiView: boolean = true;
+    dPath = ''; jumpToID: string = "";
+    guidanceDetailHistory = [];
+    gnDetailObj: any;
+    backButton: boolean = true;
+    jumpToString: string = "";
+    libContent: boolean = false;
+    jumpDpath = "";
+    pgConstants = PgConstants.constants;
+
     constructor(
-        private _guidanceNoteService: GuidanceNoteService,
         private _contentService: ContentService,
         private _routerProxy: RouterProxy,
         private _navigationService: NavigationService,
         private changeDetectorRef: ChangeDetectorRef,
-        private modalService: BsModalService,
         private _foldersService: FoldersService,
         private _dataStoreService: DataStoreService,
         private _router: Router,
@@ -54,7 +85,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         private _pageService: PagerService,
         private zone: NgZone,
     ) {
-
         window['angularComponentRef'] = {
             zone: this.zone,
             openLContent: (dpath) => this.openLContent(dpath),
@@ -63,44 +93,8 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
             setFrameHeight: (scrollHeight, offsetHeight, clientHeight) => this.setFrameHeight(scrollHeight, offsetHeight, clientHeight),
             component: this,
         };
-
-
     }
-    essentials;
-    guidances;
-    legislations;
-    commentarys;
-    caseLaws;
-    subTopic;
-    title;
-    practiceArea;
-    rootArea; isPDF: boolean = false; pdfTitle = ""; pdfContent = "";
-    paGuidance: string = "";
-    guidanceDetail: string;
-    guidanceHeader: string = "";
-    authorNames: string = "";
-    showGuidanceDetail: boolean = false;
-    contentOutlinesList: any[] = [];
-    loadFolders: boolean = false;//added by saikiran
-    saveToFolderContent;
-    showGuidance: boolean = true;
-    rendrContentRequest: RenderContentRequest = new RenderContentRequest();
-    showGuidanceDetailChildContent: boolean = false;
-    guidanceDetailChildContent: string = "";
-    modalRef: BsModalRef; downloadModalRef: BsModalRef;
-    @ViewChild('modalContent') modalContent: TemplateRef<any>;
-    viewModel;
-    saveFolderTitle;
-    domainId: string = ""; permaLink: string = "";
-    fileTitle: string = ''; fileFormat: any; isGuidanceNote: boolean = true;
-    isValidFileTitle: boolean = true; isMultiView: boolean = true;
-    dPath = ''; jumpToID: string = "";
-    guidanceDetailHistory = [];
-    gnDetailObj: any;
-    backButton: boolean = true;
-    jumpToString: string = "";
-    libContent: boolean = false;
-    jumpDpath = "";
+
     ngOnInit() {
         const stateSubscription = this._routerProxy.getViewModel().subscribe((guidancedetail) => {
             if (guidancedetail && guidancedetail != null) {
@@ -115,7 +109,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 this.navigateToGuidanceDetails(guidancedetail, guidancedetail.hasChildren);
                 this.domainId = guidancedetail.domainPath;
                 this.essentials = guidancedetail.essentials;
-                //this.getPermaLink();
                 if (this.essentials == null || this.essentials == undefined) {
                     this.getEssentials([], "");
                 }
@@ -126,23 +119,16 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 if (this.jumpToID) {
                     this.scroll(this.jumpToID);
                 } else {
-                    this.scrollTop();//window.scrollTo(0, 0);
+                    this.scrollTop();
                 }
                 this.gnDetailObj = guidancedetail;
             }
-
         });
-
         this.subscriptions.add(stateSubscription);
     }
 
-    setFrameHeight(scrollHeight, offsetHeight, clientHeight) {
+    setFrameHeight(scrollHeight, offsetHeight, clientHeight) { }
 
-    }
-
-    showHideGuidanceReference(val) {
-        this.showGuidance = val;
-    }
 
     navigateToGuidanceDetails(guidancedetail, hasChild: string = "true") {
         if (guidancedetail.domainId == null && guidancedetail.domainPath != "") {
@@ -154,12 +140,10 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         }
         this.viewModel = guidancedetail;
         this.rootArea = guidancedetail.practiceArea;
-        this.saveFolderTitle = this.viewModel.title;
         this.rendrContentRequest.dpath = guidancedetail.domainPath;
         this.rendrContentRequest.hasChildren = hasChild;
         this.contentOutlinesList = [];
         this.guidanceHeader = this.viewModel.title;
-        this.fileTitle = this.viewModel.title;
         this.dPath = guidancedetail.domainPath;
         this._contentService.contentGuidanceDetails(this.rendrContentRequest).subscribe(data => {
             data = JSON.parse(data);
@@ -167,8 +151,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
             if (this.guidances) {
                 this.guidances.forEach((guidance, guidanceInd) => {
                     if (guidance.domainPath == guidancedetail.domainPath) {
-                        this.guidanceHeader = guidance.title;//(guidance.title.trim().indexOf(">") == 0 ? guidance.title : " > " +guidance.title);
-                        this.fileTitle = guidance.title;
+                        this.guidanceHeader = guidance.title;
                         guidance.subContentDomains.forEach((subHeader, subHeadInd) => {
                             this.contentOutlinesList.push({ 'domainId': subHeader.domainId, 'title': (guidanceInd + 1) + "." + (subHeadInd + 1) + " " + subHeader.title });
                         });
@@ -178,8 +161,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
             }
             if (data !== null && data.fileStrContent != null && data.isValid) {
                 this.guidanceDetail = data.fileStrContent;
-                //this.guidanceDetail = this.buildHtml(this.guidanceDetail);
-                //this.guidanceDetail = this.buildNewHTML(this.guidanceDetail);
                 this.guidanceDetail = this.guidanceDetail.replace(this.guidanceHeader, "");
                 this.showGuidanceDetail = true;
                 this.authorNames = data.authorName;
@@ -191,18 +172,14 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 historyData['essentials'] = this.essentials;
                 historyData['isMultiView'] = this.isMultiView;
                 historyData['guidanceDetail'] = this.guidanceDetail;
-                //this.guidanceDetailHistory.push(historyData);
-                //this.guidanceDetailHistory.push(historyData);
                 if (guidancedetail.isKeySections) {
                     this.jumpToID = guidancedetail.jumpToID;
-                    //this.scroll(this.jumpToID);
                 }
 
                 if (!this.dPath.startsWith('zb/a2ioc')) {
                     this.libContent = true;
                 }
                 if (guidancedetail.fromSearch) {
-                    //console.log(guidancedetail.jumpString);
                     let self = this;
                     setTimeout(function () {
                         self.scroll("", document.evaluate("//p[contains(.,'" + guidancedetail.jumpString + "')]", document, null, XPathResult.ANY_TYPE, null).iterateNext());
@@ -213,9 +190,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
             }
         });
     }
-
-
-
 
     hideGuidanceDetail() {
         this.showGuidanceDetail = false;
@@ -245,30 +219,49 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
             subTopics.push(s);
         });
 
-        this._essentialService.getEssential(subTopics).subscribe((essentials: any) => {
-            if (essentials && essentials.length > 0 && essentials[0].isValid) {
-                this.essentials = [];
-                var topics = essentials;
-                topics.forEach(topic => {
-                    if (topic.essentials) {
-                        topic.essentials.forEach(e => {
-                            e.subContentDomains.forEach(s => {
-                                s.eType = topic.pageType;
-                                s.guidance = topic.subTopicName;
-                                this.essentials.push(s);
-                            });
-                        });
-                    }
-                });
-            } else {
-                this.essentials = [];
-            }
-        });
+        var selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
 
+        let paName = selectedPracticeArea.title;
+        if (selectedPracticeArea.type == "PA-MD") {
+            paName = selectedPracticeArea.actualTitle;
+        }
+        this._essentialService.getEssentialsCount({ practiceAreaName: paName }).subscribe(allFilters => {
+            let aggrFilters = this._essentialService.aggregateEssentials(allFilters);
+            let topics;
+            let documentType;
+
+            if (aggrFilters.topics != undefined) {
+                topics = Object.keys(aggrFilters.topics).map(topic => {
+                    return { title: topic, isSelected: true, count: aggrFilters.topics[topic]['total'], topic: topic, isTopic: true, topicData: aggrFilters.topics[topic] };
+                });
+            }
+
+            if (aggrFilters.documentTypes != undefined) {
+                documentType = Object.keys(aggrFilters.documentTypes).map(docTitle => {
+                    return { title: docTitle, isSelected: true, count: aggrFilters.documentTypes[docTitle], isTopic: false, topic: docTitle };
+                });
+            }
+
+            this._essentialService.getAllEssentialsByPage({ topics: topics.concat(documentType), page: 1, size: 5, practiceAreaName: paName }).subscribe((essentials) => {
+                if (essentials && essentials.length > 0) {
+                    if (essentials[0].isValid) {
+                        this.essentials = essentials;
+                    } else {
+                        this.essentials = [];
+                    }
+                } else {
+                    this.essentials = [];
+                }
+
+            });
+        });
+        
     }
+
     ngOnDestroy() {
         this.subscriptions.unsubscribe();
     }
+
     openLContent(domainPath: string) {
         this.jumpDpath = domainPath;
         var splitArray = domainPath.split('/');
@@ -343,7 +336,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         rendRequest.hasChildren = hasChildren
         this.guidanceDetailChildContent = null;
         this.showGuidanceDetailChildContent = false;
-
         var historyData = {};
         historyData['guidanceHeader'] = this.guidanceHeader;
         historyData['authorNames'] = this.authorNames;
@@ -358,12 +350,10 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         this.domainId = dpath;
         this.dPath = dpath;
         this._contentService.downloadContent(rendRequest).subscribe((content: any) => {
-
             if (content && content != null && content.isValid) {
                 if (content.mimeType == "text/html") {
                     this.backButton = true;
                     this.guidanceDetailChildContent = content.fileStrContent;
-                    //this.guidanceDetailChildContent = this.buildNewHTML(this.guidanceDetailChildContent);
                     this.guidanceDetail = this.guidanceDetailChildContent;
                     this.essentials = [];
                     this.contentOutlinesList = [];
@@ -377,14 +367,12 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                     } else {
                         this.authorNames = "";
                     }
-                    this.fileTitle = title;
                     if (this.compile) {
                         this.compile.compile = this.guidanceDetailChildContent;
                         this.compile.compileContext = this;
                         this.compile.compRef.changeDetectorRef.detectChanges();
                         this.compile.ngOnChanges();
                     }
-
                     this.dPath = dpath;
                     if (this.jumpToID) {
                         this.scroll(this.jumpToID);
@@ -394,55 +382,44 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                     if (!this.dPath.startsWith("zb/a2ioc")) {
                         this.libContent = true;
                     }
-
-                } else if (content.mimeType == "application/pdf" && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
+                } else if (content.mimeType == "application/pdf" && !this._pageService.isMobile) {
                     this.isPDF = true;
                     this.pdfTitle = content.fileName.replace(".pdf", '');
                     this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + rendRequest.dpath.split("/").pop();
                     this.guidanceDetailHistory.pop();
                     this.scrollTop();
-                }
-                else {
+                } else {
                     this._contentService.downloadattachment(content.fileContent, content.fileName, content.mimeType);
                     this.guidanceDetailHistory.pop();
                 }
             } else {
                 this.backButton = true;
-
                 this.guidanceDetailChildContent = content.fileStrContent;
-                //this.guidanceDetailChildContent = this.buildNewHTML(this.guidanceDetailChildContent);
                 this.guidanceDetail = this.guidanceDetailChildContent;
-                var title = "";
+
                 if (content.fileName != null) {
-                    title = content.fileName.replace(content.fileExtension, "");
-                    this.guidanceHeader = title;
+                    this.guidanceHeader = content.fileName.replace(content.fileExtension, "");
                 }
                 if (content.authorName) {
                     this.authorNames = content.authorName;
                 } else {
                     this.authorNames = "";
                 }
-                this.fileTitle = title;
                 if (this.compile) {
                     this.compile.compile = this.guidanceDetailChildContent;
                     this.compile.compileContext = this;
                     this.compile.compRef.changeDetectorRef.detectChanges();
                     this.compile.ngOnChanges();
                 }
-
                 this.dPath = dpath;
                 if (this.jumpToID) {
                     this.scroll(this.jumpToID);
                 } else {
-                    this.scrollTop();//window.scrollTo(0, 0);
+                    this.scrollTop();
                 }
             }
         });
-
-
     }
-
-
 
     downloadEssentials(data) {
         this.rendrContentRequest.dpath = data.domainPath;
@@ -457,62 +434,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
             }
         });
-    }
-
-    buildHtml(input: string): string {
-        var regex1 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...','PGS/ContentView.aspx[?]dpath[=]`);
-        var regex2 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...', 'Library/ContentView.aspx[?]dpath[=]`);
-        var regex3 = new RegExp(`src[=]"/Content/ContentResponse.aspx[?]dpath[=]`);
-        /*var regex4 = new RegExp(`(?<=authorsNames">)(.*)(?=<\/span>)`, 'g');
-        var titleRegex = new RegExp(`(?<=title">)(.*)(?=<\/title>)`, 'g');
-        if (titleRegex.test(input)) {
-            this.fileTitle = input.match(titleRegex)[0];
-            this.guidanceHeader = this.fileTitle;
-        }
-    
-        if (regex4.test(input)) {
-            this.authorNames = input.match(regex4)[0];
-        } else {
-            this.authorNames = "";
-        }*/
-
-        //  input = input.replace(new RegExp('<p', 'g'), "<div");
-        //  input = input.replace(new RegExp('</p>', 'g'), "</div><br />");
-        input = input.replace(new RegExp('&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;', 'g'), "");
-        input = input.replace(new RegExp('&#13;&#10;&#9;&#9;&#9;&#9;&#9;', 'g'), "");
-        input = input.replace(new RegExp('&#xD;&#xA;            ', 'g'), "");
-        input = input.replace(new RegExp('&#xA;            ', 'g'), "");
-        input = input.replace(new RegExp('&#x9;', 'g'), "");
-        input = input.replace(new RegExp(`onclick="openLContent`, 'g'), `(click)="openLContent`);
-        input = input.replace(new RegExp(`onclick="openMVContent`, 'g'), `(click)="openMVContent`);
-        input = input.replace(new RegExp(regex1, 'g'), `(click)="openDContent('`);
-        input = input.replace(new RegExp(regex2, 'g'), `(click)="openDContent('`);
-        input = input.replace(new RegExp(`href="#`, 'g'), `class="underLine`);
-        // input = input.replace(new RegExp('[^\u0000-\u007F]', 'g'), ' ');
-        input = input.replace(new RegExp('.jpg"', 'g'), `.jpg'"`);
-        input = input.replace(new RegExp(regex3, 'g'), `[image-src]="'`);
-        input = input.replace(new RegExp('.JPG"', 'g'), `.JPG'"`);
-        input = input.replace(new RegExp('.png"', 'g'), `.png'"`);
-
-        return input;
-    }
-
-    buildNewHTML(input: string): string {
-        var regex1 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...','PGS/ContentView.aspx[?]dpath[=]`);
-        var regex2 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...', 'Library/ContentView.aspx[?]dpath[=]`);
-        var regex3 = new RegExp(`src[=]"/Content/ContentResponse.aspx[?]dpath[=]`);
-        input = input.replace(new RegExp(regex1, 'g'), `(click)="openDContent('`);
-        input = input.replace(new RegExp(regex2, 'g'), `(click)="openDContent('`);
-        input = input.replace(new RegExp(`href="#`, 'g'), `class="underLine`);
-        // input = input.replace(new RegExp('[^\u0000-\u007F]', 'g'), ' ');
-        input = input.replace(new RegExp('.jpg"', 'g'), `.jpg'"`);
-        input = input.replace(new RegExp(regex3, 'g'), `[image-src]="'`);
-        input = input.replace(new RegExp('.JPG"', 'g'), `.JPG'"`);
-        input = input.replace(new RegExp('.png"', 'g'), `.png'"`);
-        input = input.replace('&#xA;', ';');
-
-        //input = input.replace(new RegExp('{', 'g'), '{{');
-        return input;
     }
 
     loadContentView(subContent) {
@@ -534,7 +455,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
             }
 
             var guidanceData = this.guidanceDetailHistory.pop();
-            this.guidanceDetailHistory = this.guidanceDetailHistory;
             this.guidanceHeader = guidanceData.guidanceHeader;
             this.guidanceDetail = guidanceData.guidanceDetail;
             this.authorNames = guidanceData.authorNames;
@@ -562,99 +482,37 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
 
     }
 
-    showFolderModal(modal) {
-        this.openModal(modal);
-    }
-
-    openModal(template: TemplateRef<any>) {
-        var content = {
+    openSaveToFolderModal(): void {
+        let content = {
             "title": this.guidanceHeader,
             "url": this.dPath,
             "searchResult": null
         };
+        let modalOptions = { class: 'modal-lg folder-modal', backdrop: 'static', keyboard: false };
         this.saveToFolderContent = JSON.parse(JSON.stringify(content));
-
-        this.modalRef = this.modalService.show(template, { class: 'modal-lg folder-modal', backdrop: 'static', keyboard: false });
-        this.loadFolders = true;
-        //this.getFoldersAll(template);
+        this.saveToFolderModalComponent.openModal(modalOptions);
     }
 
-    folderInfo;
-    selectedMainFolder;
-    selectedSubsciberClientId;
-    mainFolder;
-    selFolder;
-    getFoldersAll(template) {
-        this.folderInfo = this._dataStoreService.getSessionStorageItem("ClientFolders");
-        if (!this.folderInfo) {
-            this._foldersService.getFolders().subscribe(data => {
-                if (data !== null) {
-                    this.folderInfo = data;
-                    if (this.selectedSubsciberClientId)
-                        this.selectedMainFolder = this.folderInfo.find(f => f.subscriberClientId == this.selectedSubsciberClientId);
-                    this.modalRef = this.modalService.show(template, { backdrop: 'static', keyboard: false });
-                } else {
-                    this.folderInfo = [];
-                }
-            });
-        }
-        else {
-            this.modalRef = this.modalService.show(template, { backdrop: 'static', keyboard: false });
-            this.selectedMainFolder = this.folderInfo[0];
-            this.selectedSubsciberClientId = this.selectedMainFolder.subscriberClientId;
-            this.mainFolder = {
-                "zoneId": this.selectedMainFolder.zoneId,
-                "subscriberId": this.selectedMainFolder.subscriberId,
-                "subscriberClientId": this.selectedMainFolder.subscriberClientId,
-                "lastAccessedDate": this.selectedMainFolder.lastAccessedDate,
-                "dateCreated": this.selectedMainFolder.dateCreated,
-                "clientDescription": this.selectedMainFolder.clientDescription,
-                "isSelected": false
-            };
-        }
-    }
 
-    onParentFolderSelect(subscriberClientId) {
-        this.selectedSubsciberClientId = subscriberClientId;
-        this.selectedMainFolder = this.folderInfo.find(f => f.subscriberClientId == subscriberClientId);
-        this.mainFolder = {
-            "zoneId": this.selectedMainFolder.zoneId,
-            "subscriberId": this.selectedMainFolder.subscriberId,
-            "subscriberClientId": this.selectedMainFolder.subscriberClientId,
-            "lastAccessedDate": this.selectedMainFolder.lastAccessedDate,
-            "dateCreated": this.selectedMainFolder.dateCreated,
-            "clientDescription": this.selectedMainFolder.clientDescription,
-            "isSelected": false
-        };
-    }
-
-    selectedFolder(folder) {
-        this.selFolder = folder;
-    }
-
-    SaveFile() {
-        if (this.selFolder) {
+    saveFileToFolder(folder: any) {
+        if (folder) {
             var createFolder = new CreateFolerViewModel();
-            createFolder.subscriberClientId = this.selFolder.subscriberClientID;
-            createFolder.folderID = this.selFolder.folderNameID;
+            createFolder.subscriberClientId = folder.subscriberClientID;
+            createFolder.folderId = folder.folderNameID;
             createFolder.url = (this.viewModel.subTopicDomainPath) ? this.viewModel.subTopicDomainPath : this.viewModel.domainPath;
             createFolder.title = (this.viewModel.practiceArea) ? this.viewModel.practiceArea : this.viewModel.title;
             this._foldersService.CreateDocument(createFolder).subscribe(data => {
-                this.modalRef.hide();
+                this.saveToFolderModalComponent.onCloseModal(true);
             });
         }
         else
             alert("Please select a folder");
     }
-    onSaveToFolderClick(folder) {
-        this.selFolder = folder;
-        this.SaveFile();
-    }
-    onPopUpCloseClick() {
-        this.loadFolders = false;
+
+    onCloseSaveToFolderModal(eventData: any) {
         this.saveToFolderContent = null;
-        this.modalRef.hide();
     }
+
     get subtopicBreadCrumb() {
         return this._navigationService.routes.find(r => r.currentRoute == '/sub-topics');
     }
@@ -686,9 +544,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
 
         if (this.gnDetailObj.redirectedFrom && this.gnDetailObj.redirectedFrom == "folder-detail" && route == 'guidanceNote') {
 
-            // this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
-            //var topic = selectedPracticeArea.subTocItem.find(nI => domainPath.split('/')[3] == nI.domainId);
-            //var subtopic = topic.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId);
             var topic = undefined;
             var subtopic = undefined;
             if (this.isPgModule(domainPath)) {
@@ -701,7 +556,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
             }
             var input = { "subTopicDomainPath": subtopic.domainPath, "title": selectedPracticeArea.title + " > " + subtopic.title, "practiceArea": subtopic.title, rootArea: selectedPracticeArea.title, "subTopic": subtopic };
 
-            //  var input = { "subTopicDomainPath": domainId, "title": null, "practiceArea": null, rootArea: null };
             this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
 
 
@@ -720,7 +574,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
                 this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(selectedPracticeArea));
             }
-            // this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(selectedPracticeArea));
 
         } else {
             if (this._navigationService.isNavigationSubTopic || route == 'guidanceNote')
@@ -750,13 +603,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                         "subTopic": subtopic
                     };
 
-                    //var input = {
-                    //    "subTopicDomainPath": this.viewModel.subtopic.domainPath,
-                    //    "title": selectedPracticeArea.title + " > " + this.viewModel.subtopic.title,
-                    //    "practiceArea": this.viewModel.subtopic.title,
-                    //    rootArea: selectedPracticeArea.title,
-                    //    "subTopic": this.viewModel.subtopic
-                    //};
                     this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
                 } else {
                     this._navigationService.navigate(routes.currentRoute, routes.previousRouteStateParams);
@@ -765,6 +611,8 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 this._router.navigateByUrl("/practice-areas");
         }
     }
+
+
     scroll(id, element = undefined) {
         let el = element ? element : document.getElementById(id);
         let scrollEle = document.getElementById('newpg');
@@ -786,53 +634,44 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
 
         } else {
             this._pageService.setPageView();
-            /*
-            if (window.navigator.userAgent.indexOf("Edge") == -1)
-                scrollEle.scrollTo(0, 0);
-            else
-                scrollEle.scrollTop = 0;
-            */
         }
 
     }
-    openFileDownloadModal(template: TemplateRef<any>) {
-        this.fileTitle = this.guidanceHeader;
-        this.fileFormat = "pdf";
-        this.downloadModalRef = this.modalService.show(template, { backdrop: 'static', keyboard: false });
+
+    openFileDownloadModal() {
+        let fileInfo: any = {
+            fileTitle: this.guidanceHeader,
+            fileFormat: "pdf"
+        }
+        let modalOptions: any = { backdrop: 'static', keyboard: false };
+        this.downloadModalComponent.openModal(fileInfo, modalOptions);
     }
 
-    validate() {
-        if (this.fileTitle != undefined && this.fileTitle != null && this.fileTitle.trim() != '') {
-            this.isValidFileTitle = true;
-            var fileData = new RenderContentRequest();
-            fileData.downloadContent = "true";
-            fileData.dpath = this.dPath;//this.viewModel.subTopicDomainPath;
-            fileData.title = this.fileTitle;
-            fileData.fileFormat = this.fileFormat;
-            fileData.hasChildren = "True";//this.isMultiView ? "True" : "False";
-            fileData.isMultiView = "True";//this.isMultiView ? "True" : "False";
-            fileData.fromPage = "PGS";
-            this.downloadModalRef.hide();
-            this._contentService.GetContent(fileData).subscribe((content: any) => {
-                if (content && content.isValid) {
-                    this._contentService.downloadattachment(content.fileContent, content.fileName, content.mimeType);
-                } else {
-                    let params: ErrorContent = {
-                        message: PgMessages.constants.guidanceNote.downloadError,
-                        showOk: true,
-                        showCancel: false,
-                        callBack: undefined
-                    }
-                    this._errorModalService.open(params);
+    downloadFile(eventData: any): void {
+        let fileData = new RenderContentRequest();
+        fileData.downloadContent = "true";
+        fileData.hasChildren = "true";
+        fileData.isMultiView = "true";
+        fileData.fromPage = "PGS";
+        fileData.dpath = this.dPath;
+        fileData.title = eventData.fileTitle;
+        fileData.fileFormat = eventData.fileFormat;
+        this.downloadModalComponent.closeModal();
+        this._contentService.GetContent(fileData).subscribe((content: any) => {
+            if (content && content.isValid) {
+                this._contentService.downloadattachment(content.fileContent, content.fileName, content.mimeType);
+            } else {
+                let params: ErrorContent = {
+                    message: PgMessages.constants.guidanceNote.downloadError,
+                    showOk: true,
+                    showCancel: false,
+                    callBack: undefined
                 }
-            });
-        } else {
-            this.isValidFileTitle = false;
-        }
+                this._errorModalService.open(params);
+            }
+        });
     }
-    closeFileDialog() {
-        this.downloadModalRef.hide();
-    }
+
     openEmailModal() {
         this._emailModalService.open(this.domainId, "true");
     }
@@ -846,65 +685,18 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         });
     }
 
-    openPermaLinkModal(template: TemplateRef<any>) {
-        if (this.permaLink == "" || this.permaLink) {
+    openPermaLinkModal(): void {
+        let modalOptions: any = { backdrop: 'static', keyboard: false };
+        if (this.permaLink) {
+            this.permalinkModalComponent.openModal(modalOptions);
+        } else {
             this._contentService.GetPermaLink({ dPath: this.dPath }).subscribe(data => {
                 if (data !== null) {
                     this.permaLink = data;
-                    this.downloadModalRef = this.modalService.show(template, { backdrop: 'static', keyboard: false });
-                    setTimeout(function () {
-                        var inputElmnt = (document.querySelector("input#permalinkContent") as HTMLInputElement);
-                        inputElmnt.focus();
-                        inputElmnt.setSelectionRange(0, 200, "forward");//inputElmnt.value.length);
-                    }, 200);
-                    this.modalService.onShown.subscribe((next, error, complete) => {
-                        setTimeout(function () {
-                            var inputElmnt = (document.querySelector("input#permalinkContent") as HTMLInputElement);
-                            inputElmnt.focus();
-                            inputElmnt.setSelectionRange(0, 200, "forward");//inputElmnt.value.length);
-                        }, 200);
-                        try {
-                            (document.querySelector("input#permalinkContent") as HTMLInputElement).select();
-                        }
-                        catch (e) {
-
-                        }
-                    });
-                    this.modalService.onShow.subscribe((next, error, complete) => {
-                        try {
-                            (document.querySelector("input#permalinkContent") as HTMLInputElement).select();
-                        }
-                        catch (e) {
-
-                        }
-                    });
+                    this.permalinkModalComponent.openModal(modalOptions);
                 }
-            });
-
-        } else {
-            this.downloadModalRef = this.modalService.show(template, { backdrop: 'static', keyboard: false });
-            this.modalService.onShown.subscribe((next, error, complete) => {
-                try {
-                    (document.querySelector("input#permalinkContent") as HTMLInputElement).select();
-
-                }
-                catch (e) {
-
-                }
-
-            });
-            this.modalService.onShow.subscribe((next, error, complete) => {
-                try {
-                    (document.querySelector("input#permalinkContent") as HTMLInputElement).select();
-
-                }
-                catch (e) {
-
-                }
-
             });
         }
-
     }
 
     openGuidanceDetail(dpath, hasChild) {
@@ -929,8 +721,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 this.contentOutlinesList = [];
                 this.guidances.forEach((guidance, guidanceInd) => {
                     if (guidance.domainPath == dpath) {
-                        this.guidanceHeader = guidance.title;//(guidance.title.trim().indexOf(">") == 0 ? guidance.title : " > " +guidance.title);
-                        this.fileTitle = guidance.title;
+                        this.guidanceHeader = guidance.title;
                         guidance.subContentDomains.forEach((subHeader, subHeadInd) => {
                             this.contentOutlinesList.push({ 'domainId': subHeader.domainId, 'title': (guidanceInd + 1) + "." + (subHeadInd + 1) + " " + subHeader.title });
                         });
@@ -943,8 +734,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 divElmnt.classList.add("libcontent-div");
             }
             this.guidanceDetail = data.fileStrContent;
-            // this.guidanceDetail = this.buildHtml(this.guidanceDetail);
-            //this.guidanceDetail = this.buildNewHTML(this.guidanceDetail);
             this.guidanceDetail = this.guidanceDetail.replace(this.guidanceHeader, "");
             this.guidanceHeader = data.fileName.replace(data.fileExtension, "");
             this.showGuidanceDetail = true;
@@ -954,64 +743,9 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 this.authorNames = "";
             }
 
-            //this.guidanceDetail = data;
-            //this.guidanceDetail = this.buildHtml(this.guidanceDetail);
-            //data = this.guidanceDetail;
-
-            //var regex4 = new RegExp(`(?<=<(.*)db_title_disable")(.*)(?=<\/p>)`, 'g');
-            //if (regex4.test(data.fileStrContent)) {
-            //    var title = data.match(regex4);
-            //    if (title && title.length > 0) {
-            //        title = title[0];
-            //        title = title.match(new RegExp(`(?<=(.*)>)(.*)`, 'g'));
-            //        this.guidanceHeader = title[0];
-            //    }
-
-            //}
-            //this.guidanceDetail = this.guidanceDetail.replace(this.guidanceHeader, "");
-            //var titlesReg = new RegExp(`(?<=<(.*)db_title")(.*)(?=<\/)`, 'g');
-            ////this.contentOutlinesList.push({ 'domainId': subHeader.domainId, 'title': (guidanceInd + 1) + "." + (subHeadInd + 1) + " " + subHeader.title });
-            //if (titlesReg != null && titlesReg.test(data)) {
-            //    var titles = data.match(titlesReg);
-            //    if (titles && titles.length > 0) {
-            //        for (var i = 0; i < titles.length; i++) {
-            //            var matching = titles[i].match(new RegExp(`(?<=(.*)>)(.*)`, 'g'));
-            //            if (matching != null && matching.length > 0) {
-            //                matching = matching[0];
-            //                //if (this.contentOutlinesList && this.contentOutlinesList.length>0 && this.contentOutlinesList.find(col => col.title.indexOf(matching) != -1)) {
-
-            //                //} else {
-            //                //    this.contentOutlinesList.push({domainId: ''});
-            //                //}
-            //            }
-            //            //this.contentOutlinesList.find(col => col.title.indexOf(titles[i])!=-1);
-            //        }
-            //    }
-
-            //}
             this.essentials = [];
-            //db_title
             this.showGuidanceDetail = true;
-            this.scrollTop();//window.scrollTo(0, 0);
-            /*
-            var regex4 = new RegExp(`(?<=<(.*)db_title">)(.*)(?=<\/p>)`, 'g');
-            if (regex4.test(data)) {
-                var contentHeadersList = data.match(regex4);
-                var contentList = [];
-                for (var i = 0; i < contentHeadersList.length; i++) {
-                    var ele = contentHeadersList[i];
-                    //contentList.push({ 'domainId': ele.getAttribute("id"), title: ele.innerText });
-                    //.push({ 'domainId': subHeader.domainId, 'title': (guidanceInd + 1) + "." + (subHeadInd + 1) + " " + subHeader.title });
-                    //ele.getAttribute("id");
-                }
- 
-                this.contentOutlinesList = contentList;
- 
-            } else {
-                //this.authorNames = "";
-            }
-            */
-
+            this.scrollTop();
 
         });
 
@@ -1020,8 +754,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
     }
 
     ngAfterViewInit() {
-        //window.scrollTo(0, 0);
-
 
         this.contentOutlinesList = [];
 
@@ -1034,7 +766,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
             var dpath = this.dPath;
             var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
             let selectedPA = practiceAreas.find(pa => dpath.indexOf(pa.domainPath) == 0);
-            //this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPA);
             if (selectedPA != undefined) {
 
                 let topic = selectedPA.subTocItem.find(tp => dpath.indexOf(tp.domainPath) == 0);
@@ -1045,21 +776,43 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                     var selectedGND = selectedPA.subTocItem.find(st => dpath.indexOf(st.domainId) != -1);
                     if (selectedGND != undefined) {
                         subTopics.push(selectedGND);
-                        this._essentialService.getEssential(subTopics).subscribe(data => {
-                            this.essentials = [];
-                            var topics = data;
-                            topics.forEach(topic => {
-                                if (topic.essentials) {
-                                    topic.essentials.forEach(e => {
-                                        e.subContentDomains.forEach(s => {
-                                            s.eType = topic.pageType;
-                                            s.guidance = topic.subTopicName;
-                                            this.essentials.push(s);
-                                        });
-                                    });
+
+
+                        let paName = selectedPA.title;
+                        if (selectedPA.type == "PA-MD") {
+                            paName = selectedPA.actualTitle;
+                        }
+                        this._essentialService.getEssentialsCount({ practiceAreaName: paName }).subscribe(allFilters => {
+                            let aggrFilters = this._essentialService.aggregateEssentials(allFilters);
+                            let topics;
+                            let documentType;
+
+                            if (aggrFilters.topics != undefined) {
+                                topics = Object.keys(aggrFilters.topics).map(topic => {
+                                    return { title: topic, isSelected: true, count: aggrFilters.topics[topic]['total'], topic: topic, isTopic: true, topicData: aggrFilters.topics[topic] };
+                                });
+                            }
+
+                            if (aggrFilters.documentTypes != undefined) {
+                                documentType = Object.keys(aggrFilters.documentTypes).map(docTitle => {
+                                    return { title: docTitle, isSelected: true, count: aggrFilters.documentTypes[docTitle], isTopic: false, topic: docTitle };
+                                });
+                            }
+
+                            this._essentialService.getAllEssentialsByPage({ topics: topics.concat(documentType), page: 1, size: 5, practiceAreaName: paName }).subscribe((essentials) => {
+                                if (essentials && essentials.length > 0) {
+                                    if (essentials[0].isValid) {
+                                        this.essentials = essentials;
+                                    } else {
+                                        this.essentials = [];
+                                    }
+                                } else {
+                                    this.essentials = [];
                                 }
+
                             });
                         });
+
                     }
 
                 } else {
@@ -1073,7 +826,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         if (this.jumpToID) {
             this.scroll(this.jumpToID);
         } else {
-            this.scrollTop();//window.scrollTo(0, 0);
+            this.scrollTop();
         }
     }
 
@@ -1082,13 +835,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
 
     scrollTop() {
         this._pageService.setPageView();
-        /*
-        let scrollEle = document.getElementById('newpg');
-        if (window.navigator.userAgent.indexOf("Edge") == -1)
-            scrollEle.scrollTo(0, 0);
-        else
-            scrollEle.scrollTop = 0;
-        */
     }
 
     isPgModule(domainPath: string) {

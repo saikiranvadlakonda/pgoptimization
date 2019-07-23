@@ -1,16 +1,13 @@
-<!--<div *ngIf="!_authService.isLoggedIn && !_authService.isLoggedOut">
-    <app-login [userName]="userName" [password]="password"></app-login>
-</div>-->
 <!-- Navigation Bar-->
 <header id="topnav">
-  <app-header1></app-header1>
-  <div >
-    <app-header2></app-header2>
-  </div>
-  <pg-email-modal></pg-email-modal>
-
+    <app-header1></app-header1>
+    <div>
+        <app-header2></app-header2>
+    </div>
+    <pg-email-modal></pg-email-modal>
 </header>
 <!-- End Navigation Bar-->
+
 <div class="wrapper wrapper-dashboard" id="newpg" appBackToTop (scrolled)="isScrolled($event)">
     <div class="container">
         <router-outlet>

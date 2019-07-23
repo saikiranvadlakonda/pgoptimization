@@ -1,0 +1,105 @@
+<h5 class="folderListTitle m-hide">Files</h5>
+<div class="table-responsive m-hide">
+  <table class="contentbrowsertble">
+    <tr>
+      <th>NAME</th>
+      <th>DATE CREATED</th>
+      <th>LAST UPDATED</th>
+      <th>EDIT FILE</th>
+    </tr>
+    <tr *ngIf="!files">
+      <td colspan="5">
+        <div class="folderIconDetailMain">
+          <div class="dateTimeContent">Loading...</div>
+        </div>
+      </td>
+    </tr>
+    <tr *ngFor="let file of files; let i = index">
+      <td>
+        <div class="folderIconDetailMain" (click)="onNavigateToContent(file)">
+          <div class="folderIconIndetail fileIcon">
+            <span class="fa fa-file-text-o pg-icon"></span>
+          </div>
+          <div class="fileNameCount">
+            <div class="folderName p-l-0">
+              <span>{{file.title}}</span>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="dateTimeContent">{{file?.dateAdded | date}}</div>
+      </td>
+      <td>
+        <div class="dateTimeContent">{{file?.lastAccessedDate | date}}</div>
+      </td>
+      <td>
+        <div class="btn-group folderbtn-group" dropdown placement="bottom right">
+          <button id="button-alignment" dropdownToggle type="button" class="btn folderListBtn"
+            aria-controls="dropdown-alignment">
+            <span class="fa fa-ellipsis-h pg-icon" aria-hidden="true"></span>
+          </button>
+          <ul id="dropdown-alignment" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu"
+            aria-labelledby="button-alignment">
+            <li role="menuitem" (click)="onNavigateToContent(file)"><a class="dropdown-item">View/Download</a></li>
+            <li role="menuitem" (click)="onDeleteFile(file)"><a class="dropdown-item">Delete</a></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr *ngIf="files?.length == 0">
+      <td colspan="5">
+        <p class="noOfFilesinFolder nofilesmsg">
+          {{ fileError }}
+        </p>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="mobileFoldersView d-hide">
+  <div class="foldersListHeader">
+    <div class="row">
+      <div class="col-md-12">
+        <h2 class="header-title">Files</h2>
+      </div>
+    </div>
+  </div>
+  <div class="folderListItems">
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="folders-list">
+          <li class="folder-item" *ngFor="let file of files; let i = index">
+            <span class="folder-icon">
+              <span class="fa fa-file-text-o pg-icon"></span>
+            </span>
+            <div class="folder-details">
+              <div (click)="onNavigateToContent(file)">
+                <span class="folder-name">{{ file?.title }}</span>
+                <span class="folder-mod-details">Created:
+                  {{ file?.dateAdded | date: 'MMM dd, y' }}</span>
+              </div>
+            </div>
+            <div class="folder-actions">
+              <div class="btn-group" dropdown placement="bottom right">
+                <button id="button-alignment" dropdownToggle type="button" class="btn pointer"
+                  aria-controls="dropdown-alignment">
+                  <span class="fa fa-ellipsis-v pg-icon" aria-hidden="true"></span>
+                </button>
+                <ul id="dropdown-alignment" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu"
+                  aria-labelledby="button-alignment">
+                  <li role="menuitem" (click)="onNavigateToContent(file)"><a class="dropdown-item">View/Download</a>
+                  </li>
+                  <li role="menuitem" (click)="onDeleteFile(file)"><a class="dropdown-item">Delete</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li class="folder-item" *ngIf="files?.length == 0">
+            <p class="nofolders-error">{{ fileError }}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

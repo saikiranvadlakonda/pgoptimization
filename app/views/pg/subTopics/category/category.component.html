@@ -34,7 +34,7 @@
     <div class="row topic-section-header">
         <div class="col-md-12 col-in-topic-header">
             <span *ngIf="paModules?.length > 0" class="folderBackMain pull-left" (click)="isSubTopicViewEnabled = !isSubTopicViewEnabled">
-                <i class="fa fa-angle-left angleLeft leftarrowBackButton"></i>
+                <span class="fa fa-angle-left angleLeft leftarrowBackButton pg-icon"></span>
             </span>
             <span class="expand-collapse-text pointer" (click)="expandOrCollpaseAll()">{{ activeIds.length > 0 ? 'Collapse all topics' : 'Expand all topics'}} <span class="expand-collapse-icon">{{ activeIds.length > 0 ? '-' : '+' }}</span></span>
         </div>
@@ -47,7 +47,7 @@
                         <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)" *ngIf="i % 3 == 0 && i < subTopicLength">
                             <ngb-panel id="mainpanel-{{i}}">
                                 <ng-template ngbPanelTitle>
-                                    <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ paSubTopic.title }}</span></span>
+                                    <span class="title-container"><span class="fa fa-chevron-down pg-icon"></span> <span class="title">{{ paSubTopic.title }}</span></span>
                                 </ng-template>
                                 <ng-template ngbPanelContent>
                                     <ul class="subtopic-links">
@@ -65,7 +65,7 @@
                         <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)" *ngIf="i % 3 == 1 && i < subTopicLength">
                             <ngb-panel id="mainpanel-{{i}}">
                                 <ng-template ngbPanelTitle>
-                                    <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ paSubTopic.title }}</span></span>
+                                    <span class="title-container"><span class="fa fa-chevron-down pg-icon"></span> <span class="title">{{ paSubTopic.title }}</span></span>
                                 </ng-template>
                                 <ng-template ngbPanelContent>
                                     <ul class="subtopic-links">
@@ -83,7 +83,7 @@
                         <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)" *ngIf="i % 3 == 2 && i < subTopicLength">
                             <ngb-panel id="mainpanel-{{i}}">
                                 <ng-template ngbPanelTitle>
-                                    <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ paSubTopic.title }}</span></span>
+                                    <span class="title-container"><span class="fa fa-chevron-down pg-icon"></span> <span class="title">{{ paSubTopic.title }}</span></span>
                                 </ng-template>
                                 <ng-template ngbPanelContent>
                                     <ul class="subtopic-links">
@@ -106,7 +106,7 @@
                         <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)" *ngIf="i % 2 == 0 && i < subTopicLength">
                             <ngb-panel id="mainpanel-{{i}}">
                                 <ng-template ngbPanelTitle>
-                                    <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ paSubTopic.title }}</span></span>
+                                    <span class="title-container"><span class="fa fa-chevron-down pg-icon"></span> <span class="title">{{ paSubTopic.title }}</span></span>
                                 </ng-template>
                                 <ng-template ngbPanelContent>
                                     <ul class="subtopic-links">
@@ -124,7 +124,7 @@
                         <ngb-accordion [activeIds]="activeIds" (panelChange)="addOrRemoveActivePanel(i)" *ngIf="i % 2 == 1 && i < (subTopicLength + 1)">
                             <ngb-panel id="mainpanel-{{i}}">
                                 <ng-template ngbPanelTitle>
-                                    <span class="title-container"><i class="fa fa-chevron-down"></i> <span class="title">{{ paSubTopic.title }}</span></span>
+                                    <span class="title-container"><span class="fa fa-chevron-down pg-icon"></span> <span class="title">{{ paSubTopic.title }}</span></span>
                                 </ng-template>
                                 <ng-template ngbPanelContent>
                                     <ul class="subtopic-links">

@@ -1,36 +1,8 @@
 <div class="guidanceContentMainDiv">
-    <!--<div class="guidanceRefrenceContent">
-        <div id="custom-search-input-top" class="FilterSearch">
-            <input type="text" class="form-control input-lg downloadsSearchInput img-responsive" placeholder="Search this guidance" [(ngModel)]="guidanceSearch" />
-            <span class="input-group-btn">
-                <button class="btn btn-info btn-lg searchbutton" type="button">
-                    <i class="fa fa-search Filtersearchbutton"></i>
-                </button>
-            </span>
-        </div
-        <div class="sortDiv pull-right">
-          <div class="sortybyresultperpage">Sort by</div>
-          <div class="sortresultDropDown">
-            <select class="c-select">
-              <option selected>Default</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select>
-
-
-          </div>
-        </div>
-    </div>-->
     <div class="guidanceRefrencecnt">
-        <!--<h6 class="overView">Guidance Overview</h6>-->
         <div class="guidanceHeadContent" *ngFor="let guidance of guidances|filterByProperty: guidanceSearch: 'title' : 'overview' : 'subContentDomains.title'; index as i">
-            <!--<div class="pointer guidanceHeading" (click)="setGuidanceDomainPath(guidance)"> {{guidance.title}}<span class="utagtxt"><span class="userTag">M</span><span class="userTagtxt">Maintained</span></span></div>-->
             <div class="pointer guidanceHeading" (click)="setGuidanceDomainPath(guidance)">
                 {{guidance.title}}
-                <!--<span class="utagtxt">
-                    <span class="userTag">M</span><span class="userTagtxt">Maintained</span>
-                </span>-->
             </div>
             <p class="gnOverview" *ngIf="guidance.overview!=''">
                 <pg-read-more [text]="guidance?.overview" [limitCount]="210"></pg-read-more>
@@ -41,7 +13,7 @@
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <div class="keySections">
-                                <span class="key-section-header"><i class="fa fa-chevron-down"></i> <span class="title">KEY SECTIONS</span></span>
+                                <span class="key-section-header"><span class="fa fa-chevron-down pg-icon"></span> <span class="title">KEY SECTIONS</span></span>
                             </div>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -53,7 +25,7 @@
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <div class="keySections">
-                                <span class="key-section-header"><i class="fa fa-chevron-down"></i> <span class="title">KEY SECTIONS</span></span>
+                                <span class="key-section-header"><span class="fa fa-chevron-down pg-icon"></span> <span class="title">KEY SECTIONS</span></span>
                             </div>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -62,14 +34,6 @@
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>
-
-            <!--<div class="keySections" [attr.id]="'keySection'+i" data-toggle="collapse" [attr.data-target]="'#demo'+i" (click)="toggleKeySection('keySection'+i)"> KEY SECTIONS <span class="pull-right"><i [ngClass]="i==0?'zmdi zmdi-window-minimize': 'zmdi zmdi-plus'"></i></span></div>
-            <div class="keySectionsContentBlock" [attr.id]="'demo'+i" [attr.aria-expanded]="i==0?'true':'false'" [ngClass]="i==0?'collapse in':'collapse'">
-              <div class="keySectionsContent" *ngFor="let subContentDomain of guidance?.subContentDomains">
-                <span class="cursorpointer" (click)="setSubContentDomainPath(subContentDomain)">{{subContentDomain.title}}</span>
-              </div>
-            </div>-->
-
             <hr />
         </div>
         <div class="guidanceHeadContent" *ngIf="(guidances|filterByProperty: guidanceSearch: 'title' : 'overview' : 'subContentDomains.title')?.length == 0">

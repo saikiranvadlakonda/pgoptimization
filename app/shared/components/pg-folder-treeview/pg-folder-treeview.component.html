@@ -3,29 +3,28 @@
 
         <button type="button" (click)="addFolder()" [ngClass]="(isAddEdit)? 'btn btn-primary waves-effect waves-light' : 'btn disableCursor'" *ngIf="!showClientDropdown">
             <span class="btn-label">
-                <i class="fa fa-plus-circle"></i>
+                <span class="fa fa-plus-circle pg-icon"></span>
             </span> Create
         </button>
         <button type="button" (click)="reNameFolder()" [ngClass]="(isAddEdit)? 'btn btn-primary waves-effect waves-light' : 'btn disableCursor'" *ngIf="!showClientDropdown">
             <span class="btn-label">
-                <i class="fa fa-pencil-square-o"></i>
+                <span class="fa fa-pencil-square-o pg-icon"></span>
             </span> Rename
         </button>
         <button type="button" (click)="removeFolder()" [ngClass]="(isAddEdit)? 'btn btn-primary waves-effect waves-light' : 'btn disableCursor'" *ngIf="!showClientDropdown">
             <span class="btn-label">
-                <i class="fa fa-trash-o"></i>
+                <span class="fa fa-trash-o pg-icon"></span>
             </span> Delete
         </button>
-
     </div>
  
     <div [ngClass]="(mainFolder.isSelected) ? 'selectedRow pointerCursor folderTree':'pointerCursor folderTree'" (click)="mainFolderClicked()" *ngIf="!showClientDropdown">
-        <div *ngIf="!mainFolder.isEditEnabled" class="folderTrees"><i class="icon-folder-alt icons"></i>{{mainFolder.clientDescription}}</div>
+        <div *ngIf="!mainFolder.isEditEnabled" class="folderTrees"><span class="icon-folder-alt icons pg-icon"></span>{{mainFolder.clientDescription}}</div>
         <div *ngIf="mainFolder.isEditEnabled" class="folderTreeNew">
-            <i class="icon-folder-alt icons"></i>
+            <span class="icon-folder-alt icons pg-icon"></span>
             <input type="text" name="name" class="form-control" [(ngModel)]="mainFolder.clientDescription" />
-            <i class="fa fa-floppy-o text-custom" aria-hidden="true" (click)="renameClient(mainFolder)"></i>
-            <i class="fa fa-times-circle text-danger" aria-hidden="true" (click)="undoMainFolderChanges()"></i>
+            <span class="fa fa-floppy-o text-custom pg-icon" aria-hidden="true" (click)="renameClient(mainFolder)"></span>
+            <span class="fa fa-times-circle text-danger pg-icon" aria-hidden="true" (click)="undoMainFolderChanges()"></span>
         </div>
     </div>
     <div class="folderTreeipt" style="padding-left:30px">

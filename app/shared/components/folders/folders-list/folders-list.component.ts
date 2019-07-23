@@ -1,9 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NewItemEntity } from '../../../../shared/models/whats-new/new-group.model';
-import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
-import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import { PgConstants } from '../../../../shared/constants/pg.constants';
-import { StateParams } from '../../../../shared/models/state-params/state-params.model';
 import { RenderContentRequest } from '../../../../shared/models/dashboard/content-request.model';
 import { ContentService } from '../../../../shared/services/content/content.service';
 import { FoldersService } from '../../../../shared/services/folders/folders.service';
@@ -18,9 +13,6 @@ import { PgMessages } from '../../../constants/messages';
 export class FoldersListComponent implements OnInit {
 
     constructor(
-        private _dataStoreService: DataStoreService,
-        private _navigationService: NavigationService,
-        private _contentService: ContentService,
         private _folderService: FoldersService
     ) { }
 
@@ -34,14 +26,15 @@ export class FoldersListComponent implements OnInit {
     @Output() addNewClientFolder: EventEmitter<any> = new EventEmitter<any>();
     @Output() editClientFolder: EventEmitter<any> = new EventEmitter<any>();
     @Output() deleteClientFolder: EventEmitter<any> = new EventEmitter<any>();
+    @Output() navigateToContent: EventEmitter<any> = new EventEmitter<any>();
     showMoreFoldersBtn: boolean = true;
     searchFoldersCount = 5;
     isEnableNewFolder: boolean = true;
     currentEditFolder;
-    fileFolderName;
-    searchResult;
-    fileError: string;
-    firstError: string;
+    fileFolderName = "";
+    searchResult: any = null;
+    fileError: string = "";
+    firstError: string = "";
 
     ngOnInit() {
         this.firstError = this.error;
@@ -53,12 +46,12 @@ export class FoldersListComponent implements OnInit {
     }
 
     newClientFolder = {
-        "folderNameID": null,
+        "folderNameId": null,
         "folderName": "",
-        "parentFolderID": null,
-        "subscriberClientID": null,
+        "parentFolderId": null,
+        "subscriberClientId": null,
         "clientDescription": null,
-        "subscriberID": null,
+        "subscriberId": null,
         "dateCreated": null,
         "lastAccessedDate": null,
         "isVisible": true,
@@ -93,70 +86,11 @@ export class FoldersListComponent implements OnInit {
         } else {
             folder.isValid = false;
         }
-    }
-
-    getFoldersMainFolderCount(subscriberClientId: number): number {
-        let count = 0;
-
-        var mainFolder = this.folderInfo.find(f => f.subscriberClientId == subscriberClientId);
-
-        if (mainFolder && mainFolder.parentFolders) {
-            count += mainFolder.parentFolders.length;
-            mainFolder.parentFolders.forEach(p => {
-                count += this.getFoldersCount(p.folders);
-            });
-        }
-        return count;
-    }
-
-    getFilesMainFolderCount(subscriberClientId: number): number {
-        let count = 0;
-        var mainFolder = this.folderInfo.find(f => f.subscriberClientId == subscriberClientId);
-        if (mainFolder && mainFolder.parentFolders) {
-            mainFolder.parentFolders.forEach(p => {
-                count += p.files.length;
-                count += this.getFilesCount(p.folders);
-            });
-        }
-        return count;
-    }
-
-
-    getFoldersCount(folders): number {
-        let folderCount = 0;
-        folderCount += folders.length;
-        folders.forEach(f => {
-            if (f.folders) {
-                folderCount += f.folders.length;
-                f.folders.forEach(sf => {
-                    if (sf.folders)
-                        folderCount += this.getFoldersCount(sf.folders);
-                });
-            }
-        });
-        return folderCount;
-    }
-
-    getFilesCount(folders): number {
-        let filesCount = 0;
-
-        folders.forEach(f => {
-            filesCount += f.files.length;
-            if (f.folders) {
-                f.folders.forEach(sf => {
-                    filesCount += sf.files.length;
-                    if (sf.folders)
-                        filesCount += this.getFilesCount(sf.folders);
-                });
-            }
-        });
-        return filesCount;
-    }
+    }  
 
     enableEdit(folder) {
         if (!this.isEnableNewFolder && this.folderInfo && this.folderInfo.length > 0 && this.folderInfo[0].isNewFolder) {
             this.folderInfo.shift(this.newClientFolder);
-            //this.folderInfo = JSON.parse(JSON.stringify(this.folderInfoCopy));
         }
         this.isEnableNewFolder = false;
         this.currentEditFolder = JSON.parse(JSON.stringify(folder));
@@ -175,17 +109,6 @@ export class FoldersListComponent implements OnInit {
         folder.isValid = null;
         folder.clientDescription = this.currentEditFolder.clientDescription;
         folder.isEnableEdit = null;
-    }
-
-    getDays(lastUpdateDate) {
-        var today = new Date();
-        var ldate = new Date(lastUpdateDate);
-        var day = 1000 * 60 * 60 * 24;
-        var diff = Math.floor(today.getTime() - ldate.getTime());
-        if (Math.floor(diff / day) <= 0) {
-            return (ldate.getHours() < 10 ? '0' + ldate.getHours() : ldate.getHours()) + ":" + (ldate.getMinutes() < 10 ? '0' + ldate.getMinutes() : ldate.getMinutes()) + ":" + (ldate.getSeconds() < 10 ? '0' + ldate.getSeconds() : ldate.getSeconds());
-        }
-        return Math.floor(diff / day) + " day(s) ago";
     }
 
     editClient(folder) {
@@ -218,38 +141,25 @@ export class FoldersListComponent implements OnInit {
 
     }
 
-    onKeyDown(event, folder, val) {
-        if (event.keyCode == 13) {
-            if (val == 'New') {
-                this.addNewClient(folder);
+    onKeyDown(eventData: any) {
+        if (eventData.event.keyCode == 13) {
+            if (eventData.isCreatingNewFolder == 'New') {
+                this.addNewClient(eventData.folder);
             }
-            if (val == 'Edit') {
-                this.editClient(folder);
+            if (eventData.isCreatingNewFolder == 'Edit') {
+                this.editClient(eventData.folder);
             }
         }
-    }
-    getContent(dpath, title) {
-        this.rendrContentRequest.dpath = dpath;
-        this.rendrContentRequest.hasChildren = "false";
-        this._contentService.downloadContent(this.rendrContentRequest).subscribe(data => {
-            if (data.mimeType == "text/html") {
-                this.contentHTML = this._contentService.cleanUpHTML(this._contentService.getHtmlContent(data.fileContent));
-                var regex1 = new RegExp(title);
-                this.contentHTML = this.contentHTML.replace(new RegExp(regex1, 'g'), ``);
-                this.contentHTML = this.contentHTML.replace("<br />", ``);
-                this._dataStoreService.setSessionStorageItem("htmlContent", this.contentHTML);
-                this._navigationService.navigate(PgConstants.constants.URLS.ContentView.ContentView);
-            }
-            else
-                this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
-        });
-    }
-
+    }   
 
     forceSearch(event: KeyboardEvent) {
         if (event.keyCode == 13) {
             this.searchForFilesAndFolders();
         }
+    }
+
+    onNavigateToContent(data) {
+        this.navigateToContent.emit(data);
     }
 
     searchForFilesAndFolders() {
@@ -276,12 +186,7 @@ export class FoldersListComponent implements OnInit {
                     this.showMoreFoldersBtn = false;
                 }
             });
-
-            //this.setParameter();
-        } else {
-            //modalContentAlert
-            //this.modalAlertRef = this.modalService.show(this.modalContentAlert);
-        }
+        } 
     }
 
     clearSearch() {

@@ -87,7 +87,7 @@ export class BrowseFoldersComponent implements OnInit, OnDestroy {
         this.newFolder = true;
     }
 
-    saveCreatFolder = function () {
+    saveCreatFolder () {
         this.newClientFolder.isValid = null;
         if (!this.newClientFolder.clientDescription || this.newClientFolder.clientDescription.trim() == '') {
             this.newClientFolder.isValid = false;

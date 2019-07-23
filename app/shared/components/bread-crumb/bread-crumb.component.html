@@ -1,9 +1,40 @@
 <div class="col-xs-12 col-lg-12 col-xl-12">
-    <div class="breadcrumb-text">
-        <div>
-            You are here: <span><a routerLink="/dashboard">Dashboard</a></span>  >
-            <span (click)="breadCrumbNavigation(rootArea)" *ngIf="rootArea"><a>{{rootArea}}</a></span> >
-            <span *ngIf="subTopicTitle"> {{ subTopicTitle }}</span>
+    <ng-container *ngIf="practiceArea && !subTopic && !guidanceHeader">
+        <div class="breadcrumb-text">
+            <div>You are here: <span><a routerLink="/dashboard">DashBoard</a></span> > {{practiceArea}}</div>
         </div>
-    </div>
+    </ng-container>
+
+    <ng-container *ngIf="practiceArea && subTopic && !guidanceHeader">
+        <div class="breadcrumb-text">
+            <div>
+                You are here: <span><a routerLink="/dashboard">Dashboard</a></span>  >
+                <span (click)="breadCrumbNavigation(practiceArea,'subTopic')"><a>{{practiceArea}}</a></span> >
+                <span> {{ subTopic }}</span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="practiceArea && subTopic && guidanceHeader">
+        <div class="breadcrumb-text">
+            <div>
+                You are here: <span routerLink="/dashboard"><a>Dashboard</a></span>  >
+                <span *ngIf="practiceArea != ''" (click)="breadCrumbNavigation(practiceArea,'subTopic')"> <a>{{practiceArea}}</a> > </span>
+                <span *ngIf="topic != ''" (click)="breadCrumbNavigation(subTopic,'guidanceNote')"> <a>{{subTopic}}</a> > </span>
+                <span> {{guidanceHeader}}</span>
+            </div>
+            <div *ngIf="showGuidanceDetailChildContent" class="pointer" (click)="back()">Back</div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="!practiceArea && !subTopic && !guidanceHeader && title">
+        <div class="breadcrumb-text">
+            <div>You are here: <span><a routerLink="/dashboard">Dashboard</a></span> > {{title}}</div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="practiceArea  && title">
+        <div class="breadcrumb-text">
+            <div>You are here: <span><a routerLink="/dashboard">Dashboard</a></span> > {{title}}</div>
+        </div>
+    </ng-container>
 </div>

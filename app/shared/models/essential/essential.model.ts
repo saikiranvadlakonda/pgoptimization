@@ -3,6 +3,7 @@ export class Essential {
   public subTopicName: string;
   public pageType: string;
   public essentials: ContentDomainEntity[];
+  public isValid: boolean;
 }
 
 export class ContentDomainEntity {
@@ -27,10 +28,21 @@ export class ContentDomainEntity {
   public contentPassword: string;
   public eType: string;
   public guidance: string;
+  public subTopicDomainPath: string;
 }
 
 export class Topic {
   public title: string;
   public isSelected: boolean;
   public count?: number;
+  public topicData: any;
+}
+
+
+export class EssentialFilters {
+    public topic: string;
+    public isSelected: boolean;
+    public count?: number;
+    public isTopic: boolean;
+    public documentType: string;
 }

@@ -45,6 +45,8 @@ import {
     MatInputModule,
     MatToolbarModule
 } from '@angular/material';
+import { EssentialFiltersComponent } from './essential-filters/essential-filters.component';
+import { EssentialListComponent } from './essential-list/essential-list.component';
 
 @NgModule({
     imports: [
@@ -62,7 +64,7 @@ import {
             }
         ])
     ],
-    declarations: [EssentialComponent],
+    declarations: [EssentialComponent, EssentialFiltersComponent, EssentialListComponent],
     providers: [EssentialService, ContentService]
 })
 export class EssentialViewModule { }

@@ -44,14 +44,13 @@ export class DashboardComponent implements OnInit {
     activeTab: number = 0;
     viewDate: Date = new Date();
     events: CalendarEvent[] = [];
-    bEvents: CalendarEvent[] = [];
+    calenderEvents: CalendarEvent[] = [];
     folderInfo: SubscriberFolderEntity[];
     whatsNew: NewGroupEntity[];
     newItems: NewItemEntity[];
     firstSubscribedPA: string;
     subscribedPracticeArea: TocItemViewModel;
     newItemsLoaded: boolean = false;
-    whatsNewCarouselNum: number = 1;
     refresh: Subject<any> = new Subject();
     view: string = 'month';
     @ViewChild(HistoryComponent) historyComponent: HistoryComponent;
@@ -136,6 +135,8 @@ export class DashboardComponent implements OnInit {
             if (practiceArea.type === 'MD') {
                 let modules: TocItemViewModel[] = practiceArea.subTocItem.map((individualModule: TocItemViewModel) => {
                     individualModule.isSubscribed = practiceArea.isSubscribed;
+                    individualModule['actualTitle'] = individualModule.title;
+
                     if (practiceArea.title.includes('Income Tax')) {
                         individualModule.title = 'Tax' + ' - ' + individualModule.title;
                     }
@@ -197,11 +198,11 @@ export class DashboardComponent implements OnInit {
                             }
                         }
                     });
-                    this.bEvents = this.events.map(event => event);
+                    this.calenderEvents = this.events.map(event => event);
                     this.eventsError = undefined;                
             } else {
                 this.events = [];
-                this.bEvents = [];
+                this.calenderEvents = [];
                 this.eventsError = (Array.isArray(events) && events.length == 0) ? PgMessages.constants.calendar.noEvents : PgMessages.constants.calendar.error;
             }
             this.getPracticeAreas();
@@ -254,13 +255,9 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    showAllWhatsNew() {
+    showAllWhatsNew(eventData: any) {
         var inputNotedet = { "paTitle": undefined };
         this._navigationService.navigate(PgConstants.constants.URLS.WhatsNew.WhatsNew, new StateParams(inputNotedet));
-    }
-
-    updateSlideIndex(event: number) {
-        this.whatsNewCarouselNum = event + 1;
     }
 
     viewDateChanged() {

@@ -17,6 +17,7 @@ import { WhatsNewService } from '../../../shared/services/whats-new/whats-new.se
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../../../shared/services/search/search-service';
 import { WhatsnewCarouselComponent } from './whatsnew-carousel/whatsnew-carousel.component';
+import { EventsComponent } from './events/events.component';
 
 //angular material
 import {
@@ -43,7 +44,8 @@ import {
         HistoryComponent,
         DashboardComponent,
         BrowseFoldersComponent,
-        WhatsnewCarouselComponent
+        WhatsnewCarouselComponent,
+        EventsComponent
     ],
     providers: [
         FoldersService,

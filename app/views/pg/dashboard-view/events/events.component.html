@@ -1,0 +1,20 @@
+<div class="card-box border-radius-0 eventsBlock">
+    <div class="p-20 tilebox-two eventHeader">
+        <h4 class="m-b-10"><span data-plugin="counterup">Events</span></h4>
+        <h6 class="text-muted text-uppercase m-b-15 m-hide">&nbsp;</h6>
+        <hr class="hrline" />
+    </div>
+    <ng-container *ngFor="let event of calenderEvents|slice: 0:3">
+        <div class="event-txt-content evBlock p-20">
+            <p class="font-600 m-b-5">{{event.start | date: 'dd MMM. yyyy'}}</p>
+            <h4 class="header-title m-t-0 m-b-20">{{event.title}} <span class="text-secondary pull-right"><span class="label label-pill label-default">{{event.eventType}}</span></span></h4>
+        </div>
+    </ng-container>
+    <p *ngIf="calenderEvents?.length==0" class="no-events-mgs">{{ eventsError }}</p>
+    <div class="showMoreMainFolder showmorebtn-m-t text-center mins">
+        <div class="showMoreTxtFolder pointer" routerLink="/calendar">Show More</div>
+    </div>
+    <div class="show-more-events text-center">
+        <p class="pointer" routerLink="/calendar">Show more</p>
+    </div>
+</div>

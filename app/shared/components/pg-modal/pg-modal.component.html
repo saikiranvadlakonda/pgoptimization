@@ -1,24 +1,3 @@
-<!--<div *ngIf="modalOpen" [config]="{ show: true }" (onHidden)="onHidden()" bsModal #autoShownModal="bs-modal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title pull-left">Not Subscribed</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div>You are not subscribed to view the content in this Practice Area.</div>
-        <br />
-        <div>  Please contact your Account Manager or Customer Services on 0860 765 432 or customercare@lexisnexis.co.za should you wish to subscribe.</div>
-      </div>
-        <button mat-button (click)="openDialog(MatDialogReff)" #MatDialogReff>Open dialog</button>
-    </div>
-  </div>
-</div>-->
-
-<!--<button mat-button (click)="openDialog(MatDialogReff)" #MatDialogReff>Open dialog</button>-->
-
 <ng-template #feedbackModal let-close="close">
     <div class="modal-header">
         <h5 class="modal-title">
@@ -26,10 +5,8 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </h5>
-
     </div>
     <div class="modal-body">
-
         <h4>TELL US WHAT YOU THINK</h4>
         <p>Your input helps us improve My LexisNexis. For immediate support with online issues, please call LexisNexis Customer Support at +27 86 076 5432 or +27 79 529 4777 (after hours). Our Customer Support team of professionals is available 24/7 to assist you.</p>
         <span>* denotes required fields.</span>

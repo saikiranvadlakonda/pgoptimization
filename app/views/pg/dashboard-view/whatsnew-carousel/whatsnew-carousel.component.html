@@ -1,15 +1,37 @@
-<div class="whatNew-txt-content p-20" *ngFor="let newItem of newItems | slice: pageStart:pageEnd">
-    <p><span class="label label-pill label-default">{{newItem.practiceAreaTitle}}</span></p>
-    <h4 class="header-title m-t-0 m-b-20 pointer" *ngIf="newItem.isPdf =='True'" (click)="openWhatsNewPdf(newItem)">
-        <span data-plugin="counterup" class="titles" mat-raised-button matTooltip="{{ newItem?.title }}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
-            {{ newItem?.title.length > 83 ? newItem?.title.trim().slice(0, 80).trim().concat('...') : newItem?.title }}
-        </span>
-    </h4>
-    <h4 class="header-title m-t-0 m-b-20 pointer" *ngIf="newItem.isPdf !=='True'" (click)="detailView(newItem)">
-        <span data-plugin="counterup" class="titles" mat-raised-button matTooltip="{{ newItem?.title }}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
-            {{ newItem?.title.length > 83 ? newItem?.title.trim().slice(0, 80).trim().concat('...') : newItem?.title }}
-        </span>
-    </h4>   
-    <p class="font-600 m-b-5">&nbsp; <span class="text-secondary pull-right"><i class="zmdi zmdi-time"></i> {{newItem?.datePublished | date: 'd LLL, yyyy'}}</span></p>
-    <hr />
+<div class="card-box border-radius-0 whats-new-content">
+    <div class="p-20 tilebox-two foldersHeader">
+        <div class="pull-xs-right folderbtn"></div>
+        <h6 class="text-muted  m-b-15">
+            {{ carouselNum }} of {{ totalSlides }}
+        </h6>
+        <h4 class="m-b-10">
+            <span data-plugin="counterup">What's new</span>
+        </h4>
+        <hr />
+    </div>
+    <carousel [noWrap]="noWrapSlides" (activeSlideChange)="updateSlideIndex($event)" *ngIf="newItems?.length > 0">
+        <!-- Wrapper for carousel items -->
+        <slide *ngFor="let slide of getArray(totalSlides); let i = index">
+            <div class="whatNew-txt-content p-20" *ngFor="let newItem of newItems | slice: (i * itemsPerSlide) : ((i * itemsPerSlide) + itemsPerSlide)">
+                <p><span class="label label-pill label-default">{{newItem.practiceAreaTitle}}</span></p>
+                <h4 class="header-title m-t-0 m-b-20 pointer" *ngIf="newItem.isPdf =='True'" (click)="openWhatsNewPdf(newItem)">
+                    <span data-plugin="counterup" class="titles" mat-raised-button matTooltip="{{ newItem?.title }}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                        {{ newItem?.title.length > 83 ? newItem?.title.trim().slice(0, 80).trim().concat('...') : newItem?.title }}
+                    </span>
+                </h4>
+                <h4 class="header-title m-t-0 m-b-20 pointer" *ngIf="newItem.isPdf !=='True'" (click)="detailView(newItem)">
+                    <span data-plugin="counterup" class="titles" mat-raised-button matTooltip="{{ newItem?.title }}" matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
+                        {{ newItem?.title.length > 83 ? newItem?.title.trim().slice(0, 80).trim().concat('...') : newItem?.title }}
+                    </span>
+                </h4>
+                <p class="font-600 m-b-5">&nbsp; <span class="text-secondary pull-right"><span class="zmdi zmdi-time pg-icon"></span> {{newItem?.datePublished | date: 'd LLL, yyyy'}}</span></p>
+                <hr />
+            </div>
+        </slide>
+    </carousel>
+    <div *ngIf="newItems?.length == 0">
+        <p>{{ whatsNewError }}</p>
+    </div>
+    <p class="showmore m-hide"><a class="pointer" (click)="showMore()" *ngIf="newItemsLoaded">show more</a></p>
+    <p class="mobi-showmore d-hide"><a class="pointer" (click)="showMore()" *ngIf="newItemsLoaded">Show more</a></p>
 </div>

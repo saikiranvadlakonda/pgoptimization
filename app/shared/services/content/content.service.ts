@@ -59,16 +59,6 @@ export class ContentService {
             );
     };
 
-    public getPDFStream(input): Observable<any> {
-        var url = PgConstants.constants.WEBAPIURLS.GetPdfStream;
-
-        return this.http.get(url + input, { responseType: "arraybuffer" })
-            .pipe(
-                timeout(300000),
-                catchError((error: Response) => Observable.throw(error))
-            );
-    };
-
     ReturnContentType(fileExtension: string) {
         switch (fileExtension) {
             case ".htm":
@@ -225,7 +215,7 @@ export class ContentService {
 
     navigateToContent(data) {
         var file = new NewItemEntity();
-        file.domainPath = data.domainPath ? data.domainPath : data.lmtIDPath;
+        file.domainPath = data.domainPath ? data.domainPath : data.lmtIdPath;
         file.hasChildren = "false";
         this._dataStoreService.setSessionStorageItem("selectedNewItem", file);
         file["extDpath"] = file.domainPath; file["isSubTopic"] = ""; file["contentZone"] = 32;
@@ -257,7 +247,7 @@ export class ContentService {
     }
 
     private setUrlFromDomainId(data): void {
-        var domainId = data.domainPath ? data.domainPath : data.lmtIDPath;
+        var domainId = data.domainPath ? data.domainPath : data.lmtIdPath;
         let isPgSubPracticeAreaItem = this.isPgSubPracticeAreaItem((data.name ? data.name : data.lmtTitlePath), domainId);
 
         if (this.isPgDomainPath(domainId) || isPgSubPracticeAreaItem) {
@@ -302,7 +292,7 @@ export class ContentService {
                     var domainPathLength = domainId.split('/').length;
                     var parentDomainId = topic.domainId;
 
-                    var essentials = this.getEssential();
+                    this.getEssential();
                     var guidancedetail = {
                         "domainPath": domainId,
                         "domainId": domainId.split('/')[domainPathLength - 1],
@@ -358,23 +348,41 @@ export class ContentService {
         var subTopics = [];
         var selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
 
-        selectedPracticeArea.subTocItem.forEach(s => {
-            subTopics.push(s);
-        });
+        var selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
 
-        this._essentialService.getEssential(subTopics).subscribe(data => {
-            this.essentials = [];
-            var topics = data;
-            topics.forEach(topic => {
-                if (topic.essentials) {
-                    topic.essentials.forEach(e => {
-                        e.subContentDomains.forEach(s => {
-                            s.eType = topic.pageType;
-                            s.guidance = topic.subTopicName;
-                            this.essentials.push(s);
-                        });
-                    });
+        let paName = selectedPracticeArea.title;
+        if (selectedPracticeArea.type == "PA-MD") {
+            paName = selectedPracticeArea.actualTitle;
+        }
+
+        this._essentialService.getEssentialsCount({ practiceAreaName: paName }).subscribe(allFilters => {
+            let aggrFilters = this._essentialService.aggregateEssentials(allFilters);
+            let topics;
+            let documentType;
+
+            if (aggrFilters.topics != undefined) {
+                topics = Object.keys(aggrFilters.topics).map(topic => {
+                    return { title: topic, isSelected: true, count: aggrFilters.topics[topic]['total'], topic: topic, isTopic: true, topicData: aggrFilters.topics[topic] };
+                });
+            }
+
+            if (aggrFilters.documentTypes != undefined) {
+                documentType = Object.keys(aggrFilters.documentTypes).map(docTitle => {
+                    return { title: docTitle, isSelected: true, count: aggrFilters.documentTypes[docTitle], isTopic: false, topic: docTitle };
+                });
+            }
+
+            this._essentialService.getAllEssentialsByPage({ topics: topics.concat(documentType), page: 1, size: 5, practiceAreaName: paName }).subscribe((essentials) => {
+                if (essentials && essentials.length > 0) {
+                    if (essentials[0].isValid) {
+                        this.essentials = essentials;
+                    } else {
+                        this.essentials = [];
+                    }
+                } else {
+                    this.essentials = [];
                 }
+
             });
         });
 
@@ -590,6 +598,7 @@ export class ContentService {
         })
 
     }
+
     setModulesAsPracticeAreas(practiceAreas: TocItemViewModel[]): void {
         this.practiceAreas = [];
         practiceAreas.forEach((practiceArea: TocItemViewModel) => {

@@ -18,6 +18,8 @@ import { AuthService } from '../../../shared/services/auth/auth.service';
 import { PracticeAreaService } from '../../../shared/services/practice-areas/practice-areas.service';
 import { GuidanceNoteService } from '../../../shared/services/guidance-note/guidance-note.service';
 import { PagerService } from '../../../shared/services/pager/pager.service';
+import { SaveToFolderModalComponent } from '../../../shared/components/save-to-folder-modal/save-to-folder-modal.component';
+import { PermalinkModalComponent } from '../../../shared/components/permalink-modal/permalink-modal.component';
 
 @Component({
     selector: 'permalink-view',
@@ -27,19 +29,12 @@ import { PagerService } from '../../../shared/services/pager/pager.service';
 })
 export class PermalinkViewComponent implements OnInit {
 
-    constructor(
-        private _practiceAreaService: PracticeAreaService,
-        private _authService: AuthService,
-        private _contentService: ContentService,
-        private route: ActivatedRoute,
-        private _dataStoreService: DataStoreService,
-        private _navigationService: NavigationService,
-        private modalService: BsModalService,
-        private _emailModalService: EmailModalService,
-        private _guidanceNoteService: GuidanceNoteService,
-        private _pagerService: PagerService
+    @ViewChild(EssentialsComponent) essentialComponent: EssentialsComponent;
+    @ViewChild(CompileDirective) compile: CompileDirective;
+    @ViewChild(ImageDirective) imagesrc: ImageDirective;
+    @ViewChild(SaveToFolderModalComponent) saveToFolderModalComponent: SaveToFolderModalComponent;
+    @ViewChild(PermalinkModalComponent) permalinkModalComponent: PermalinkModalComponent;
 
-    ) { }
     dpath: string;
     contentInfo: ContentInfo;
     downloadContentInfo: DownloadContentInfo;
@@ -56,11 +51,21 @@ export class PermalinkViewComponent implements OnInit {
     contentOutlinesList: any[] = [];
     contentHistory: any[] = [];
     userName; password;
-    @ViewChild(EssentialsComponent) essentialComponent: EssentialsComponent;
-    @ViewChild(CompileDirective) compile: CompileDirective;
-    @ViewChild(ImageDirective) imagesrc: ImageDirective;
     practiceArea: string = "";
     rootArea: string = "";
+
+    constructor(
+        private _practiceAreaService: PracticeAreaService,
+        private _authService: AuthService,
+        private _contentService: ContentService,
+        private route: ActivatedRoute,
+        private _dataStoreService: DataStoreService,
+        private _navigationService: NavigationService,
+        private modalService: BsModalService,
+        private _emailModalService: EmailModalService,
+        private _guidanceNoteService: GuidanceNoteService,
+        private _pagerService: PagerService
+    ) { }
 
     ngOnInit() {
         const firstParam: string = this.route.snapshot.queryParamMap.get('pgNew');
@@ -303,8 +308,8 @@ export class PermalinkViewComponent implements OnInit {
 
             //this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNoteDetail, new StateParams(guidanceDetail));
         });
-
     }
+
     showContent() {
         let input = {};
         input["extDpath"] = this.dpath;
@@ -325,11 +330,12 @@ export class PermalinkViewComponent implements OnInit {
             }
         });
         //});
-
     }
+
     openLibContent(domainPath: string, selectedTabName: string, selectedTabIndex: string) {
         this.openLContent(domainPath);
     }
+
     openLContent(domainPath: string) {
         var splitArray = domainPath.split('/');
         domainPath = splitArray[splitArray.length - 1];
@@ -338,78 +344,39 @@ export class PermalinkViewComponent implements OnInit {
             this.title = this.downloadContentInfo.fileName ? this.downloadContentInfo.fileName.replace(this.downloadContentInfo.fileExtension, "") : "";
         });
     }
+
     openEmailModal() {
         this._emailModalService.open(this.dpath, "true");
     }
 
-    openModal(template: TemplateRef<any>) {
-        var content = { "title": this.title, "url": this.dpath, "searchResult": null };
+    openSaveToFolderModal() {
+        let content = { "title": this.title, "url": this.dpath, "searchResult": null };
+        let modalOptions = { class: 'modal-lg folder-modal', backdrop: 'static', keyboard: false };
         this.saveToFolderContent = JSON.parse(JSON.stringify(content));
-        this.getFoldersAll(template);
+        this.saveToFolderModalComponent.openModal(modalOptions);
     }
+
+    saveFileToFolder(eventData: any): void { }
+
+    onCloseSaveToFolderModal(eventData: any): void { }
 
     getFoldersAll(template) {
         this.loadFolders = true;
         this.modalRef = this.modalService.show(template, { class: 'modal-lg folder-modal', backdrop: 'static', keyboard: false });
     }
 
-
-    openPermaLinkModal(template: TemplateRef<any>) {
-        if (this.permaLink == "" || this.permaLink) {
-            this._contentService.GetPermaLink({ dPath: this.dpath }).subscribe(data => {
-                this.permaLink = data;
-                this.downloadModalRef = this.modalService.show(template, { backdrop: 'static', keyboard: false });
-                setTimeout(function () {
-                    var inputElmnt = (document.querySelector("input#permalinkContent") as HTMLInputElement);
-                    inputElmnt.focus();
-                    inputElmnt.setSelectionRange(0, 200, "forward");//inputElmnt.value.length);
-                }, 200);
-                this.modalService.onShown.subscribe((next, error, complete) => {
-                    try {
-                        (document.querySelector("input#permalinkContent") as HTMLInputElement).select();
-                    }
-                    catch (e) {
-
-                    }
-                });
-                this.modalService.onShow.subscribe((next, error, complete) => {
-                    try {
-                        (document.querySelector("input#permalinkContent") as HTMLInputElement).select();
-                    }
-                    catch (e) {
-
-                    }
-                });
-            });
-
+    openPermaLinkModal() {
+        let modalOptions: any = { backdrop: 'static', keyboard: false };
+        if (this.permaLink) {
+            this.permalinkModalComponent.openModal(modalOptions);
         } else {
-            this.downloadModalRef = this.modalService.show(template, { backdrop: 'static', keyboard: false });
-            this.modalService.onShown.subscribe((next, error, complete) => {
-                try {
-                    (document.querySelector("input#permalinkContent") as HTMLInputElement).select();
-
+            this._contentService.GetPermaLink({ dPath: this.dpath }).subscribe(data => {
+                if (data !== null) {
+                    this.permaLink = data;
+                    this.permalinkModalComponent.openModal(modalOptions);
                 }
-                catch (e) {
-
-                }
-
-            });
-            this.modalService.onShow.subscribe((next, error, complete) => {
-                try {
-                    (document.querySelector("input#permalinkContent") as HTMLInputElement).select();
-
-                }
-                catch (e) {
-
-                }
-
             });
         }
-
-    }
-
-    onPopUpCloseClick() {
-        this.modalRef.hide();
     }
 
     downloadEssentials(data) {

@@ -12,13 +12,7 @@ import { BsDropdownModule } from 'ngx-bootstrap';
       CommonModule, SharedModule, FormsModule, BsDropdownModule.forRoot(),RouterModule.forChild([
       {
         path: '', component: HistoryListComponent
-      },
-      //{
-      //  path: 'history', redirectTo: 'history-list'
-      //},
-      //{
-      //  path: '', component: HistoryListComponent
-      //},
+      },     
       {
         path: 'history-list', component: HistoryListComponent
       }
