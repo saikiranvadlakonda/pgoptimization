@@ -144,7 +144,7 @@ export class LoginComponent implements OnInit {
                                                                         "fromLib": fromLib == 'yes' ? true : false
                                                                     };
                                                                 }
-                                                                if (subTopic != null && subTopic.type == "ST" && subTopic.domainId == data.contentId) {
+                                                                if (subTopic.type == "ST" && subTopic.domainId == data.contentId) {
                                                                     this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
                                                                 }
                                                                 break;
