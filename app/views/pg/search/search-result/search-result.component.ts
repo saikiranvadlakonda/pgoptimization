@@ -262,7 +262,9 @@ export class SearchResultComponent implements OnInit, OnDestroy {
         rendRequest.hasChildren = hasChildren
 
         this._contentService.downloadContent(rendRequest).subscribe((content: any) => {
-            if (content && content.isValid) {
+            if (content != null){
+				
+			if(content.isValid) {
                 if (content.mimeType == "text/html") {
                     this.buildHTML(content, null);
                     this.pdfTitle = (content.fileName ? (content.fileName.replace(content.fileExtension, '')) : '');
@@ -271,6 +273,7 @@ export class SearchResultComponent implements OnInit, OnDestroy {
             } else {
                 this.buildHTML(content, null);
             }
+		}
         });
     }
 
