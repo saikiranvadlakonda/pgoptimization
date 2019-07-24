@@ -245,7 +245,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
                 Object.keys(this.folderDetails).forEach(key => {
                     folderData[key] = this.folderDetails[key];
                 });
-                if (folderDetails && (folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid)) {
+                if (folderDetails && ((folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid))) {
                     folderData['folders'] = JSON.parse(JSON.stringify(folderDetails.foldersList));
                     folderData['files'] = JSON.parse(JSON.stringify(folderDetails.filesList));
                     this.folderDetailsError = (folderDetails.foldersList.length == 0) ? PgMessages.constants.folders.noFolders : undefined;
@@ -501,7 +501,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
     getNavigatedFolderFiles(folder, id, checkFlag) {
         let folderIndex;
         this._foldersService.getSelectedFoldersFiles(id).subscribe(folderDetails => {
-            if (folderDetails && (folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid)) {
+            if (folderDetails && ((folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid))) {
                 if (checkFlag) {
                     folder['folders'] = folderDetails.foldersList;
                     folder['files'] = folderDetails.filesList;
