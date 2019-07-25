@@ -150,10 +150,10 @@ export class SubTopicComponent implements OnInit, OnDestroy {
             this.rendrContentRequest.hasChildren = (data.hasChildren) ? "true" : "false";
             var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
             var regex = new RegExp(expression);
-            if (regex.test(data.domainPath)) {
-                window.open(data.domainPath);
+            if (regex.test(data.subTopicDomainPath)) {
+                window.open(data.subTopicDomainPath);
             } else {
-                if (data.mimeType.indexOf("pdf") != -1 && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
+                if (data.mimeType.indexOf("pdf") != -1 && !this._pagerService.isMobile) {
                     this.isPDF = true;
                     this.pdfTitle = data.title;
                     this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + this.rendrContentRequest.dpath.split("/").pop();

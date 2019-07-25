@@ -17,11 +17,11 @@ export class SubTopicGuidanceComponent implements OnInit {
     @Output() subContent: EventEmitter<any> = new EventEmitter<any>();
     guidanceSearch: string;
     pgMessages: any = PgMessages.constants;
-  ngOnInit() {
-  }
-  //toggleKeySection(id: string) {
-  //  document.querySelector("#" + id + " i").classList.toggle('zmdi-plus');
-  //  document.querySelector("#" + id + " i").classList.toggle('zmdi-window-minimize');
+
+
+    ngOnInit() {
+    }
+
 
     showHideGuidance(value: boolean) {
         this.showGuidance.emit(value);

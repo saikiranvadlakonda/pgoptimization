@@ -37,8 +37,8 @@ export class GuidanceNoteComponent implements OnInit {
 
     private subscriptions: Subscription = new Subscription();
     pgConstants = PgConstants.constants;
-    essentials: any[]=[];
-    guidances: any[] = [];
+    essentials: any[] = [];
+    guidances: any[] = undefined;
     legislations: any[] = [];
     commentarys: any[] = [];
     caseLaws: any[] = [];
@@ -52,10 +52,10 @@ export class GuidanceNoteComponent implements OnInit {
     unsubscribeModalRef: BsModalRef;
     viewModel;
     saveToFolderContent;
-    domainId; isPDF: boolean = false; 
-    pdfTitle :string = ""; 
-    pdfContent :string = "";
-    fileTitle: string = ''; 
+    domainId; isPDF: boolean = false;
+    pdfTitle: string = "";
+    pdfContent: string = "";
+    fileTitle: string = '';
     subTopicTitle: string;
     redirectedFrom: string;
     isGuidanceView: boolean = true;
@@ -80,7 +80,7 @@ export class GuidanceNoteComponent implements OnInit {
     ngOnInit() {
         const stateSubscription = this._routerProxy.getViewModel().subscribe((viewModel) => {
             if (viewModel) {
-                
+
                 viewModel = viewModel.subTopic ? viewModel : this._dataStoreService.getSessionStorageItem("guidanceNote");
                 this.viewModel = viewModel;
                 this.domainId = (this.viewModel.subTopic && this.viewModel.subTopic != null) ? this.viewModel.subTopic.domainId : this.viewModel.subTopicDomainPath;
@@ -148,13 +148,13 @@ export class GuidanceNoteComponent implements OnInit {
                     this.getPermaLink();
                 }
                 this._pagerService.setPageView();
-                
+
             }
         });
 
         this.subscriptions.add(stateSubscription);
     }
-    
+
 
     navigateToGuidanceDetails(guidancedetail) {
         guidancedetail.practiceArea = this.rootArea;
@@ -209,11 +209,13 @@ export class GuidanceNoteComponent implements OnInit {
         this._contentService.downloadContent(rendRequest).subscribe((content: any) => {
 
             if (content && content.isValid) {
-                 if (content.mimeType == "application/pdf" && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
+                if (content.mimeType == "application/pdf" && !this._pagerService.isMobile) {
                     this.isPDF = true;
                     this.pdfTitle = content.fileName.replace(".pdf", '');
                     this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + rendRequest.dpath.split("/").pop();
                     this._pagerService.setPageView();
+                } else {
+                    this._contentService.downloadattachment(content.fileContent, content.fileName, content.mimeType);
                 }
             } else {
 
@@ -353,7 +355,7 @@ export class GuidanceNoteComponent implements OnInit {
             }
         });
         guidancedetail.practiceArea = this.rootArea;
-        guidancedetail.topic = this.subTopicTitle;        
+        guidancedetail.topic = this.subTopicTitle;
         guidancedetail.hasChildren = true;
         guidancedetail.isKeySections = true;
         guidancedetail.jumpToID = guidancecontent.domainId;
@@ -371,7 +373,7 @@ export class GuidanceNoteComponent implements OnInit {
             guidancedetail.title = guidancecontent.title;
         }
         guidancedetail['isReferences'] = true;
-        this.navigateToGuidanceDetails(guidancedetail);        
+        this.navigateToGuidanceDetails(guidancedetail);
     }
 
     openEmailModal(unsubscribeModal) {
@@ -403,8 +405,12 @@ export class GuidanceNoteComponent implements OnInit {
         this.backButton = true;
 
         if (this.redirectedFrom == "folder-detail" || !routes) {
+            var previousRoute = this._navigationService.getPreviousRoute();
+            if (previousRoute && previousRoute.previousRoute =="/folders/my-folders") {
+                let folder = this._dataStoreService.getSessionStorageItem("selectedFolder");
+                this._navigationService.navigate(PgConstants.constants.URLS.Folders.MyFolders, new StateParams(folder));
 
-            if (this.rootArea.startsWith('Tax -') || this.rootArea.startsWith('Real Estate -')) {
+            }else if (this.rootArea.startsWith('Tax -') || this.rootArea.startsWith('Real Estate -')) {
                 var practiceAreas = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
                 var selectedPracticeArea = practiceAreas.find(nI => this.rootArea == nI.title);
                 this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);

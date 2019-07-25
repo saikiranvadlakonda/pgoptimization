@@ -245,17 +245,20 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
                 Object.keys(this.folderDetails).forEach(key => {
                     folderData[key] = this.folderDetails[key];
                 });
-                if (folderDetails && ((folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid))) {
+				if(folderDetails!=null){
+					if (folderDetails && ((folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid))) {
                     folderData['folders'] = JSON.parse(JSON.stringify(folderDetails.foldersList));
                     folderData['files'] = JSON.parse(JSON.stringify(folderDetails.filesList));
                     this.folderDetailsError = (folderDetails.foldersList.length == 0) ? PgMessages.constants.folders.noFolders : undefined;
                     this.folderDetailsFileError = (folderDetails.filesList.length == 0) ? PgMessages.constants.folders.noFiles : undefined;
-                } else {
-                    folderData['folders'] = [];
-                    folderData['files'] = [];
-                    this.folderDetailsError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
-                    this.folderDetailsFileError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
-                }
+					} else {
+						folderData['folders'] = [];
+						folderData['files'] = [];
+						this.folderDetailsError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
+						this.folderDetailsFileError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
+					}
+				}
+                
 
                 this.folderDetails = folderData;
                 this.folderDetailComponent.folderData.files = folderData.files;

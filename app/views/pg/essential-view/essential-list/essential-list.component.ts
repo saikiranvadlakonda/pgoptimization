@@ -48,12 +48,13 @@ export class EssentialListComponent implements OnInit {
     this.openTab.emit(essential);
   }
 
-  onDownLoadContent(domainpath: string, hasChildren: boolean, forceDownload: boolean = false): void {
+  onDownLoadContent(essential: any, hasChildren: boolean, forceDownload: boolean = false): void {
     let eventData: any = {
-      domainpath: domainpath,
-      hasChildren: hasChildren,
-      forceDownload: forceDownload
-    }
+        essential: essential,
+        domainpath: essential.subTopicDomainPath,
+        hasChildren: hasChildren,
+        forceDownload: forceDownload
+    };
     this.downloadContent.emit(eventData);
   }
 

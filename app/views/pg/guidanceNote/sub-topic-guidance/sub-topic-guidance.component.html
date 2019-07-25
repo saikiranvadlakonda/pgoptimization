@@ -36,7 +36,7 @@
             </mat-accordion>
             <hr />
         </div>
-        <div class="guidanceHeadContent" *ngIf="(guidances|filterByProperty: guidanceSearch: 'title' : 'overview' : 'subContentDomains.title')?.length == 0">
+        <div class="guidanceHeadContent" *ngIf="error">
             <p class="noRecordsTxt">{{ error ? error : pgMessages.guidanceNote.noGuidance }}</p>
         </div>
         <div class="guidanceHeadContent" *ngIf="guidances == undefined">

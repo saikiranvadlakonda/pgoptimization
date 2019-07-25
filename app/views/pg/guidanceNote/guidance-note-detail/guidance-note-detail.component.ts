@@ -1,18 +1,18 @@
-import { Component, NgZone, OnInit, OnDestroy, ViewChild, Input, ChangeDetectorRef, TemplateRef, AfterViewChecked, AfterViewInit, AfterContentInit } from '@angular/core';
+import { Component, NgZone, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { RouterProxy } from '../../../../store/router/proxy/router.proxy';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { PgConstants } from '../../../../shared/constants/pg.constants';
 import { StateParams } from '../../../../shared/models/state-params/state-params.model';
-import { Observable } from 'rxjs/Observable';
+//import { Observable } from 'rxjs/Observable';
 import { ContentService } from '../../../../shared/services/content/content.service';
 import { RenderContentRequest } from '../../../../shared/models/dashboard/content-request.model';
-import { Base64 } from 'js-base64';
+//import { Base64 } from 'js-base64';
 import { CompileDirective } from '../../../../shared/directives/compile.directive';
 import { ImageDirective } from '../../../../shared/directives/image.directive';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+//import { BsModalService } from 'ngx-bootstrap/modal';
+//import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { FoldersService } from '../../../../shared/services/folders/folders.service';
 import { CreateFolerViewModel } from '../../../../shared/models/Repository/Create.model';
 import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
@@ -22,11 +22,12 @@ import { PgMessages } from '../../../../shared/constants/messages';
 import { ErrorModalService } from '../../../../shared/services/error-modal/error-modal.service';
 import { ErrorContent } from '../../../../shared/models/error-content/error-content.model';
 import { PagerService } from '../../../../shared/services/pager/pager.service';
-import { SafePipe } from '../../../../shared/pipes/safe/safe.pipe';
-import { ContentSafePipe } from '../../../../shared/pipes/content-safe/content-safe.pipe';
+//import { SafePipe } from '../../../../shared/pipes/safe/safe.pipe';
+//import { ContentSafePipe } from '../../../../shared/pipes/content-safe/content-safe.pipe';
 import { SaveToFolderModalComponent } from '../../../../shared/components/save-to-folder-modal/save-to-folder-modal.component';
 import { DownloadModalComponent } from '../../../../shared/components/download-modal/download-modal.component';
 import { PermalinkModalComponent } from '../../../../shared/components/permalink-modal/permalink-modal.component';
+import { PgAlertModalComponent } from '../../../../shared/components/pg-alert-modal/pg-alert-modal.component';
 
 @Component({
     selector: 'guidance-note-detail',
@@ -34,12 +35,13 @@ import { PermalinkModalComponent } from '../../../../shared/components/permalink
     styleUrls: ['./guidance-note-detail.component.css']
 })
 
-export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, AfterContentInit {
+export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit {
     @ViewChild(CompileDirective) compile: CompileDirective;
     @ViewChild(ImageDirective) imagesrc: ImageDirective;
     @ViewChild(SaveToFolderModalComponent) saveToFolderModalComponent: SaveToFolderModalComponent;
     @ViewChild(DownloadModalComponent) downloadModalComponent: DownloadModalComponent;
     @ViewChild(PermalinkModalComponent) permalinkModalComponent: PermalinkModalComponent;
+    @ViewChild(PgAlertModalComponent) pgAlertModalComponent: PgAlertModalComponent;
 
     private subscriptions: Subscription = new Subscription();
     essentials;
@@ -97,9 +99,9 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
 
     ngOnInit() {
         const stateSubscription = this._routerProxy.getViewModel().subscribe((guidancedetail) => {
-            if (guidancedetail && guidancedetail != null) {
+            if (guidancedetail) {
                 this.guidances = this._dataStoreService.getSessionStorageItem("Guidances");
-                if (guidancedetail && guidancedetail.domainPath == undefined) {
+                if (guidancedetail.domainPath == undefined) {
                     let state = this._navigationService.getStateByRouteName("guidance-note/guidance-note-detail");
                     if (state) {
                         guidancedetail = state.previousRouteStateParams.viewModel;
@@ -109,7 +111,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 this.navigateToGuidanceDetails(guidancedetail, guidancedetail.hasChildren);
                 this.domainId = guidancedetail.domainPath;
                 this.essentials = guidancedetail.essentials;
-                if (this.essentials == null || this.essentials == undefined) {
+                if (this.essentials === null || this.essentials === undefined) {
                     this.getEssentials([], "");
                 }
                 if (guidancedetail.fromLib && guidancedetail.fromLib == true) {
@@ -159,7 +161,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 });
 
             }
-            if (data !== null && data.fileStrContent != null && data.isValid) {
+            if (data !== null && data.fileStrContent !== null && data.isValid) {
                 this.guidanceDetail = data.fileStrContent;
                 this.guidanceDetail = this.guidanceDetail.replace(this.guidanceHeader, "");
                 this.showGuidanceDetail = true;
@@ -219,7 +221,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
             subTopics.push(s);
         });
 
-        var selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
+        selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
 
         let paName = selectedPracticeArea.title;
         if (selectedPracticeArea.type == "PA-MD") {
@@ -277,9 +279,8 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         }
         try {
             if (typeof linkTitle == 'string') {
-                tText = linkTitle;
-                if (tText != null && tText != undefined && tText != "") {
-                    if (tText.toLocaleLowerCase().indexOf("guidance note:") != -1) {
+                if (linkTitle != "") {
+                    if (linkTitle.toLocaleLowerCase().indexOf("guidance note:") != -1) {
                         this.isGuidanceNote = true;
                         (this.openGuidanceDetail(dpath.split('#')[0], hasChildren));
                     } else {
@@ -310,10 +311,8 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         this.jumpDpath = domainPath;
         try {
             var tText = (event.currentTarget as HTMLElement).innerText;
-            if (tText != null && tText != undefined && tText != "") {
-                if (tText.toLocaleLowerCase().indexOf("guidance note:") != -1) {
-                }
-                else {
+            if (tText && tText != "") {
+                if (tText.toLocaleLowerCase().indexOf("guidance note:") == -1) {
                     this.isGuidanceNote = false;
                 }
             }
@@ -350,17 +349,56 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         this.domainId = dpath;
         this.dPath = dpath;
         this._contentService.downloadContent(rendRequest).subscribe((content: any) => {
-            if (content && content != null && content.isValid) {
-                if (content.mimeType == "text/html") {
+            if (content) {
+                if (content.isValid) {
+                    if (content.mimeType == "text/html") {
+                        this.backButton = true;
+                        this.guidanceDetailChildContent = content.fileStrContent;
+                        this.guidanceDetail = this.guidanceDetailChildContent;
+                        this.essentials = [];
+                        this.contentOutlinesList = [];
+                        var title = "";
+                        if (content.fileName != null) {
+                            title = content.fileName.replace(content.fileExtension, "");
+                            this.guidanceHeader = title;
+                        }
+                        if (content.authorName) {
+                            this.authorNames = content.authorName;
+                        } else {
+                            this.authorNames = "";
+                        }
+                        if (this.compile) {
+                            this.compile.compile = this.guidanceDetailChildContent;
+                            this.compile.compileContext = this;
+                            this.compile.compRef.changeDetectorRef.detectChanges();
+                            this.compile.ngOnChanges();
+                        }
+                        this.dPath = dpath;
+                        if (this.jumpToID) {
+                            this.scroll(this.jumpToID);
+                        } else {
+                            window.scrollTo(0, 0);
+                        }
+                        if (!this.dPath.startsWith("zb/a2ioc")) {
+                            this.libContent = true;
+                        }
+                    } else if (content.mimeType == "application/pdf" && !this._pageService.isMobile) {
+                        this.isPDF = true;
+                        this.pdfTitle = content.fileName.replace(".pdf", '');
+                        this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + rendRequest.dpath.split("/").pop();
+                        this.guidanceDetailHistory.pop();
+                        this.scrollTop();
+                    } else {
+                        this._contentService.downloadattachment(content.fileContent, content.fileName, content.mimeType);
+                        this.guidanceDetailHistory.pop();
+                    }
+                } else {
                     this.backButton = true;
                     this.guidanceDetailChildContent = content.fileStrContent;
                     this.guidanceDetail = this.guidanceDetailChildContent;
-                    this.essentials = [];
-                    this.contentOutlinesList = [];
-                    var title = "";
+
                     if (content.fileName != null) {
-                        title = content.fileName.replace(content.fileExtension, "");
-                        this.guidanceHeader = title;
+                        this.guidanceHeader = content.fileName.replace(content.fileExtension, "");
                     }
                     if (content.authorName) {
                         this.authorNames = content.authorName;
@@ -377,52 +415,19 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                     if (this.jumpToID) {
                         this.scroll(this.jumpToID);
                     } else {
-                        window.scrollTo(0, 0);
+                        this.scrollTop();
                     }
-                    if (!this.dPath.startsWith("zb/a2ioc")) {
-                        this.libContent = true;
-                    }
-                } else if (content.mimeType == "application/pdf" && !this._pageService.isMobile) {
-                    this.isPDF = true;
-                    this.pdfTitle = content.fileName.replace(".pdf", '');
-                    this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + rendRequest.dpath.split("/").pop();
-                    this.guidanceDetailHistory.pop();
-                    this.scrollTop();
-                } else {
-                    this._contentService.downloadattachment(content.fileContent, content.fileName, content.mimeType);
-                    this.guidanceDetailHistory.pop();
                 }
             } else {
-                this.backButton = true;
-                this.guidanceDetailChildContent = content.fileStrContent;
-                this.guidanceDetail = this.guidanceDetailChildContent;
-
-                if (content.fileName != null) {
-                    this.guidanceHeader = content.fileName.replace(content.fileExtension, "");
-                }
-                if (content.authorName) {
-                    this.authorNames = content.authorName;
-                } else {
-                    this.authorNames = "";
-                }
-                if (this.compile) {
-                    this.compile.compile = this.guidanceDetailChildContent;
-                    this.compile.compileContext = this;
-                    this.compile.compRef.changeDetectorRef.detectChanges();
-                    this.compile.ngOnChanges();
-                }
                 this.dPath = dpath;
-                if (this.jumpToID) {
-                    this.scroll(this.jumpToID);
-                } else {
-                    this.scrollTop();
-                }
+                this.guidanceDetailChildContent = PgMessages.constants.guidanceNoteDetail.error;
             }
+            
         });
     }
 
     downloadEssentials(data) {
-        this.rendrContentRequest.dpath = data.domainPath;
+        this.rendrContentRequest.dpath = data.domainPath ? data.domainPath : data.subTopicDomainPath;
         this.rendrContentRequest.hasChildren = (data.hasChildren) ? "true" : "false";
         this._contentService.downloadContent(this.rendrContentRequest).subscribe(data => {
             if (data.mimeType == "application/pdf" && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
@@ -465,8 +470,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
             setTimeout(function () {
                 self.scroll("", document.querySelector("a[href*='" + guidanceData.jumpDpath + "']"));
             }, 100);
-            if (guidanceData.jumpToString) {
-            }
 
             if (!this.dPath.startsWith('zb/a2ioc')) {
                 this.libContent = true;
@@ -505,8 +508,9 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 this.saveToFolderModalComponent.onCloseModal(true);
             });
         }
-        else
-            alert("Please select a folder");
+        else {
+            this.showAlert();
+        }
     }
 
     onCloseSaveToFolderModal(eventData: any) {
@@ -533,7 +537,8 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         var selectedPracticeArea;
         if (paTitle.startsWith('Tax -') || paTitle.startsWith('Real Estate -')) {
             selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
-            var practiceAreas = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
+            practiceAreas = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
+            if (!selectedPracticeArea)
             selectedPracticeArea = practiceAreas.find(nI => paTitle == nI.title);
             this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
         } else {
@@ -544,8 +549,8 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
 
         if (this.gnDetailObj.redirectedFrom && this.gnDetailObj.redirectedFrom == "folder-detail" && route == 'guidanceNote') {
 
-            var topic = undefined;
-            var subtopic = undefined;
+            let topic = undefined;
+            let subtopic = undefined;
             if (this.isPgModule(domainPath)) {
                 topic = selectedPracticeArea.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId);
                 subtopic = topic.subTocItem.find(nI => domainPath.split('/')[5] == nI.domainId);
@@ -554,7 +559,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                 topic = selectedPracticeArea.subTocItem.find(item => domainPath.split('/')[3] == item.domainPath.split('/')[3]);
                 subtopic = topic.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId);
             }
-            var input = { "subTopicDomainPath": subtopic.domainPath, "title": selectedPracticeArea.title + " > " + subtopic.title, "practiceArea": subtopic.title, rootArea: selectedPracticeArea.title, "subTopic": subtopic };
+            let input = { "subTopicDomainPath": subtopic.domainPath, "title": selectedPracticeArea.title + " > " + subtopic.title, "practiceArea": subtopic.title, rootArea: selectedPracticeArea.title, "subTopic": subtopic };
 
             this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
 
@@ -563,14 +568,14 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         else if ((this.gnDetailObj.redirectedFrom && this.gnDetailObj.redirectedFrom == "folder-detail" && route == 'subTopic') || route == 'subTopic') {
             this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
             if (paTitle.startsWith('Tax -') || paTitle.startsWith('Real Estate -')) {
-                var practiceAreas = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
-                var selectedPracticeArea = practiceAreas.find(nI => paTitle == nI.title);
+                practiceAreas = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
+                selectedPracticeArea = practiceAreas.find(nI => paTitle == nI.title);
                 this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
                 this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(selectedPracticeArea));
 
             } else {
-                var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
-                var selectedPracticeArea = practiceAreas.find(nI => paTitle == nI.title);
+                practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
+                selectedPracticeArea = practiceAreas.find(nI => paTitle == nI.title);
                 this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
                 this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(selectedPracticeArea));
             }
@@ -578,13 +583,13 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         } else {
             if (this._navigationService.isNavigationSubTopic || route == 'guidanceNote')
                 if (this._navigationService.isNavigationSubTopic == undefined || this.viewModel.lmtTitlePath) {
-                    var selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
-                    var topic = undefined;
-                    var subtopic = undefined;
+                    selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
+                    let topic = undefined;
+                    let subtopic = undefined;
                     if (this.isPgModule(domainPath)) {
 
                         if (paTitle.startsWith('Tax -') || paTitle.startsWith('Real Estate -')) {
-                            var practiceAreas = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
+                            practiceAreas = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
                             selectedPracticeArea = practiceAreas.find(nI => paTitle == nI.title);
                             this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
 
@@ -595,7 +600,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
                         topic = selectedPracticeArea.subTocItem.find(item => domainPath.split('/')[3] == item.domainPath.split('/')[3]);
                         subtopic = (topic !== undefined) ? topic.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId) : {};
                     }
-                    var input = {
+                    let input = {
                         "subTopicDomainPath": subtopic.domainPath,
                         "title": selectedPracticeArea.title + " > " + subtopic.title,
                         "practiceArea": subtopic.title,
@@ -812,11 +817,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
 
                             });
                         });
-
                     }
-
-                } else {
-
                 }
 
             } else {
@@ -830,9 +831,6 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         }
     }
 
-    ngAfterContentInit() {
-    }
-
     scrollTop() {
         this._pageService.setPageView();
     }
@@ -841,4 +839,12 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, After
         return (domainPath.indexOf('b2ioc') > -1 || domainPath.indexOf('nor6d') > -1 ? true : false);
     }
 
+    showAlert(): void {
+        let modalOptions: any = { backdrop: 'static', keyboard: false };
+        let messages: string[] = [];
+        messages.push("Please make a selection.");
+        this.pgAlertModalComponent.openModal(modalOptions, messages);
+    }
+
+    onCloseAlert(): void { }
 }

@@ -122,7 +122,7 @@ export class LoginComponent implements OnInit {
                                                                     var spa = allPAs.find(nI => dpath.split('/')[3] == nI.domainId);
                                                                     this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", spa);
                                                                     paTitle = spa.title;
-                                                                    subTopic = subTopic.subTocItem.find(nI => dpath.split('/')[5] == nI.domainId);
+                                                                    subTopic = subTopic.subTocItem.find(nI => dpath.indexOf(nI.domainId)!=-1);
                                                                     subTopic.redirectedFrom = "folder-detail";
                                                                     input = {
                                                                         "subTopicDomainPath": subTopic.domainPath,

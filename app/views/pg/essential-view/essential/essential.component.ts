@@ -273,28 +273,33 @@ export class EssentialComponent implements OnInit {
         let renderContentRequest: RenderContentRequest = new RenderContentRequest();
         renderContentRequest.dpath = eventData.domainpath ? eventData.domainpath : eventData.subTopicDomainPath;
         renderContentRequest.hasChildren = eventData.hasChildren;
-        this._contentService.downloadContent(renderContentRequest).subscribe(data => {
-            if (data !== null) {
-                if (data.mimeType == "application/pdf" && !eventData.forceDownload && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
-                    this.isPDF = true;
-                    this.pdfTitle = data.fileName ? data.fileName.replace(".pdf", '') : '';
-                    this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + renderContentRequest.dpath.split("/").pop();
-                    this.scrollTop();
-                } else {
+        var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+        var regex = new RegExp(expression);
+        if (regex.test(renderContentRequest.dpath)) {
+            window.open(renderContentRequest.dpath);
+        } else if (eventData.essential.mimeType == ".pdf" && !eventData.forceDownload && !this._pagerService.isMobile) {
+            this.isPDF = true;
+            this.pdfTitle = eventData.essential.title ? eventData.essential.title.replace(".pdf", '') : '';
+            this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + renderContentRequest.dpath.split("/").pop();
+            this.scrollTop();
+        } else {
+            this._contentService.downloadContent(renderContentRequest).subscribe(data => {
+                if (data !== null) {
                     this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
+                } else {
+                    if (!this._errorModalService.isModalOpened()) {
+                        let modalData: ErrorContent = {
+                            message: PgMessages.constants.essentials.downloadError,
+                            showOk: true,
+                            showCancel: false,
+                            callBack: undefined
+                        };
+                        this._errorModalService.open(modalData);
+                    }
                 }
-            } else {
-                if (!this._errorModalService.isModalOpened()) {
-                    let modalData: ErrorContent = {
-                        message: PgMessages.constants.essentials.downloadError,
-                        showOk: true,
-                        showCancel: false,
-                        callBack: undefined
-                    };
-                    this._errorModalService.open(modalData);
-                }
-            }
-        });
+            });
+        }
+        
 
         this.checkedEssential = [];
         this.unSelectAllEssentials();
@@ -355,7 +360,9 @@ export class EssentialComponent implements OnInit {
     }
 
     openTab(essential) {
-        if (essential.subTopicDomainPath.indexOf("http") == 0) {
+        var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+        var regex = new RegExp(expression);
+        if (essential.subTopicDomainPath.indexOf("http") == 0 || regex.test(essential.subTopicDomainPath)) {
             window.open(essential.subTopicDomainPath);
         }
 
@@ -365,10 +372,8 @@ export class EssentialComponent implements OnInit {
 
 
     openFileDownloadModal() {
-        //this.fileTitle = this.practiceArea;
         if (!this.checkedEssential || this.checkedEssential.length == 0) {
             this.showAlert();
-            //alert("Please make a selection");
         } else {
             var content = { "title": "", "url": "", "searchResult": null, "essentialResult": this.checkedEssential };
             content.title = this.checkedEssential.map(d => { return d.title; }).toLocaleString();

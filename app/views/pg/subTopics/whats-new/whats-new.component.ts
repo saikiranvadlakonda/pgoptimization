@@ -48,6 +48,7 @@ export class WhatsNewComponent implements OnInit {
 
     detailView(newItem) {
         var selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
+        newItem.disablePermalink = true;
         if (selectedPracticeArea.isSubscribed) {
             if (newItem.isPdf == 'True') {
                 this.openWhatsNewPdf(newItem);

@@ -43,9 +43,7 @@ export class SearchResultComponent implements OnInit, OnDestroy {
     routerState$: Observable<StateParams>;
     isPDF = false; pdfContent: any; pdfTitle: string = "";
     searchResults: SearchModel;
-    // pager object
     pager: any = {};
-    // paged items
     pagedItems: any[];
     renderContentRequest: RenderContentRequest = new RenderContentRequest();
     contentHTML: string;
@@ -71,7 +69,6 @@ export class SearchResultComponent implements OnInit, OnDestroy {
         private _dataStoreService: DataStoreService,
         private _whatsNewService: WhatsNewService,
         private _contentViewReqService: ContentViewReqService) {
-
         this.routerState$ = this._routerProxy.getRouterState();
     }
 
@@ -204,7 +201,7 @@ export class SearchResultComponent implements OnInit, OnDestroy {
             }
             if (dPath.split('/').length > pathLen) {
                 dPath = dPath.substring(0, dPath.lastIndexOf('/'));
-            } 
+            }
 
             if (dPath.indexOf("zb/") != 0 && dPath.indexOf("zb/") == -1) {
                 dPath = "zb/" + dPath;
@@ -262,18 +259,17 @@ export class SearchResultComponent implements OnInit, OnDestroy {
         rendRequest.hasChildren = hasChildren
 
         this._contentService.downloadContent(rendRequest).subscribe((content: any) => {
-            if (content != null){
-				
-			if(content.isValid) {
-                if (content.mimeType == "text/html") {
+            if (content != null) {
+                if (content.isValid) {
+                    if (content.mimeType == "text/html") {
+                        this.buildHTML(content, null);
+                        this.pdfTitle = (content.fileName ? (content.fileName.replace(content.fileExtension, '')) : '');
+                    } else
+                        this._contentService.downloadattachment(content.fileContent, content.fileName, content.mimeType);
+                } else {
                     this.buildHTML(content, null);
-                    this.pdfTitle = (content.fileName ? (content.fileName.replace(content.fileExtension, '')) : '');
-                } else
-                    this._contentService.downloadattachment(content.fileContent, content.fileName, content.mimeType);
-            } else {
-                this.buildHTML(content, null);
+                }
             }
-		}
         });
     }
 
@@ -364,15 +360,14 @@ export class SearchResultComponent implements OnInit, OnDestroy {
                 this.buildHTML(data, 'displayContent');
                 this.pdfTitle = (data.fileName ? (data.fileName.replace(data.fileExtension, '')) : '');
             }
-            else {
-                if (data.mimeType == "application/pdf") {
-                    this.isPDF = true;
-                    this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + rendRequest.dpath.split("/").pop();
-                    this.pdfTitle = data.fileName;
-                    this.scrollTop();
-                } else {
-                    this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
-                }
+            else if (data.mimeType == "application/pdf") {
+                this.isPDF = true;
+                this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + rendRequest.dpath.split("/").pop();
+                this.pdfTitle = data.fileName;
+                this.scrollTop();
+            } else {
+                this._contentService.downloadattachment(data.fileContent, data.fileName, data.mimeType);
+
             }
         });
     }

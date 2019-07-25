@@ -116,7 +116,7 @@ export class ContentComponent implements OnInit {
                             this.backButton = false;
                         }
                         this.compileHTML(this);
-                    } else if (data.mimeType == "application/pdf" && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
+                    } else if (data.mimeType == "application/pdf" && !this._pagerService.isMobile) {
                         this.isPDF = true;
                         this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + (this.rendrContentRequest.dpath.split("/").pop());
                         this.pdfTitle = data.fileName;
@@ -246,7 +246,7 @@ export class ContentComponent implements OnInit {
                 }
                 this.authorNames = data.authorName;
                 this.compileHTML(this);
-            } else if (data.mimeType == "application/pdf" && navigator.userAgent.toLowerCase().indexOf("mobile") == -1) {
+            } else if (data.mimeType == "application/pdf" && !this._pagerService.isMobile) {
                 this.backButton = true;
                 this.isPDF = true;
                 this.pdfContent = PgConstants.constants.WEBAPIURLS.GetPdfStream + rendRequest.dpath.split("/").pop();

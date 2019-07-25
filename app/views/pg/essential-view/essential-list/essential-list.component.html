@@ -53,7 +53,7 @@
                                     [matMenuTriggerFor]="menu"><span class="fa fa-ellipsis-h pg-icon"></span></button>
                                 <mat-menu #menu="matMenu">
                                     <button mat-menu-item
-                                        (click)="filteredEssentials[i]?.mimeType=='link'?onOpenTab(filteredEssentials[i]):onDownLoadContent(filteredEssentials[i].subTopicDomainPath,filteredEssentials[i].hasChildren, true)">Download</button>
+                                        (click)="filteredEssentials[i]?.mimeType=='link'?onOpenTab(filteredEssentials[i]):onDownLoadContent(filteredEssentials[i],filteredEssentials[i].hasChildren, true)">Download</button>
                                     <span class="dropdown-divider"></span>
                                     <button mat-menu-item (click)="onOpenSaveToFolderModal(filteredEssentials[i])">Add to
                                         a
@@ -62,7 +62,7 @@
                                 </mat-menu>
                             </span>
                             <span data-plugin="counterup" class="titles"
-                                (click)="filteredEssentials[i]?.mimeType=='link'?onOpenTab(filteredEssentials[i]):onDownLoadContent(filteredEssentials[i].subTopicDomainPath,filteredEssentials[i].hasChildren)"
+                                (click)="filteredEssentials[i]?.mimeType=='link'?onOpenTab(filteredEssentials[i]):onDownLoadContent(filteredEssentials[i],filteredEssentials[i].hasChildren)"
                                 mat-raised-button matTooltip="{{filteredEssentials[i]?.title.trim()}}"
                                 matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
                                 {{filteredEssentials[i]?.title.length>33?filteredEssentials[i]?.title.slice(0,30).trim().concat('...'):filteredEssentials[i]?.title}}
@@ -103,7 +103,7 @@
                                     [matMenuTriggerFor]="menu"><span class="fa fa-ellipsis-h pg-icon"></span></button>
                                 <mat-menu #menu="matMenu">
                                     <button mat-menu-item
-                                        (click)="filteredEssentials[(i + 1)]?.mimeType=='link'?onOpenTab(filteredEssentials[(i + 1)]):onDownLoadContent(filteredEssentials[(i + 1)].subTopicDomainPath,filteredEssentials[(i + 1)].hasChildren, true)">Download</button>
+                                        (click)="filteredEssentials[(i + 1)]?.mimeType=='link'?onOpenTab(filteredEssentials[(i + 1)]):onDownLoadContent(filteredEssentials[(i + 1)],filteredEssentials[(i + 1)].hasChildren, true)">Download</button>
                                     <span class="dropdown-divider"></span>
                                     <button mat-menu-item
                                         (click)="onOpenSaveToFolderModal(filteredEssentials[(i + 1)])">Add to a
@@ -112,7 +112,7 @@
                                 </mat-menu>
                             </span>
                             <span data-plugin="counterup" class="titles"
-                                (click)="filteredEssentials[(i + 1)]?.mimeType=='link'?onOpenTab(filteredEssentials[(i + 1)]):onDownLoadContent(filteredEssentials[(i + 1)].subTopicDomainPath,filteredEssentials[(i + 1)].hasChildren)"
+                                (click)="filteredEssentials[(i + 1)]?.mimeType=='link'?onOpenTab(filteredEssentials[(i + 1)]):onDownLoadContent(filteredEssentials[(i + 1)],filteredEssentials[(i + 1)].hasChildren)"
                                 mat-raised-button matTooltip="{{filteredEssentials[(i + 1)]?.title.trim()}}"
                                 matTooltipClass="whatsNewToolTip" matTooltipPosition="above">
                                 {{filteredEssentials[(i + 1)]?.title.length>33?filteredEssentials[(i + 1)]?.title.slice(0,30).concat('...'):filteredEssentials[(i + 1)]?.title}}
