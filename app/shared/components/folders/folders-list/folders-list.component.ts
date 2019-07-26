@@ -80,7 +80,7 @@ export class FoldersListComponent implements OnInit {
 
     addNewClient(folder) {
         if (folder) {
-            if (folder && folder.clientDescription) {
+            if (folder.clientDescription) {
                 this.isEnableNewFolder = true;
                 folder.isValid = null;
                 this.addNewClientFolder.emit(folder);

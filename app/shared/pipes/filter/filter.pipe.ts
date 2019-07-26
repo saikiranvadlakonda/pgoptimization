@@ -9,7 +9,7 @@ export class FilterPipe implements PipeTransform {
         if (Array.isArray(items) && items.length && searchText && searchText.length) {
             return items.filter(item => {
                 let keys = Object.keys(item);
-                if (Array.isArray(keys) && keys.length) {
+                if (keys.length) {
                     for (let key of keys) {
                         if (item.hasOwnProperty(key) && item[key] && item[key].length && (item[key].toString().toLowerCase().replace(/ /g, '')).includes((searchText.toString().toLowerCase().replace(/ /g, '')))) {
                             return true;

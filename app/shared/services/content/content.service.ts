@@ -174,9 +174,6 @@ export class ContentService {
     }
 
     cleanUpHTML(input: string): string {
-        var regex1 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...','PGS/ContentView.aspx[?]dpath[=]`);
-        var regex2 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...', 'Library/ContentView.aspx[?]dpath[=]`);
-
         input = input.replace(new RegExp('<p', 'g'), "<div");
         input = input.replace(new RegExp('</p>', 'g'), "</div><br />");
         input = input.replace(new RegExp('&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;', 'g'), "");
@@ -186,9 +183,9 @@ export class ContentService {
         return input;
     }
     buildHtml(input: string): string {
-        var regex1 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...','PGS/ContentView.aspx[?]dpath[=]`);
-        var regex2 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...', 'Library/ContentView.aspx[?]dpath[=]`);
-        var regex3 = new RegExp(`src[=]"/Content/ContentResponse.aspx[?]dpath[=]`);
+        let regex1 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...','PGS/ContentView.aspx[?]dpath[=]`);
+        let regex2 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...', 'Library/ContentView.aspx[?]dpath[=]`);
+        let regex3 = new RegExp(`src[=]"/Content/ContentResponse.aspx[?]dpath[=]`);
 
         input = input.replace(new RegExp('<p', 'g'), "<div");
         input = input.replace(new RegExp('</p>', 'g'), "</div><br />");
@@ -619,4 +616,3 @@ export class ContentService {
         });
     }
 }
-

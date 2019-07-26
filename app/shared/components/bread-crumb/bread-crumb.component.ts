@@ -29,14 +29,12 @@ export class BreadCrumbComponent implements OnInit {
     breadCrumbNavigation(title, page) {
         let practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
         let selectedPracticeArea = practiceAreas.find(p => p.title == this.practiceArea);
-        let selectedTopic;
         let selectedSubTopic;
 
         selectedPracticeArea.subTocItem.forEach(topic => {
             if (topic.subTocItem) {
                 topic.subTocItem.forEach(subTopic => {
                     if (subTopic.title == this.subTopic) {
-                        selectedTopic = topic;
                         selectedSubTopic = subTopic;
                     }
 
@@ -44,11 +42,11 @@ export class BreadCrumbComponent implements OnInit {
             }
         });
         
+        this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
 
         
         switch (page) {
             case 'subTopic':
-                this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
                 this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(selectedPracticeArea));
                 break;
             case 'guidanceNote':
@@ -58,7 +56,6 @@ export class BreadCrumbComponent implements OnInit {
                 this._navigationService.isNavigationSubTopic = true;
                 this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
                 break;
-            case '': break;
             default: break;
         }
         
