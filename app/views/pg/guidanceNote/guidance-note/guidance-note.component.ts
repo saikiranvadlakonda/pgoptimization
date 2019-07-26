@@ -84,7 +84,7 @@ export class GuidanceNoteComponent implements OnInit {
                 viewModel = viewModel.subTopic ? viewModel : this._dataStoreService.getSessionStorageItem("guidanceNote");
                 this.viewModel = viewModel;
                 this.domainId = (this.viewModel.subTopic) ? this.viewModel.subTopic.domainId : this.viewModel.subTopicDomainPath;
-                this.paTitle = viewModel.subTopic.title ? viewModel.subTopic.title : "";
+                this.paTitle = (viewModel.subTopic && viewModel.subTopic.title) ? viewModel.subTopic.title : "";
                 if (viewModel.subTopic.redirectedFrom && viewModel.subTopic.redirectedFrom == "folder-detail") {
                     this.redirectedFrom = viewModel.subTopic.redirectedFrom;
                 }
