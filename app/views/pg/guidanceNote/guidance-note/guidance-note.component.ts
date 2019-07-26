@@ -85,10 +85,10 @@ export class GuidanceNoteComponent implements OnInit {
                 this.viewModel = viewModel;
                 this.domainId = (this.viewModel.subTopic) ? this.viewModel.subTopic.domainId : this.viewModel.subTopicDomainPath;
                 this.paTitle = (viewModel.subTopic && viewModel.subTopic.title) ? viewModel.subTopic.title : "";
-                if (viewModel.subTopic.redirectedFrom && viewModel.subTopic.redirectedFrom == "folder-detail") {
+                if (viewModel.subTopic && viewModel.subTopic.redirectedFrom && viewModel.subTopic.redirectedFrom == "folder-detail") {
                     this.redirectedFrom = viewModel.subTopic.redirectedFrom;
                 }
-                if (viewModel.subTopicDomainPath) {
+                if (viewModel.subTopic && viewModel.subTopicDomainPath) {
                     this._guidanceNoteService.getHomeContentForSubTopic(viewModel).subscribe(data => {
                         if (data !== null) {
                             this.subTopic = data;
