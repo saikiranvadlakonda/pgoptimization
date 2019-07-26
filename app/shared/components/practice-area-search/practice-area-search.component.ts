@@ -9,7 +9,6 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { PracticeAreaService } from '../../services/practice-areas/practice-areas.service';
 import { DataStoreService } from '../../services/data-store/data-store.service';
-import { TocItemViewModel } from '../../models/practiceAreas/tocItem.model';
 import { SearchService } from '../../services/search/search-service';
 import { PgAlertModalComponent } from '../pg-alert-modal/pg-alert-modal.component';
 
@@ -69,7 +68,6 @@ export class PracticeAreaSearchComponent implements OnInit {
     }
 
     setPracticeAreas() {
-        let searchPAs = this._dataStoreService.getSessionStorageItem("searchFilters");
 
         this.searchPracticeAreas = this.practiceAreas.map(practicearea => {
             return {
@@ -109,7 +107,7 @@ export class PracticeAreaSearchComponent implements OnInit {
                 this.searchParamters.SearchTerm = this.searchTerm;
                 this.searchParamters.SearchPreFilters = this.SearchPreFilters;
 
-                if (this.modalRef != undefined && this.modalRef != null)
+                if (this.modalRef)
                     this.modalRef.hide();
                 this._navigationService.navigate(PgConstants.constants.URLS.Header2.SearchResults, new StateParams(this.searchParamters));
             }
@@ -198,13 +196,9 @@ export class PracticeAreaSearchComponent implements OnInit {
 
         if (this.searchTerm == '' || selectedCount == 0) {
             if (this.searchTerm == '')
-                //alert("Enter search Term");
-                //this.openModal(this.modalContentAlert);
                 this.showAlert();
             else {
                 if (selectedCount == 0)
-                    //alert("Select atleast one practice area");
-                    //this.openModal(this.modalContentAlert);
                     this.showAlert();
             }
 
@@ -230,7 +224,7 @@ export class PracticeAreaSearchComponent implements OnInit {
     }
 
     onCloseAlert(): void {
-        if (this.modalRef != undefined && this.modalRef != null)
+        if (this.modalRef)
             this.modalRef.hide();
         if (this.searchTerm.trim().length == 0) {
             this.searchInput.nativeElement.focus();

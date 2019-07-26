@@ -1,7 +1,7 @@
 
-import { Component, OnInit, ViewEncapsulation, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { MatDialog, MatDialogModule, MatDialogConfig, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
 import { PgModalService } from '../../services/pg-modal/pg-modal.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { PracticeAreaService } from '../../services/practice-areas/practice-areas.service';
@@ -98,7 +98,7 @@ export class PgModalComponent implements OnInit {
             //"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"
             isValidForm = false;
         } else {
-            var matched = this.feedBackData.email.match(new RegExp(/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/));
+            let matched = this.feedBackData.email.match(new RegExp(/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/));
             if (!matched || !matched[0]) {
                 isValidForm = false;
             }
@@ -108,7 +108,7 @@ export class PgModalComponent implements OnInit {
             isValidForm = false;
             //"\s*[0+]\d{9,20}|[0+]\d{2,4}\s\d{3}\s\d{4}\s*"
         } else {
-            var matched = this.feedBackData.contactNumber.match(new RegExp(/\s*[0+]\d{9,20}|[0+]\d{2,4}\s\d{3}\s\d{4}\s*/));
+            let matched = this.feedBackData.contactNumber.match(new RegExp(/\s*[0+]\d{9,20}|[0+]\d{2,4}\s\d{3}\s\d{4}\s*/));
             if (!matched || !matched[0]) {
                 isValidForm = false;
             }

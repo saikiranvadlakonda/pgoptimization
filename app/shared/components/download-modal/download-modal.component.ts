@@ -34,7 +34,7 @@ export class DownloadModalComponent implements OnInit {
   }
 
   validate(): void {
-    if (this.fileTitle != undefined && this.fileTitle != null && this.fileTitle.trim() != '') {
+    if (this.fileTitle && this.fileTitle.trim() != '') {
       this.isValidFileTitle = true;
       let eventData: any = {
         fileTitle: this.fileTitle,

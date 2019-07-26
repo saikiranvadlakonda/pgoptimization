@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, TemplateRef, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, Inject } from '@angular/core';
 import { EmailModalService } from '../../services/email-modal/email-modal.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { MatDialog, MatDialogModule, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { EmailContent } from '../../../shared/models/email-modal/email-modal.model';
 import { DataStoreService } from '../../../shared/services/data-store/data-store.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -56,8 +56,6 @@ export class PgEmailModalComponent implements OnInit {
                         this.emailSuccessfulAlertRef = this.bsModalService.show(this.emailSuccessfulAlert, { backdrop: 'static', keyboard: false });
                     }
                 });
-            }
-            else {
             }
         });
     }

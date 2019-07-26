@@ -1,5 +1,4 @@
-﻿import { Component, Inject, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+﻿import { Component } from '@angular/core';
 
 @Component({
     selector: 'pg-spinner-component-specific',

@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NewItemEntity } from '../../../../shared/models/whats-new/new-group.model';
 import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { PgConstants } from '../../../../shared/constants/pg.constants';
-import { StateParams } from '../../../../shared/models/state-params/state-params.model';
 import { RenderContentRequest } from '../../../../shared/models/dashboard/content-request.model';
 import { ContentService } from '../../../../shared/services/content/content.service';
 import { FoldersService } from '../../../../shared/services/folders/folders.service';
@@ -291,25 +289,32 @@ export class FolderDetailComponent implements OnInit {
             }
             if (folderId) {
                 this._folderService.SearchInFolder({ searchText: this.fileFolderName, folderId: folderId }).subscribe((folderDetails: any) => {
-                    if (folderDetails && (folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid)) {
-                        this.searchResult = folderDetails;
-                        if (folderDetails.foldersList.length > 5) {
-                            this.showMoreFoldersBtn = true;
+                    if (folderDetails) {
+                        if ((folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid)) {
+                            this.searchResult = folderDetails;
+                            if (folderDetails.foldersList.length > 5) {
+                                this.showMoreFoldersBtn = true;
+                            } else {
+                                this.showMoreFoldersBtn = false;
+                            }
+                            this.folderError = (folderDetails.foldersList.length == 0) ? PgMessages.constants.folders.noFolders : undefined;
+                            this.fileError = (folderDetails.filesList.length == 0) ? PgMessages.constants.folders.noFiles : undefined;
                         } else {
+                            let searchResult = {
+                                foldersList: [],
+                                filesList: []
+                            };
+                            this.searchResult = searchResult;
+                            this.folderError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
+                            this.fileError = (Array.isArray(folderDetails.filesList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
                             this.showMoreFoldersBtn = false;
                         }
-                        this.folderError = (folderDetails.foldersList.length == 0) ? PgMessages.constants.folders.noFolders : undefined;
-                        this.fileError = (folderDetails.filesList.length == 0) ? PgMessages.constants.folders.noFiles : undefined;
                     } else {
-                        let searchResult = {
-                            foldersList: [],
-                            filesList: []
-                        };
-                        this.searchResult = searchResult;
-                        this.folderError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
-                        this.fileError = (Array.isArray(folderDetails.filesList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
+                        this.folderError = PgMessages.constants.folders.error;
+                        this.fileError = PgMessages.constants.folders.error;
                         this.showMoreFoldersBtn = false;
                     }
+                    
                 });
             }
         }

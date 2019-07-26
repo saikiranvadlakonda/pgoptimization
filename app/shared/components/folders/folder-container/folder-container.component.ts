@@ -86,7 +86,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
         this.viewModelSubscription = this._routerProxy.getViewModel().subscribe((viewModel) => {
             if (viewModel) {
                 if (viewModel.isFolderDetails) {
-                    this.selectedFolders = viewModel.selectedFoldersList ? viewModel.selectedFoldersList.slice(0, viewModel.selectedFoldersList.length-1) : [];
+                    this.selectedFolders = viewModel.selectedFoldersList ? viewModel.selectedFoldersList.slice(0, viewModel.selectedFoldersList.length - 1) : [];
                     this.onClientFolderClick(viewModel.folder);
                 } else {
                     this.getAllFolders();
@@ -111,24 +111,26 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
 
     getFiles(folder, id, idType) {
         this._foldersService.getSelectedFoldersFiles(id).subscribe((folderDetails: any) => {
-            if (folderDetails && (folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid)) {
-                if (idType == "onFolderClick") {
-                    folder['folders'] = JSON.parse(JSON.stringify(folderDetails.foldersList));
-                    folder['files'] = JSON.parse(JSON.stringify(folderDetails.filesList));
+            if (folderDetails) {
+                if ((folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid)) {
+                    if (idType == "onFolderClick") {
+                        folder['folders'] = JSON.parse(JSON.stringify(folderDetails.foldersList));
+                        folder['files'] = JSON.parse(JSON.stringify(folderDetails.filesList));
+                    } else {
+                        folder['folders'] = folderDetails.foldersList;
+                        folder['files'] = folderDetails.filesList;
+                    }
+                    this.folderDetailsError = (folderDetails.foldersList.length == 0) ? PgMessages.constants.folders.noFolders : undefined;
+                    this.folderDetailsFileError = (folderDetails.filesList.length == 0) ? PgMessages.constants.folders.noFiles : undefined;
                 } else {
-                    folder['folders'] = folderDetails.foldersList;
-                    folder['files'] = folderDetails.filesList;
-                }
-                this.folderDetailsError = (folderDetails.foldersList.length == 0) ? PgMessages.constants.folders.noFolders : undefined;
-                this.folderDetailsFileError = (folderDetails.filesList.length == 0) ? PgMessages.constants.folders.noFiles : undefined;
-            } else {
-                folder['folders'] = [];
-                folder['files'] = [];
-                this.folderDetailsError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
-                if (idType == "onFolderClick") {
-                    this.folderDetailsFileError = (Array.isArray(folderDetails.filesList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
-                } else {
-                    this.folderDetailsFileError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
+                    folder['folders'] = [];
+                    folder['files'] = [];
+                    this.folderDetailsError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
+                    if (idType == "onFolderClick") {
+                        this.folderDetailsFileError = (Array.isArray(folderDetails.filesList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
+                    } else {
+                        this.folderDetailsFileError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
+                    }
                 }
             }
 
@@ -193,7 +195,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
                     this.folderDetailsError = PgMessages.constants.folders.error;
                     this.folderDetailsFileError = PgMessages.constants.folders.error;
                 }
-                
+
             });
         }
         else {
@@ -265,7 +267,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
                         this.folderDetailsFileError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
                     }
                 }
-                
+
 
                 this.folderDetails = folderData;
                 this.folderDetailComponent.folderData.files = folderData.files;
@@ -395,7 +397,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
                 this.folderDetailsError = PgMessages.constants.folders.error;
                 this.folderDetailsFileError = PgMessages.constants.folders.error;
             }
-            
+
         });
     }
 
@@ -452,7 +454,6 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
 
     onFileDelete(deleteContent) {
         this._foldersService.DeleteFolderFile(deleteContent.deletedId).subscribe(isDeleted => {
-            var holdData = this.folderDetailComponent.folderDetails;
             if (isDeleted) {
                 if (this.folderDetailComponent.folderDetails.folderNameId) {
                     this._foldersService.getSelectedFoldersFiles(this.folderDetailComponent.folderDetails.folderNameId).subscribe(data => {
@@ -497,13 +498,11 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
     }
 
     navigateToThisFolder(folder) {
-        let folderIndex;
-        if (folder != undefined && folder.subscriberClientId != undefined && folder.subscriberClientId != null) {
+        if (folder && folder.subscriberClientId) {
             this.getNavigatedFolderFiles(folder, folder.subscriberClientId, true);
-        } else if (folder != undefined && folder.folderNameId != undefined && folder.subscriberClientId != null) {
+        } else if (folder && folder.folderNameId && folder.subscriberClientId) {
             this.getNavigatedFolderFiles(folder, folder.folderNameId, false);
-
-        } else if (folder != undefined && folder.folderNameId != undefined && folder.folderNameId != null) {
+        } else if (folder && folder.folderNameId) {
             this.getNavigatedFolderFiles(folder, folder.folderNameId, false);
         }
 
@@ -517,53 +516,59 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
     getNavigatedFolderFiles(folder, id, checkFlag) {
         let folderIndex;
         this._foldersService.getSelectedFoldersFiles(id).subscribe(folderDetails => {
-            if (folderDetails && (folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid)) {
-                if (checkFlag) {
-                    folder['folders'] = folderDetails.foldersList;
-                    folder['files'] = folderDetails.filesList;
-                    this.clientFolder = folder;
-                    folder.folderName = folder.clientDescription;
-                    this.selectedFolders = [folder];
-                    this.currentSelection = 'folderDetails';
-                    this.folderDetails = folder;
-                    this.selectedFolder = folder;
-                    if (!this.isSaveToFolder)
+            if (folderDetails) {
+                if ((folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid)) {
+                    if (checkFlag) {
+                        folder['folders'] = folderDetails.foldersList;
+                        folder['files'] = folderDetails.filesList;
+                        this.clientFolder = folder;
+                        folder.folderName = folder.clientDescription;
+                        this.selectedFolders = [folder];
+                        this.currentSelection = 'folderDetails';
+                        this.folderDetails = folder;
+                        this.selectedFolder = folder;
+                        if (!this.isSaveToFolder)
+                            this.selectedFoldersList.emit(this.selectedFolders);
+                    } else {
+                        folder['folders'] = JSON.parse(JSON.stringify(folderDetails.foldersList));
+                        folder['files'] = JSON.parse(JSON.stringify(folderDetails.filesList));
+                        folderIndex = this.selectedFolders.findIndex(folderDetail => folder.folderNameId === folderDetail.folderNameId);
+                        this.selectedFolders = this.selectedFolders.slice(0, folderIndex + 1);
+                        this.folderDetails = JSON.parse(JSON.stringify(folder));
+                        this.selectedFolder = folder;
                         this.selectedFoldersList.emit(this.selectedFolders);
-                } else {
-                    folder['folders'] = JSON.parse(JSON.stringify(folderDetails.foldersList));
-                    folder['files'] = JSON.parse(JSON.stringify(folderDetails.filesList));
-                    folderIndex = this.selectedFolders.findIndex(folderDetail => folder.folderNameId === folderDetail.folderNameId);
-                    this.selectedFolders = this.selectedFolders.slice(0, folderIndex + 1);
-                    this.folderDetails = JSON.parse(JSON.stringify(folder));
-                    this.selectedFolder = folder;
-                    this.selectedFoldersList.emit(this.selectedFolders);
-                }
+                    }
 
-                this.folderDetailsError = (folderDetails.foldersList.length == 0) ? PgMessages.constants.folders.noFolders : undefined;
-                this.folderDetailsFileError = (folderDetails.filesList.length == 0) ? PgMessages.constants.folders.noFiles : undefined;
+                    this.folderDetailsError = (folderDetails.foldersList.length == 0) ? PgMessages.constants.folders.noFolders : undefined;
+                    this.folderDetailsFileError = (folderDetails.filesList.length == 0) ? PgMessages.constants.folders.noFiles : undefined;
+                } else {
+                    folder['folders'] = [];
+                    folder['files'] = [];
+                    if (checkFlag) {
+                        this.clientFolder = folder;
+                        folder.folderName = folder.clientDescription;
+                        this.selectedFolders = [folder];
+                        this.currentSelection = 'folderDetails';
+                        this.folderDetails = folder;
+                        this.selectedFolder = folder;
+                        if (!this.isSaveToFolder)
+                            this.selectedFoldersList.emit(this.selectedFolders);
+                    } else {
+                        folderIndex = this.selectedFolders.findIndex(folderDetail => folder.folderNameId === folderDetail.folderNameId);
+                        this.selectedFolders = this.selectedFolders.slice(0, folderIndex + 1);
+                        this.folderDetails = JSON.parse(JSON.stringify(folder));
+                        this.selectedFolder = folder;
+                        this.selectedFoldersList.emit(this.selectedFolders);
+                    }
+
+                    this.folderDetailsError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
+                    this.folderDetailsFileError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
+                }
             } else {
-                folder['folders'] = [];
-                folder['files'] = [];
-                if (checkFlag) {
-                    this.clientFolder = folder;
-                    folder.folderName = folder.clientDescription;
-                    this.selectedFolders = [folder];
-                    this.currentSelection = 'folderDetails';
-                    this.folderDetails = folder;
-                    this.selectedFolder = folder;
-                    if (!this.isSaveToFolder)
-                        this.selectedFoldersList.emit(this.selectedFolders);
-                } else {
-                    folderIndex = this.selectedFolders.findIndex(folderDetail => folder.folderNameId === folderDetail.folderNameId);
-                    this.selectedFolders = this.selectedFolders.slice(0, folderIndex + 1);
-                    this.folderDetails = JSON.parse(JSON.stringify(folder));
-                    this.selectedFolder = folder;
-                    this.selectedFoldersList.emit(this.selectedFolders);
-                }
-
-                this.folderDetailsError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
-                this.folderDetailsFileError = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
+                this.folderDetailsError = PgMessages.constants.folders.error;
+                this.folderDetailsFileError = PgMessages.constants.folders.error;
             }
+            
         });
     }
 
@@ -581,7 +586,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
 
     private setUrlFromDomainId(data): void {
         var domainId = data.url;
-        var title = data.title ? data.title : "";        
+        var title = data.title ? data.title : "";
         var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
         var selectedPracticeArea = practiceAreas.find(nI => domainId.includes(nI.domainId));
         this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
@@ -590,7 +595,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
             let isPgSubPracticeAreaItem = this.isPgSubPracticeAreaItem("", domainId);
             data.domainPath = data.url;
             if (this.isPgDomainPath(domainId) || isPgSubPracticeAreaItem) {
-                var topic = selectedPracticeArea.subTocItem.find(nI => domainId.includes(nI.domainId));
+                let topic = selectedPracticeArea.subTocItem.find(nI => domainId.includes(nI.domainId));
                 if (!isPgSubPracticeAreaItem && topic == undefined) {
                     data.disablePermalink = true;
                     this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
@@ -602,18 +607,18 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
                 }
             } else {
                 if (domainId.split('/').length === 5) {
-                    var topic = selectedPracticeArea.subTocItem.find(nI => domainId.split('/')[3] == nI.domainId);
-                    var subtopic = topic.subTocItem.find(nI => domainId.split('/')[domainId.split('/').length - 1] == nI.domainId);
+                    let topic = selectedPracticeArea.subTocItem.find(nI => domainId.split('/')[3] == nI.domainId);
+                    let subtopic = topic.subTocItem.find(nI => domainId.split('/')[domainId.split('/').length - 1] == nI.domainId);
                     subtopic.redirectedFrom = "folder-detail";
-                    var input = { "subTopicDomainPath": subtopic.domainPath, "title": selectedPracticeArea.title + " > " + subtopic.title, "practiceArea": subtopic.title, "rootArea": selectedPracticeArea.title, "subTopic": subtopic };
+                    let input = { "subTopicDomainPath": subtopic.domainPath, "title": selectedPracticeArea.title + " > " + subtopic.title, "practiceArea": subtopic.title, "rootArea": selectedPracticeArea.title, "subTopic": subtopic };
                     this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
                 }
                 else if ((domainId.split('/').length > 5)) {
                     if (domainId.indexOf('isMultiView') > -1) {
-                        var inputNote = { "title": null, "domainPath": domainId.split('|')[0] };
+                        let inputNote = { "title": null, "domainPath": domainId.split('|')[0] };
                         this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNoteDetail, new StateParams(inputNote));
                     }
-                    else {                        
+                    else {
                         var topic = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => domainId.split('/')[3] == nI.domainId) : undefined;
 
                         if (topic == undefined) {
@@ -627,7 +632,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
                             }
                             this._navigationService.navigate(PgConstants.constants.URLS.ContentView.ContentView);
                         } else {
-                            var subtopic = topic.subTocItem.find(nI => domainId.split('/')[4] == nI.domainId);
+                            let subtopic = topic.subTocItem.find(nI => domainId.split('/')[4] == nI.domainId);
                             var domainPathLength = domainId.split('/').length;
                             var guidancedetail = {
                                 "domainPath": data.url,
@@ -644,7 +649,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
                             if (selectedPracticeArea.domainId == 'b2ioc' || selectedPracticeArea.domainId == 'nor6d') {
                                 subtopic = subtopic.subTocItem.find(nI => domainId.split('/')[5] == nI.domainId);
                                 subtopic.redirectedFrom = "folder-detail";
-                                var input = { "subTopicDomainPath": subtopic.domainPath, "title": selectedPracticeArea.title + " > " + subtopic.title, "practiceArea": subtopic.title, rootArea: selectedPracticeArea.title, "subTopic": subtopic };
+                                let input = { "subTopicDomainPath": subtopic.domainPath, "title": selectedPracticeArea.title + " > " + subtopic.title, "practiceArea": subtopic.title, rootArea: selectedPracticeArea.title, "subTopic": subtopic };
                                 this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
                             } else {
                                 this.practiceArea = subtopic.title;
@@ -672,7 +677,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
     getGNdetailData(viewModel, guidanceDetail) {
         this._guidanceNoteService.getHomeContentForSubTopic(viewModel).subscribe(data => {
             var subTopicData = data;
-            var guidances = [];            
+            var guidances = [];
 
             guidances = subTopicData.result.guidance;
             this._dataStoreService.setSessionStorageItem("Guidances", guidances);
@@ -684,7 +689,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
             }
             if (subTopicData.result["other resources"] != null) {
                 this.getEssentials(subTopicData.result["other resources"], "Other Resources");
-            }            
+            }
             guidanceDetail["guidances"] = guidances;
             guidanceDetail.essentials = this.essentials;
             guidanceDetail.redirectedFrom = "folder-detail";
@@ -707,7 +712,7 @@ export class FolderContainerComponent implements OnInit, OnDestroy {
 
             });
         })
-    } 
+    }
 
     getContent(dpath, title) {
         this.rendrContentRequest.dpath = dpath;

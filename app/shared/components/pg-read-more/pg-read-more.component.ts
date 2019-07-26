@@ -16,7 +16,7 @@ export class PgReadMoreComponent implements OnInit {
   public limit: number;
 
   constructor() {
-      if (this.limitCount != null && this.limitCount != undefined && this.limitCount != "")
+      if (this.limitCount && this.limitCount != "")
           this.limit = parseInt(this.limitCount);
       else
           this.limit = 300;
@@ -39,7 +39,7 @@ export class PgReadMoreComponent implements OnInit {
   }
 
   ngOnInit() {
-      if (this.limitCount != null && this.limitCount != undefined && this.limitCount != "")
+      if (this.limitCount && this.limitCount != "")
           this.limit = parseInt(this.limitCount);
       else
           this.limit = 300;

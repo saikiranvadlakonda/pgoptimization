@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/core';
-import { RouterModule, RouterLink } from '@angular/router';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal/modal.module';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { DataStoreService } from '../../services/data-store/data-store.service';
 import { PgConstants } from '../../constants/pg.constants';
-import { NewGroupEntity, NewItemEntity } from '../../../shared/models/whats-new/new-group.model';
+import { NewItemEntity } from '../../../shared/models/whats-new/new-group.model';
 import { TocItemViewModel } from '../../models/practiceAreas';
 import { WhatsNewService } from '../../services/whats-new/whats-new.service';
 import { StateParams } from '../../../shared/models/state-params/state-params.model';

@@ -1,4 +1,4 @@
-﻿import { Component, Inject, OnDestroy, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+﻿import { Component, OnDestroy, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { SpinnerService } from './pg-spinner.service';
 

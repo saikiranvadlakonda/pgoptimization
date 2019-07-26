@@ -1,8 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { DataStoreService } from '../../services/data-store/data-store.service';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';

@@ -79,13 +79,16 @@ export class FoldersListComponent implements OnInit {
     }
 
     addNewClient(folder) {
-        if (folder && folder.clientDescription) {
-            this.isEnableNewFolder = true;
-            folder.isValid = null;
-            this.addNewClientFolder.emit(folder);
-        } else {
-            folder.isValid = false;
+        if (folder) {
+            if (folder && folder.clientDescription) {
+                this.isEnableNewFolder = true;
+                folder.isValid = null;
+                this.addNewClientFolder.emit(folder);
+            } else {
+                folder.isValid = false;
+            }
         }
+        
     }  
 
     enableEdit(folder) {
@@ -165,26 +168,33 @@ export class FoldersListComponent implements OnInit {
     searchForFilesAndFolders() {
         if (this.fileFolderName != "" && this.fileFolderName.length >= 2) {
             this._folderService.SearchAllFolder({ searchText: this.fileFolderName, folderId: 0 }).subscribe((folderDetails: any) => {
-                if (folderDetails && folderDetails.isValid || (folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid) || (folderDetails.rootFolders.length > 0 && folderDetails.rootFolders[0].isValid)) {
-                    folderDetails.foldersList = folderDetails.foldersList.concat(folderDetails.rootFolders);
-                    this.searchResult = folderDetails;
-                    if (folderDetails.foldersList.length > 5) {
-                        this.showMoreFoldersBtn = true;
+                if (folderDetails) {
+                    if (folderDetails.isValid || (folderDetails.foldersList.length > 0 && folderDetails.foldersList[0].isValid) || (folderDetails.filesList.length > 0 && folderDetails.filesList[0].isValid) || (folderDetails.rootFolders.length > 0 && folderDetails.rootFolders[0].isValid)) {
+                        folderDetails.foldersList = folderDetails.foldersList.concat(folderDetails.rootFolders);
+                        this.searchResult = folderDetails;
+                        if (folderDetails.foldersList.length > 5) {
+                            this.showMoreFoldersBtn = true;
+                        } else {
+                            this.showMoreFoldersBtn = false;
+                        }
+                        this.error = (folderDetails.foldersList.length == 0) ? PgMessages.constants.folders.noFolders : undefined;
+                        this.fileError = (folderDetails.filesList.length == 0) ? PgMessages.constants.folders.noFiles : undefined;
                     } else {
+                        let searchResult = {
+                            foldersList: [],
+                            filesList: []
+                        };
+                        this.searchResult = searchResult;
+                        this.error = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
+                        this.fileError = (Array.isArray(folderDetails.filesList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
                         this.showMoreFoldersBtn = false;
                     }
-                    this.error = (folderDetails.foldersList.length == 0) ? PgMessages.constants.folders.noFolders : undefined;
-                    this.fileError = (folderDetails.filesList.length == 0) ? PgMessages.constants.folders.noFiles : undefined;
                 } else {
-                    let searchResult = {
-                        foldersList: [],
-                        filesList: []
-                    };
-                    this.searchResult = searchResult;
-                    this.error = (Array.isArray(folderDetails.foldersList)) ? PgMessages.constants.folders.noFolders : PgMessages.constants.folders.error;
-                    this.fileError = (Array.isArray(folderDetails.filesList)) ? PgMessages.constants.folders.noFiles : PgMessages.constants.folders.error;
+                    this.error = PgMessages.constants.folders.error;
+                    this.fileError = PgMessages.constants.folders.error;
                     this.showMoreFoldersBtn = false;
                 }
+                
             });
         } 
     }

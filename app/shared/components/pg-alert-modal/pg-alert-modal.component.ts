@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 @Component({
