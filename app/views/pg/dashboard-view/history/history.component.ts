@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { HistoryItem } from '../../../../shared/models/history/history-item.model';
-import { distinct } from 'rxjs/operators'
+//import { distinct } from 'rxjs/operators'
 import { HistoryService } from '../../../../shared/services/history/history.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
-import { PgConstants } from '../../../../shared/constants/pg.constants';
-import { StateParams } from '../../../../shared/models/state-params/state-params.model';
+//import { PgConstants } from '../../../../shared/constants/pg.constants';
+//import { StateParams } from '../../../../shared/models/state-params/state-params.model';
 import { ContentService } from '../../../../shared/services/content/content.service';
 import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
 

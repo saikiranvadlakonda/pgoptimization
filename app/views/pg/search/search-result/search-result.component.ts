@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, Optional } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { SearchService } from '../../../../shared/services/search/search-service';
 import { RouterProxy } from '../../../../store/router/proxy/router.proxy';
 import { SearchModel } from '../../../../shared/models/search';
@@ -86,7 +86,7 @@ export class SearchResultComponent implements OnInit, OnDestroy {
 
                 }
 
-                (window.document.getElementById("searchTextInput") as HTMLInputElement).value = state.viewModel.SearchTerm;
+                (window.document.getElementById("searchTextInput") as HTMLInputElement).value = state.viewModel ? state.viewModel.SearchTerm : "";
                 this.searchParams = state.viewModel;
                 this.getSeachResults(state.viewModel);
                 this.scrollTop();

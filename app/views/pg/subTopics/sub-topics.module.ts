@@ -6,7 +6,7 @@ import { SubTopicComponent } from './sub-topic/sub-topic.component';
 import { CategoryComponent } from './category/category.component';
 import { WhatsNewComponent } from './whats-new/whats-new.component';
 import { SubTopicService } from '../../../shared/services/sub-topic/sub-topics.service';
-import { MatTooltip, MatTooltipModule } from '@angular/material';
+import { MatTooltipModule } from '@angular/material';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 

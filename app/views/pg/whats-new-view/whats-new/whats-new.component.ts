@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { NewGroupEntity, NewItemEntity } from '../../../../shared/models/whats-new/new-group.model';
+import { NewItemEntity } from '../../../../shared/models/whats-new/new-group.model';
 import { TocItemViewModel } from '../../../../shared/models/practiceAreas/tocItem.model';
 import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
 import { WhatsNewService } from '../../../../shared/services/whats-new/whats-new.service';
-import { RenderContentRequest } from '../../../../shared/models/dashboard/content-request.model';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { PgConstants } from '../../../../shared/constants/pg.constants';
 import { PgModalService } from '../../../../shared/services/pg-modal/pg-modal.service';
 import { Subscription } from 'rxjs/Subscription';
 import { RouterProxy } from '../../../../store/router/proxy/router.proxy';
-import { StateParams } from '../../../../shared/models/state-params/state-params.model';
-import { Observable } from 'rxjs/Observable';
 import { PgMessages } from '../../../../shared/constants/messages';
 import { PagerService } from '../../../../shared/services/pager/pager.service';
 
@@ -46,7 +43,7 @@ export class WhatsNewComponent implements OnInit {
         this.practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
         const stateSubscription = this._routerProxy.getViewModel().subscribe((viewModel) => {
             if (viewModel) {
-                if (viewModel.paTitle && viewModel.paTitle !== undefined) {
+                if (viewModel.paTitle) {
                     if (!this.practiceArea) {
                         this.practiceAreas.forEach(pa => {
                             if (pa.title == viewModel.paTitle) {
@@ -78,7 +75,7 @@ export class WhatsNewComponent implements OnInit {
                 if (whatsNew && whatsNew.length > 0) {
                     if (whatsNew[0].isValid) {
                         this.newItems = [];
-                        for (var i = this.pageIndex; i < this.pageSize && whatsNew != undefined && whatsNew.length > 0; i++) {
+                        for (var i = this.pageIndex; i < this.pageSize; i++) {
                             if (whatsNew[i] !== undefined) {
                                 this.newItems.push(whatsNew[i]);
                             }
@@ -241,7 +238,7 @@ export class WhatsNewComponent implements OnInit {
                     if (whatsNew[0].isValid) {
                         this.newItems = [];
                         this._dataStoreService.setSessionStorageItem("WhatsNews", whatsNew);
-                        for (var i = this.pageIndex; i < this.pageSize && whatsNew != undefined && whatsNew.length > 0; i++) {
+                        for (var i = this.pageIndex; i < this.pageSize; i++) {
                             this.newItems.push(whatsNew[i]);
                         }
                         this.newItems = [];
@@ -274,7 +271,7 @@ export class WhatsNewComponent implements OnInit {
                 if (whatsNew[0].isValid) {
                     this.newItems = [];
                     this._dataStoreService.setSessionStorageItem("WhatsNews", whatsNew);
-                    for (var i = this.pageIndex; i < this.pageSize && whatsNew != undefined && whatsNew.length > 0; i++) {
+                    for (var i = this.pageIndex; i < this.pageSize; i++) {
                         if (whatsNew[i] !== undefined) {
                             this.newItems.push(whatsNew[i]);
                         }

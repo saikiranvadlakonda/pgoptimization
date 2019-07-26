@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { RenderContentRequest } from '../../../../shared/models/dashboard/content-request.model';
 import { ContentService } from '../../../../shared/services/content/content.service';
 import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
@@ -134,31 +134,33 @@ export class ContentComponent implements OnInit {
 
     back() {
         let previous = this._navigationService.getPreviousRoute();
-        if (previous && previous != null && previous.previousRoute && (previous.previousRoute.startsWith('/permalink-view')
-            || previous.previousRoute.startsWith('/guidance-note/guidance-note-detail')
-            || previous.previousRoute.startsWith('/login'))
-        ) {
-            this.isPDF = false;
-            var newItem;
+        if (previous) {
+            if (previous.previousRoute && (previous.previousRoute.startsWith('/permalink-view')
+                || previous.previousRoute.startsWith('/guidance-note/guidance-note-detail')
+                || previous.previousRoute.startsWith('/login'))
+            ) {
+                this.isPDF = false;
+                var newItem;
 
-            if (this.previousNewItems.length > 1) {
-                newItem = this.previousNewItems[this.previousNewItems.length - 1];
+                if (this.previousNewItems.length > 1) {
+                    newItem = this.previousNewItems[this.previousNewItems.length - 1];
+                    this.previousNewItems = this.previousNewItems.slice(this.previousNewItems.length - 1);
 
-                this.previousNewItems = this.previousNewItems.slice(this.previousNewItems.length - 1);
-
+                } else {
+                    newItem = this.previousNewItem;
+                    this.previousNewItems = [];
+                }
+                this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
+                this._dataStoreService.setSessionStorageItem("selectedNewItem", newItem);
+                this.newItem = newItem;
+                this.getContent();
             } else {
-                newItem = this.previousNewItem;
-                this.previousNewItems = [];
-            }
-            this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
-            this._dataStoreService.setSessionStorageItem("selectedNewItem", newItem);
-            this.newItem = newItem;
-            this.getContent();
-        } else {
-            if (previous.previousRoute != undefined) {
-                this._navigationService.navigate(previous.previousRoute, this._navigationService.getStateParams(previous.previousRoute));
+                if (previous.previousRoute != undefined) {
+                    this._navigationService.navigate(previous.previousRoute, this._navigationService.getStateParams(previous.previousRoute));
+                }
             }
         }
+        
     }
 
     openSaveToFolderModal() {
@@ -214,13 +216,13 @@ export class ContentComponent implements OnInit {
             if (selectedPracticeArea.type == 'PA-MD') {
                 var allPAs = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
                 var paModule = allPAs.find(item => dpath.split('/')[3] == item.domainId);
-                var topic = (paModule !== undefined) ? paModule.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId) : undefined;
-                var subtopic = (topic !== undefined) ? topic.subTocItem.find(nI => dpath.split('/')[5] == nI.domainId) : undefined;
+                let topic = (paModule !== undefined) ? paModule.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId) : undefined;
+                let subtopic = (topic !== undefined) ? topic.subTocItem.find(nI => dpath.split('/')[5] == nI.domainId) : undefined;
                 this.rootArea = (topic !== undefined) ? paModule.title : '';
                 this.practiceArea = (subtopic !== undefined) ? subtopic.title : '';
             } else {
-                var topic = selectedPracticeArea.subTocItem.find(item => dpath.split('/')[3] == item.domainPath.split('/')[3]);
-                var subtopic = (topic !== undefined) ? topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId) : undefined;
+                let topic = selectedPracticeArea.subTocItem.find(item => dpath.split('/')[3] == item.domainPath.split('/')[3]);
+                let subtopic = (topic !== undefined) ? topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId) : undefined;
                 this.rootArea = (topic !== undefined) ? selectedPracticeArea.title : '';
                 this.practiceArea = (subtopic !== undefined) ? subtopic.title : '';
             }
@@ -315,11 +317,11 @@ export class ContentComponent implements OnInit {
                                 var allPAs = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
                                 var spa = allPAs.find(nI => domainPath.split('/')[3] == nI.domainId);
                                 var paTitle = spa.title;
-                                var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => domainPath.split('/')[3] == nI.domainId) : {};
+                                let paModule = selectedPracticeArea.subTocItem.find(nI => domainPath.split('/')[3] == nI.domainId);
                                 topic = paModule.subTocItem.find(nI => domainPath.split('/')[4] == nI.domainId);
                                 subtopic = topic.subTocItem.find(nI => domainPath.split('/')[5] == nI.domainId);
                                 
-                                var guidancedetail = this.getGuidanceDetailsObj(dpath,domainPathLength,data,subtopic,paTitle);                               
+                                guidancedetail = this.getGuidanceDetailsObj(dpath,domainPathLength,data,subtopic,paTitle);                               
                                 this.getGNdetailData(inputdata, guidancedetail);
                                 this.setData(dpath,false);
                             } else {                                
@@ -339,7 +341,7 @@ export class ContentComponent implements OnInit {
                     this.openLContent(domainPath);
                     break;
                 case PgConstants.constants.ContentPageType.SubTopic:
-                    this.openLContent(domainPath);
+                    this.openLContent(domainPath); break;
                 case PgConstants.constants.ContentPageType.Topic:
                     this.openLContent(domainPath);
                     break;

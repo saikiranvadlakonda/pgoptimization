@@ -8,7 +8,7 @@ import { PracticeAreaService } from '../../../../shared/services/practice-areas/
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal/modal.module';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { SubscriberFolderEntity, FolderEntity } from '../../../../shared/models/folder';
+import { SubscriberFolderEntity } from '../../../../shared/models/folder';
 import { ErrorContent } from '../../../../shared/models/error-content/error-content.model';
 import { ErrorModalService } from '../../../../shared/services/error-modal/error-modal.service';
 import { PgMessages } from '../../../../shared/constants/messages';

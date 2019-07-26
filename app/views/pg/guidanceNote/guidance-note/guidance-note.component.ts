@@ -1,15 +1,13 @@
-import { Component, OnInit, OnDestroy, ViewChild, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { RouterProxy } from '../../../../store/router/proxy/router.proxy';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { PgConstants } from '../../../../shared/constants/pg.constants';
 import { StateParams } from '../../../../shared/models/state-params/state-params.model';
-import { Observable } from 'rxjs/Observable';
 import { GuidanceNoteService } from '../../../../shared/services/guidance-note/guidance-note.service';
 import { ContentService } from '../../../../shared/services/content/content.service';
-import { EssentialsComponent } from '../../../../shared/components/essentials/essentials.component';
 import { RenderContentRequest } from '../../../../shared/models/dashboard/content-request.model';
-import { BsModalService, ModalDirective } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { FoldersService } from '../../../../shared/services/folders/folders.service';
 import { CreateFolerViewModel } from '../../../../shared/models/Repository/Create.model';
@@ -24,6 +22,7 @@ import { PagerService } from '../../../../shared/services/pager/pager.service';
 import { SaveToFolderModalComponent } from '../../../../shared/components/save-to-folder-modal/save-to-folder-modal.component';
 import { DownloadModalComponent } from '../../../../shared/components/download-modal/download-modal.component';
 import { PermalinkModalComponent } from '../../../../shared/components/permalink-modal/permalink-modal.component';
+import { PgAlertModalComponent } from '../../../../shared/components/pg-alert-modal/pg-alert-modal.component';
 
 @Component({
     selector: 'app-guidance-note',
@@ -34,6 +33,7 @@ export class GuidanceNoteComponent implements OnInit {
     @ViewChild(SaveToFolderModalComponent) saveToFolderModalComponent: SaveToFolderModalComponent;
     @ViewChild(DownloadModalComponent) downloadModalComponent: DownloadModalComponent;
     @ViewChild(PermalinkModalComponent) permalinkModalComponent: PermalinkModalComponent;
+    @ViewChild(PgAlertModalComponent) pgAlertModalComponent: PgAlertModalComponent;
 
     private subscriptions: Subscription = new Subscription();
     pgConstants = PgConstants.constants;
@@ -83,7 +83,7 @@ export class GuidanceNoteComponent implements OnInit {
 
                 viewModel = viewModel.subTopic ? viewModel : this._dataStoreService.getSessionStorageItem("guidanceNote");
                 this.viewModel = viewModel;
-                this.domainId = (this.viewModel.subTopic && this.viewModel.subTopic != null) ? this.viewModel.subTopic.domainId : this.viewModel.subTopicDomainPath;
+                this.domainId = (this.viewModel.subTopic) ? this.viewModel.subTopic.domainId : this.viewModel.subTopicDomainPath;
                 this.paTitle = viewModel.subTopic.title;
                 if (viewModel.subTopic.redirectedFrom && viewModel.subTopic.redirectedFrom == "folder-detail") {
                     this.redirectedFrom = viewModel.subTopic.redirectedFrom;
@@ -95,7 +95,7 @@ export class GuidanceNoteComponent implements OnInit {
                             this.rootArea = this.viewModel.rootArea;
 
                             if (this.subTopic["documentPathTitles"].length > 0) {
-                                this.rootArea = this.viewModel ? this.viewModel.rootArea : this.subTopic["documentPathTitles"][1].title;
+                                this.rootArea = this.viewModel.rootArea ? this.viewModel.rootArea : this.subTopic["documentPathTitles"][1].title;
                                 this.subTopicTitle = this.subTopic["documentPathTitles"][(this.subTopic["documentPathTitles"].length - 2)].title;
                                 this.paTitle = this.subTopicTitle;
                             } else {
@@ -218,7 +218,15 @@ export class GuidanceNoteComponent implements OnInit {
                     this._contentService.downloadattachment(content.fileContent, content.fileName, content.mimeType);
                 }
             } else {
-
+                if (!this._errorModalService.isModalOpened()) {
+                    let modalData: ErrorContent = {
+                        message: PgMessages.constants.essentials.downloadError,
+                        showOk: true,
+                        showCancel: false,
+                        callBack: undefined
+                    };
+                    this._errorModalService.open(modalData);
+                }
             }
         });
 
@@ -244,7 +252,7 @@ export class GuidanceNoteComponent implements OnInit {
             this.navigateToGuidanceDetails(libContent);
         }
         else {
-            if (dpath != null && dpath != "" && dpath != undefined && pgsdpath == undefined && dpath.indexOf("kilc") == -1) {
+            if (dpath && dpath != "" && pgsdpath == undefined && dpath.indexOf("kilc") == -1) {
                 var subPath = dpath.substring(0, dpath.lastIndexOf('/'));
                 var ParentPath = subPath.substring(subPath.lastIndexOf('/') + 1);
                 pathParam = ParentPath.split("#")[0];
@@ -403,39 +411,34 @@ export class GuidanceNoteComponent implements OnInit {
 
     breadCrumbNavigation(routes) {
         this.backButton = true;
-
+        var practiceAreas; var selectedPracticeArea;
         if (this.redirectedFrom == "folder-detail" || !routes) {
             var previousRoute = this._navigationService.getPreviousRoute();
-            if (previousRoute && previousRoute.previousRoute =="/folders/my-folders") {
+            if (previousRoute && previousRoute.previousRoute == "/folders/my-folders") {
                 let folder = this._dataStoreService.getSessionStorageItem("selectedFolder");
                 this._navigationService.navigate(PgConstants.constants.URLS.Folders.MyFolders, new StateParams(folder));
 
-            }else if (this.rootArea.startsWith('Tax -') || this.rootArea.startsWith('Real Estate -')) {
-                var practiceAreas = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
-                var selectedPracticeArea = practiceAreas.find(nI => this.rootArea == nI.title);
+            } else if (this.rootArea.startsWith('Tax -') || this.rootArea.startsWith('Real Estate -')) {
+                practiceAreas = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
+                selectedPracticeArea = practiceAreas.find(nI => this.rootArea == nI.title);
                 this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
                 this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(selectedPracticeArea));
 
             } else {
-                var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
-                var selectedPracticeArea = practiceAreas.find(nI => this.rootArea == nI.title);
+                practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
+                selectedPracticeArea = practiceAreas.find(nI => this.rootArea == nI.title);
                 this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
                 this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(selectedPracticeArea));
             }
 
-        } else {
-            if (this._navigationService.isNavigationSubTopic) {
-                var selectedPA = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
-                if (selectedPA == undefined) {
-                    var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
-                    var selectedPracticeArea = practiceAreas.find(nI => this.rootArea == nI.title);
-                    this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
-                }
-                this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(this._dataStoreService.getSessionStorageItem("SelectedPracticeArea")));
+        } else if (this._navigationService.isNavigationSubTopic) {
+            let selectedPA = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
+            if (selectedPA == undefined) {
+                practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
+                selectedPracticeArea = practiceAreas.find(nI => this.rootArea == nI.title);
+                this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
             }
-            else {
-
-            }
+            this._navigationService.navigate(PgConstants.constants.URLS.SubTopics.SubTopics, new StateParams(this._dataStoreService.getSessionStorageItem("SelectedPracticeArea")));
         }
     }
 

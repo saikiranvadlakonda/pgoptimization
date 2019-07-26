@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { EssentialService } from '../../../../shared/services/essential/essential-service';
 import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
-import { TocItemViewModel } from '../../../../shared/models/practiceAreas';
-import { Essential, Topic, ContentDomainEntity, EssentialFilters } from '../../../../shared/models/essential';
+import { Essential, Topic, ContentDomainEntity } from '../../../../shared/models/essential';
 import { ContentService } from '../../../../shared/services/content/content.service';
 import { RenderContentRequest } from '../../../../shared/models/dashboard/content-request.model';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -10,7 +9,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { FilterByPropertyPipe } from '../../../../shared/pipes/filter-by-property/filter-by-property.pipe';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { PgConstants } from '../../../../shared/constants/pg.constants';
-import { StateParams } from '../../../../shared/models/state-params/state-params.model';
 import { SafePipe } from '../../../../shared/pipes/safe/safe.pipe';
 import { PgMessages } from '../../../../shared/constants/messages';
 import { ErrorContent } from '../../../../shared/models/error-content/error-content.model';
@@ -146,7 +144,7 @@ export class EssentialComponent implements OnInit {
     numberOfPages(): number {
         let filteredEssentials = this._filterByPropertyPipe.transform(this.essentialsList, this.searchEssential, 'title');
         this.filteredEssentials = filteredEssentials;
-        if (this.searchEssential != undefined && this.searchEssential != null && this.searchEssential.trim().length == 0) {
+        if (this.searchEssential && this.searchEssential.trim().length == 0) {
             let total = 0;
             this.documentType.forEach(doc => {
                 this.topics.forEach(topic => {
@@ -397,7 +395,7 @@ export class EssentialComponent implements OnInit {
     }
 
     validate() {
-        if (this.checkedEssential.length > 0 && this.fileTitle != undefined && this.fileTitle != null && this.fileTitle.trim() != '') {
+        if (this.checkedEssential.length > 0 && this.fileTitle  && this.fileTitle.trim() != '') {
             this.isValidFileTitle = true;
             var fileData = new RenderContentRequest();
             fileData.downloadContent = "true";

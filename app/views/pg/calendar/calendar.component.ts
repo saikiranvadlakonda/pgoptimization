@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, OnInit, OnChanges } from '@angular/core';
-import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
+import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, OnInit } from '@angular/core';
+//import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
 import { Subject } from 'rxjs';
 import { CalendarService } from '../../../shared/services/calendar/calendar.service';
-import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent } from 'angular-calendar';
+import { CalendarEvent } from 'angular-calendar';
 import { PgConstants } from '../../../shared/constants/pg.constants';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal/modal.module';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -26,12 +26,12 @@ export class CalendarComponent implements OnInit {
     @ViewChild('modalContent') modalContent: TemplateRef<any>
     view: string = 'month';
     viewDate: Date = new Date();
-    events: CalendarEvent[] = [];
-    eventsWithNoTitle: CalendarEvent[] = [];
+    events: CalendarEvent<any, any>[] = [];
+    eventsWithNoTitle: CalendarEvent<any, any>[] = [];
     refresh: Subject<any> = new Subject();
     activeDayIsOpen: boolean = true;
     modalData: {
-        event: CalendarEvent;
+        event: CalendarEvent<any, any>;
     };
     modalRef: BsModalRef;
 
@@ -112,7 +112,7 @@ export class CalendarComponent implements OnInit {
     isStartDayOfEvent(day: any, event: any): boolean {
         let currentDate: Date = new Date(new Date(day.date).toLocaleDateString('en-US'));
         let eventStartDate: Date = new Date(new Date(event.start).toLocaleDateString('en-US'));
-        let eventEndDate: Date = new Date(new Date(event.end).toLocaleDateString('en-US'));
+        //let eventEndDate: Date = new Date(new Date(event.end).toLocaleDateString('en-US'));
         if (eventStartDate.getTime() == currentDate.getTime() || day.isWeekend) {
             return true;
         }
@@ -136,7 +136,7 @@ export class CalendarComponent implements OnInit {
         return 0;
     }
 
-    handleEvent(event: CalendarEvent, template: TemplateRef<any>): void {
+    handleEvent(event: CalendarEvent<any, any>, template: TemplateRef<any>): void {
         this.modalData = { event };
         this.openModal(template);
     }

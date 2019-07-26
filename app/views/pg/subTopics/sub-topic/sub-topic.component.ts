@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { SubTopicService } from '../../../../shared/services/sub-topic/sub-topics.service';
 import { TocItemViewModel } from '../../../../shared/models/practiceAreas';
 import { Subscription } from 'rxjs/Subscription';
 import { RouterProxy } from '../../../../store/router/proxy/router.proxy';
@@ -16,7 +15,6 @@ import { WhatsNewService } from '../../../../shared/services/whats-new/whats-new
 import { EssentialService } from '../../../../shared/services/essential/essential-service';
 import { HistoryService } from '../../../../shared/services/history/history.service';
 import { PracticeAreaService } from '../../../../shared/services/practice-areas/practice-areas.service';
-import { PgMessages } from '../../../../shared/constants/messages';
 import { PagerService } from '../../../../shared/services/pager/pager.service';
 
 @Component({
@@ -61,7 +59,7 @@ export class SubTopicComponent implements OnInit, OnDestroy {
     ngOnInit() {
         const stateSubscription = this._routerProxy.getViewModel().subscribe((viewModel) => {
             if (viewModel) {
-                if (viewModel.subTocItem == undefined || viewModel.subTocItem == null) {
+                if (viewModel.subTocItem) {
                     let prev = this._navigationService.getStateParams("/sub-topics");
                     viewModel = prev.viewModel;
                 }
@@ -239,7 +237,7 @@ export class SubTopicComponent implements OnInit, OnDestroy {
 
     getRecentlyView() {
         this._historyService.getHistoryItemsByCount(5).subscribe(data => {
-            if (data && data != undefined && data != null && data.length > 0 && data[0].isValid) {
+            if (data && data.length > 0 && data[0].isValid) {
                 data.forEach(hItem => {
                     if (hItem.lmtTitlePath) {
                         let titlePath = hItem.lmtTitlePath;
@@ -282,7 +280,6 @@ export class SubTopicComponent implements OnInit, OnDestroy {
         } else if (topic.type == "ST") {
             this.catSubTopics = [...this.catSubTopics, topic];
             return topic;
-        } else {
-        }
+        } 
     }
 }

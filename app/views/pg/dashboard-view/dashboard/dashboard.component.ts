@@ -43,8 +43,8 @@ export class DashboardComponent implements OnInit {
     tabsMenu = ['Browse Practice Areas', 'History', 'Calendar'];
     activeTab: number = 0;
     viewDate: Date = new Date();
-    events: CalendarEvent[] = [];
-    calenderEvents: CalendarEvent[] = [];
+    events: CalendarEvent<any, any>[] = [];
+    calenderEvents: CalendarEvent<any, any>[] = [];
     folderInfo: SubscriberFolderEntity[];
     whatsNew: NewGroupEntity[];
     newItems: NewItemEntity[];
@@ -306,7 +306,6 @@ export class DashboardComponent implements OnInit {
     isStartDayOfEvent(day: any, event: any): boolean {
         let currentDate: Date = new Date(new Date(day.date).toLocaleDateString('en-US'));
         let eventStartDate: Date = new Date(new Date(event.start).toLocaleDateString('en-US'));
-        let eventEndDate: Date = new Date(new Date(event.end).toLocaleDateString('en-US'));
         if (eventStartDate.getTime() == currentDate.getTime() || day.isWeekend) {
             return true;
         }

@@ -12,38 +12,9 @@ import { FoldersModule } from '../../pg/folders/folders.module';
 
 //angular material
 import {
-    MatButtonModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatExpansionModule,
-    MatAutocompleteModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatChipsModule,
-    MatDatepickerModule,
-    MatDialogModule,
-    MatGridListModule,
-    MatListModule,
     MatMenuModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
     MatRadioModule,
-    MatRippleModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatSnackBarModule,
-    MatSortModule,
-    MatTableModule,
-    MatTabsModule,
-    MatTooltipModule,
-    MatStepperModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatToolbarModule
+    MatTooltipModule
 } from '@angular/material';
 import { EssentialFiltersComponent } from './essential-filters/essential-filters.component';
 import { EssentialListComponent } from './essential-list/essential-list.component';

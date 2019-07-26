@@ -24,25 +24,23 @@ export class WhatsNewComponent implements OnInit {
     constructor(private _dataStoreService: DataStoreService, private _modalService: PgModalService, private _navigationService: NavigationService, private _whatsNewService: WhatsNewService) { }
 
     ngOnInit() {
-        if (this.news != undefined) {
+        if (this.news) {
             let data = this.news;
-            if (data !== null) {
-                let newsList = [];
-                data.forEach(newsGroup => {
-                    if (newsGroup) {
-                        newsList.push(newsGroup);
-                    }
-                });
+            let newsList = [];
+            data.forEach(newsGroup => {
+                if (newsGroup) {
+                    newsList.push(newsGroup);
+                }
+            });
 
-                newsList.sort((nItem1, nItem2) => {
-                    return new Date(nItem2.datePublished).getTime() - new Date(nItem1.datePublished).getTime();
-                });
-                this.news = newsList;
-                this.error = (this.news.length == 0) ? PgMessages.constants.whatsNew.noWhatsNewForSelectedPA : undefined;
-            } else {
-                this.news = [];
-                this.error = PgMessages.constants.whatsNew.error;
-            }
+            newsList.sort((nItem1, nItem2) => {
+                return new Date(nItem2.datePublished).getTime() - new Date(nItem1.datePublished).getTime();
+            });
+            this.news = newsList;
+            this.error = (this.news.length == 0) ? PgMessages.constants.whatsNew.noWhatsNewForSelectedPA : undefined;
+        } else {
+            this.news = [];
+            this.error = PgMessages.constants.whatsNew.error;
         }
     }
 
@@ -69,12 +67,12 @@ export class WhatsNewComponent implements OnInit {
                     this._modalService.open();
                 }
             });
-        }                    
+        }
     }
 
     showAllWhatsNew() {
         var practiceAreaTitle = this.news[0].practiceAreaTitle;
-        var inputNotedet = { "paTitle": practiceAreaTitle};
+        var inputNotedet = { "paTitle": practiceAreaTitle };
         this._dataStoreService.setSessionStorageItem("WhatsNews", this.news);
         this._navigationService.navigate(PgConstants.constants.URLS.WhatsNew.WhatsNew, new StateParams(inputNotedet));
     }

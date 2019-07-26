@@ -1,7 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
+import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../../../../shared/services/auth/auth.service';
-import { UserService } from '../../../../shared/services/user/user.service';
 import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { PgConstants } from '../../../../shared/constants/pg.constants';

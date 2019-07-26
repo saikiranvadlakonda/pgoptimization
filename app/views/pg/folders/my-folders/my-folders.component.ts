@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FoldersService } from '../../../../shared/services/folders/folders.service'
 import { DataStoreService } from '../../../../shared/services/data-store/data-store.service';
 import { FolderContainerComponent } from '../../../../shared/components/folders/folder-container/folder-container.component';

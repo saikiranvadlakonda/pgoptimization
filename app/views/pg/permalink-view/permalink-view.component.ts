@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { RenderContentRequest } from '../../../shared/models/dashboard/content-request.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ContentService } from '../../../shared/services/content/content.service';
 import { DataStoreService } from '../../../shared/services/data-store/data-store.service';
 import { NavigationService } from '../../../shared/services/navigation/navigation.service';
@@ -81,14 +80,11 @@ export class PermalinkViewComponent implements OnInit {
                 this._dataStoreService.setSessionStorageItem("uName", username);
                 this._dataStoreService.setSessionStorageItem("subscriberId", subscriberId);
                 this._dataStoreService.setSessionStorageItem("subscriberClientId", subscriberClientId);
-                if (this.userName != null && subscriberId) {
                     this._authService.login(this.userName, this.password).subscribe((response) => {
                         response.token = firstParam;
                         this._dataStoreService.setSessionStorageItem('userToken', response);
                         this._authService.getUserInfo().subscribe(userInfo => {
                             this._dataStoreService.setSessionStorageItem("userInfo", userInfo);
-                            let userProfile = this._dataStoreService.getSessionStorageItem("userInfo");
-                            let subscriberClientId = this.route.snapshot.queryParamMap.get('subscriberClientId');
                             let permalink = this.route.snapshot.queryParamMap.get('permalink');
                             let dpath = this.route.snapshot.queryParamMap.get("extDpath");
 
@@ -108,7 +104,7 @@ export class PermalinkViewComponent implements OnInit {
                                             input["contentZone"] = 32;
                                             this._contentService.GetContentType(input).subscribe(data => {
                                                 this.contentInfo = data;
-                                                var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
+                                                let practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
                                                 //var selectedPracticeArea = practiceAreas.find(nI => paTitle == nI.title);
                                                 var allPAs = this._dataStoreService.getSessionStorageItem("AllModulesPAs");
 
@@ -117,7 +113,7 @@ export class PermalinkViewComponent implements OnInit {
                                                         this.title = data.title;
                                                         if (fromLib == "yes") {
                                                             var paDomainId = dpath.split('/')[2];
-                                                            var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
+                                                            practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
                                                             var selectedPracticeArea = practiceAreas.find(nI => paDomainId == nI.domainId);
                                                             this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
                                                             var topic1 = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
@@ -127,7 +123,7 @@ export class PermalinkViewComponent implements OnInit {
                                                                 var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
                                                                 topic1 = paModule.subTocItem ? paModule.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId) : {};
                                                                 subtopic = topic1.subTocItem ? topic1.subTocItem.find(nI => dpath.split('/')[5] == nI.domainId) : {};
-                                                                var spa = allPAs.find(nI => dpath.split('/')[3] == nI.domainId);
+                                                                let spa = allPAs.find(nI => dpath.split('/')[3] == nI.domainId);
                                                                 paTitle = spa.title;
 
                                                             }
@@ -142,7 +138,7 @@ export class PermalinkViewComponent implements OnInit {
                                                                 "subtopic": subtopic,
                                                                 "essentials": [],
                                                                 "hasChildren": true,
-                                                                "fromLib": fromLib == 'yes' ? true : false
+                                                                "fromLib": true
 
                                                             };
                                                             this.practiceArea = subtopic.title;
@@ -157,7 +153,7 @@ export class PermalinkViewComponent implements OnInit {
                                                             if (domainPathLength == 6 || domainPathLength == 8) {
                                                                 if (selectedPracticeArea.domainId == 'b2ioc' || selectedPracticeArea.domainId == 'nor6d') {
 
-                                                                    var spa = allPAs.find(nI => dpath.split('/')[3] == nI.domainId);
+                                                                    let spa = allPAs.find(nI => dpath.split('/')[3] == nI.domainId);
                                                                     this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", spa);
 
                                                                     this.practiceArea = subtopic.title;
@@ -171,13 +167,13 @@ export class PermalinkViewComponent implements OnInit {
                                                                     }
                                                                     this.getGNdetailData(inputdata, guidancedetail);
                                                                 } else {
-                                                                    var newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
+                                                                    let newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
                                                                     this.navigateToContentView(newItem);
                                                                 }
 
                                                             } else {
                                                                 if (selectedPracticeArea.domainId == 'b2ioc' || selectedPracticeArea.domainId == 'nor6d') {
-                                                                    var newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
+                                                                    let newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
                                                                     this.navigateToContentView(newItem);
                                                                 } else {
                                                                     this.getGNdetailData(inputdata, guidancedetail);
@@ -232,7 +228,7 @@ export class PermalinkViewComponent implements OnInit {
                                                                 "fromLib": fromLib == 'yes' ? true : false
                                                             };
                                                         }
-                                                        if (subTopic != null && subTopic.type == "ST" && subTopic.domainId == data.contentId) {
+                                                        if (subTopic.type == "ST" && subTopic.domainId == data.contentId) {
 
                                                             this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
 
@@ -251,7 +247,6 @@ export class PermalinkViewComponent implements OnInit {
                             });
                         });
                     });
-                }
             }
         }
 
@@ -281,9 +276,7 @@ export class PermalinkViewComponent implements OnInit {
         this._guidanceNoteService.getHomeContentForSubTopic(viewModel).subscribe(data => {
             var subTopicData = data;
             var guidances = [];
-            var commentarys = [];
-            var legislations = [];
-            var caseLaws = [];
+            
 
             guidances = subTopicData.result.guidance;
             this._dataStoreService.setSessionStorageItem("Guidances", guidances);
@@ -296,9 +289,7 @@ export class PermalinkViewComponent implements OnInit {
             if (subTopicData.result["other resources"] != null) {
                 this.getEssentials(subTopicData.result["other resources"], "Other Resources");
             }
-            commentarys = subTopicData.result.commentary;
-            legislations = subTopicData.result.legislation;
-            caseLaws = subTopicData.result["case law"];
+            
             guidanceDetail["guidances"] = guidances;
             guidanceDetail.essentials = this.essentials;
             guidanceDetail.redirectedFrom = "folder-detail";
