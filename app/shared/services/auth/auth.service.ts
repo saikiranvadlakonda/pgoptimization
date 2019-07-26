@@ -1,7 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { timeout, catchError, tap, shareReplay } from 'rxjs/operators';
+import { timeout, catchError, shareReplay } from 'rxjs/operators';
 import { PgConstants } from '../../constants/pg.constants';
 import { CustomEncoder } from '../custom-encoder/custom-encoder';
 import { DataStoreService } from '../data-store/data-store.service';
@@ -53,11 +53,7 @@ export class AuthService {
     get isLoggedIn(): boolean {
         this.tokenModel = this._dataStoreService.getSessionStorageItem("userToken");
         this.userProfile = this._dataStoreService.getSessionStorageItem("userInfo");
-        /*if (window.location.href.lastIndexOf("logout") != -1 || window.location.href.indexOf("permalink-view") != -1) {
-            //this.userProfile.isAuthenticated = false;
-            this.isLoggedOut = true;
-            return false;
-        }*/
+        
         // Check if current date is before token
         // expiration and user is signed in locally
         if (this.tokenModel != null && this.userProfile != null) {

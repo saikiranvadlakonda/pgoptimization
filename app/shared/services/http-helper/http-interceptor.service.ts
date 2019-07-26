@@ -11,7 +11,6 @@ import {
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import { Location } from '@angular/common';
-import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { SpinnerService } from '../../components/pg-spinner/pg-spinner.service';
 import { DataStoreService } from '../data-store/data-store.service';
 import { TokenModel } from '../../models/token/token.model';
@@ -32,7 +31,6 @@ export class PgInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        const timeout = Number(request.headers.get('timeout')) || this.defalutTimeout;
         //only show spinner for api calls
         this._spinnerService.show();
         if (window.parent)

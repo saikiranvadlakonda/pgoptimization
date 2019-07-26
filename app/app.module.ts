@@ -1,7 +1,6 @@
 /** angular modules import */
-import { NgModule, ErrorHandler, APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CalendarModule } from 'angular-calendar';
@@ -60,7 +59,7 @@ import { RouterProxy } from './store/router/proxy/router.proxy';
 
 /* ngx-bootstrap*/
 
-import { BsDropdownModule, CarouselModule, CollapseModule } from 'ngx-bootstrap';
+import { BsDropdownModule, CarouselModule } from 'ngx-bootstrap';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 

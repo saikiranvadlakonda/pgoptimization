@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import fontawesome from '@fortawesome/fontawesome';
 import faTrashAlt from '@fortawesome/fontawesome-free-regular/';
 import { PgConstants } from './shared/constants/pg.constants';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import 'rxjs/add/operator/pairwise';
 import { NavigationService } from './shared/services/navigation/navigation.service';
 import { AuthService } from './shared/services/auth/auth.service';
@@ -12,7 +12,6 @@ import { Subject } from 'rxjs/Subject';
 import { Location } from "@angular/common";
 import { PagerService } from './shared/services/pager/pager.service';
 import { PgModalService } from './shared/services/pg-modal/pg-modal.service';
-import { environment } from '../environments/environment';
 import BackendHost from './shared/constants/backendhost';
 
 @Component({

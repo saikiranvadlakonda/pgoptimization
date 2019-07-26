@@ -145,12 +145,12 @@ export class ContentService {
         }
 
         else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) { //Safari
-            var url = URL.createObjectURL(blobObject);
+            let url = URL.createObjectURL(blobObject);
             window.open(url);
         }
         else {//others
-            var downloadLink = document.createElement("a");
-            var url = URL.createObjectURL(blobObject);
+            let downloadLink = document.createElement("a");
+            let url = URL.createObjectURL(blobObject);
             downloadLink.href = url;
             downloadLink.download = filename;
             document.body.appendChild(downloadLink);
@@ -185,7 +185,6 @@ export class ContentService {
 
         return input;
     }
-
     buildHtml(input: string): string {
         var regex1 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...','PGS/ContentView.aspx[?]dpath[=]`);
         var regex2 = new RegExp(`onclick="javascript:window.parent.parent.addTab[(]'Loading...', 'Library/ContentView.aspx[?]dpath[=]`);
@@ -234,6 +233,9 @@ export class ContentService {
                     var topic = selectedPracticeArea.subTocItem.find(nI => file.domainPath.includes(nI.domainId));
                     var subtopic = topic.subTocItem.find(nI => file.domainPath.includes(nI.domainId));
                     var input = { "subTopicDomainPath": subtopic.domainPath, "title": selectedPracticeArea.title + " > " + subtopic.title, "practiceArea": subtopic.title, rootArea: selectedPracticeArea.title, "subTopic": subtopic };
+                    if (data.redirectedFrom) {
+                        subtopic.redirectedFrom = data.redirectedFrom;
+                    }
                     this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNote, new StateParams(input));
                     break;
                 case PgConstants.constants.ContentPageType.Topic:
@@ -269,10 +271,10 @@ export class ContentService {
             this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
 
             if (domainId.split('/').length === 5) {
-                var topic = selectedPracticeArea.subTocItem.find(nI => domainId.split('/')[domainId.split('/').length - 2] == nI.domainId);
-                var subtopic = topic.subTocItem.find(nI => domainId.split('/')[domainId.split('/').length - 1] == nI.domainId);
+                let topic = selectedPracticeArea.subTocItem.find(nI => domainId.split('/')[domainId.split('/').length - 2] == nI.domainId);
+                let subtopic = topic.subTocItem.find(nI => domainId.split('/')[domainId.split('/').length - 1] == nI.domainId);
 
-                var input = {
+                let input = {
                     "subTopicDomainPath": subtopic.domainPath,
                     "title": selectedPracticeArea.title + " > " + subtopic.title,
                     "practiceArea": subtopic.title,
@@ -286,11 +288,10 @@ export class ContentService {
                     this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNoteDetail, new StateParams(inputNote));
                 }
                 else {
-                    var inputNotedet = { "title": null, "domainPath": domainId };
-                    var topic = selectedPracticeArea.subTocItem.find(nI => domainId.includes(nI.domainId));
-                    var subtopic = topic.subTocItem.find(nI => domainId.includes(nI.domainId));
-                    var domainPathLength = domainId.split('/').length;
-                    var parentDomainId = topic.domainId;
+                    let topic = selectedPracticeArea.subTocItem.find(nI => domainId.includes(nI.domainId));
+                    let subtopic = topic.subTocItem.find(nI => domainId.includes(nI.domainId));
+                    let domainPathLength = domainId.split('/').length;
+                    let parentDomainId = topic.domainId;
 
                     this.getEssential();
                     var guidancedetail = {
@@ -313,7 +314,7 @@ export class ContentService {
                     if (selectedPracticeArea.domainId == 'b2ioc' || selectedPracticeArea.domainId == 'nor6d') {
                         subtopic = subtopic.subTocItem.find(nI => domainId.split('/')[5] == nI.domainId);
 
-                        var input = {
+                        let input = {
                             "subTopicDomainPath": subtopic.domainPath,
                             "title": selectedPracticeArea.title + " > " + subtopic.title,
                             "practiceArea": subtopic.title,
@@ -325,8 +326,6 @@ export class ContentService {
                     } else {
                         this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNoteDetail, new StateParams(guidancedetail));
                     }
-
-                    // this._navigationService.navigate(PgConstants.constants.URLS.GuidanceNote.GuidanceNoteDetail, new StateParams(inputNotedet));
                 }
 
             }
@@ -345,10 +344,8 @@ export class ContentService {
 
     getEssential() {
 
-        var subTopics = [];
-        var selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
-
-        var selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
+        let subTopics = [];
+        let selectedPracticeArea = this._dataStoreService.getSessionStorageItem("SelectedPracticeArea");
 
         let paName = selectedPracticeArea.title;
         if (selectedPracticeArea.type == "PA-MD") {
@@ -482,21 +479,21 @@ export class ContentService {
     showContentByDomainPath(dpath, fromLib, data) {
 
         if (this.isPgDomainPath(dpath)) {
-            var paDomainId = dpath.split('/')[2];
-            var practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
-            var selectedPracticeArea = practiceAreas.find(nI => paDomainId == nI.domainId);
+            let paDomainId = dpath.split('/')[2];
+            let practiceAreas = this._dataStoreService.getSessionStorageItem("AllPracticeAreas");
+            let selectedPracticeArea = practiceAreas.find(nI => paDomainId == nI.domainId);
             this._dataStoreService.setSessionStorageItem("SelectedPracticeArea", selectedPracticeArea);
-            var topic = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
-            var subtopic = topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
+            let topic = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
+            let subtopic = topic.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
 
             if (this.isPgModule(dpath)) {
-                var paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
+                let paModule = selectedPracticeArea.subTocItem ? selectedPracticeArea.subTocItem.find(nI => dpath.split('/')[3] == nI.domainId) : {};
                 topic = paModule.subTocItem.find(nI => dpath.split('/')[4] == nI.domainId);
                 subtopic = topic.subTocItem.find(nI => dpath.split('/')[5] == nI.domainId);
 
             }
-            var domainPathLength = dpath.split('/').length;
-            var guidancedetail = {
+            let domainPathLength = dpath.split('/').length;
+            let guidancedetail = {
                 "domainPath": dpath,
                 "domainId": dpath.split('/')[domainPathLength - 1],
                 "parentDomainId": dpath.split('/')[domainPathLength - 2],
@@ -527,13 +524,13 @@ export class ContentService {
                     }
                     this.getGNdetailData(inputdata, guidancedetail);
                 } else {
-                    var newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
+                    let newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
                     this.navigateToContentView(newItem);
                 }
 
             } else {
                 if (this.isPgModule(dpath)) {
-                    var newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
+                    let newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
                     this.navigateToContentView(newItem);
                 } else {
                     this.getGNdetailData(inputdata, guidancedetail);
@@ -541,11 +538,12 @@ export class ContentService {
             }
 
         } else {
-            var newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
+            let newItem = { "domainPath": dpath, "hasChildren": false, "back": false };
             this.navigateToContentView(newItem);
         }
 
     }
+
     navigateToContentView(newItem) {
         this._dataStoreService.setSessionStorageItem("IsInlineDownload", false);
         this._dataStoreService.setSessionStorageItem("selectedNewItem", newItem);
@@ -554,11 +552,9 @@ export class ContentService {
     getGNdetailData(viewModel, guidanceDetail) {
 
         this._guidanceNoteService.getHomeContentForSubTopic(viewModel).subscribe(data => {
-            var subTopicData = data;
-            var guidances = [];
-            var commentarys = [];
-            var legislations = [];
-            var caseLaws = [];
+            let subTopicData = data;
+            let guidances = [];
+            
 
             guidances = subTopicData.result.guidance;
             this._dataStoreService.setSessionStorageItem("Guidances", guidances);
@@ -571,9 +567,7 @@ export class ContentService {
             if (subTopicData.result["other resources"] != null) {
                 this.getEssentials(subTopicData.result["other resources"], "Other Resources");
             }
-            commentarys = subTopicData.result.commentary;
-            legislations = subTopicData.result.legislation;
-            caseLaws = subTopicData.result["case law"];
+            
             guidanceDetail["guidances"] = guidances;
             guidanceDetail.essentials = this.essentials;
             guidanceDetail.redirectedFrom = "folder-detail";

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { NavigationService } from '../navigation/navigation.service';
-import { PgConstants } from '../../constants/pg.constants';
 import { AuthService } from '../auth/auth.service';
 import { SpinnerService } from '../../components/pg-spinner/pg-spinner.service';
 

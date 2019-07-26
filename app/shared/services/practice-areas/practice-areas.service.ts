@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { timeout, catchError, share } from 'rxjs/operators';
-import { TocItemViewModel, SubTocItemViewModel } from '../../models/practiceAreas'
+import { TocItemViewModel } from '../../models/practiceAreas'
 import { PgConstants } from '../../constants/pg.constants';
 
 

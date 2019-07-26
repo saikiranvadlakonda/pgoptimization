@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { timeout, catchError } from 'rxjs/operators';
 import { PgConstants } from '../../constants/pg.constants';
 import { FolderInfoViewModel, FolderFileInfoViewModel } from '../../models/Repository/folderInfo.model';
-import { FolderContentViewModel } from '../../models/Repository/foldercontent.model';
 import { CreateFolerViewModel } from '../../models/Repository/Create.model';
 import { SubscriberFolderEntity } from '../../models/folder';
 

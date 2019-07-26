@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router, NavigationExtras, Params } from '@angular/router';
-import { StateParams } from '../../models/state-params/state-params.model';
+import { Router, NavigationExtras } from '@angular/router';
 import { RouterProxy } from '../../../store/router/proxy/router.proxy';
 import { SpinnerService } from '../../components/pg-spinner/pg-spinner.service'
 import { Subscription } from 'rxjs/Subscription';

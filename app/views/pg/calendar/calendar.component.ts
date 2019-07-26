@@ -26,12 +26,12 @@ export class CalendarComponent implements OnInit {
     @ViewChild('modalContent') modalContent: TemplateRef<any>
     view: string = 'month';
     viewDate: Date = new Date();
-    events: CalendarEvent<any, any>[] = [];
-    eventsWithNoTitle: CalendarEvent<any, any>[] = [];
+    events: CalendarEvent[] = [];
+    eventsWithNoTitle: CalendarEvent[] = [];
     refresh: Subject<any> = new Subject();
     activeDayIsOpen: boolean = true;
     modalData: {
-        event: CalendarEvent<any, any>;
+        event: CalendarEvent;
     };
     modalRef: BsModalRef;
 
@@ -136,7 +136,7 @@ export class CalendarComponent implements OnInit {
         return 0;
     }
 
-    handleEvent(event: CalendarEvent<any, any>, template: TemplateRef<any>): void {
+    handleEvent(event: CalendarEvent, template: TemplateRef<any>): void {
         this.modalData = { event };
         this.openModal(template);
     }

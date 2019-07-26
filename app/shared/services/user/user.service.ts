@@ -1,10 +1,9 @@
-﻿import { Injectable, Output, EventEmitter } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+﻿import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { timeout, catchError } from 'rxjs/operators';
 import { PgConstants } from '../../constants/pg.constants';
 import { UserViewModel } from '../../models/user/user.model';
-import { FeedbackModel } from '../../models/user/feedback.model';
 
 
 @Injectable()

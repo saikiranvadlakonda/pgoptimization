@@ -50,6 +50,9 @@
             noCaseLaw: 'No case laws found.',
             error: 'Something went wrong. Please try again later.',
             downloadError: 'Error while downloading content. Please try again later'
+        },
+        guidanceNoteDetail: {
+            error: 'The website experienced a problem retrieving the content you are trying to access. We apologize for the inconvenience this may have caused and will attend to the problem as soon as possible.'
         }
     }
 }

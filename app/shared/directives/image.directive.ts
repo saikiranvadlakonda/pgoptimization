@@ -1,5 +1,5 @@
 ﻿import { Directive, OnInit, Input } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PgConstants } from '../constants/pg.constants';
 

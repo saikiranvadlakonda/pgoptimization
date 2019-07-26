@@ -43,8 +43,8 @@ export class DashboardComponent implements OnInit {
     tabsMenu = ['Browse Practice Areas', 'History', 'Calendar'];
     activeTab: number = 0;
     viewDate: Date = new Date();
-    events: CalendarEvent<any, any>[] = [];
-    calenderEvents: CalendarEvent<any, any>[] = [];
+    events: CalendarEvent[] = [];
+    calenderEvents: CalendarEvent[] = [];
     folderInfo: SubscriberFolderEntity[];
     whatsNew: NewGroupEntity[];
     newItems: NewItemEntity[];

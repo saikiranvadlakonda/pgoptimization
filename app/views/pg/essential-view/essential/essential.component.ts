@@ -9,7 +9,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { FilterByPropertyPipe } from '../../../../shared/pipes/filter-by-property/filter-by-property.pipe';
 import { NavigationService } from '../../../../shared/services/navigation/navigation.service';
 import { PgConstants } from '../../../../shared/constants/pg.constants';
-import { SafePipe } from '../../../../shared/pipes/safe/safe.pipe';
 import { PgMessages } from '../../../../shared/constants/messages';
 import { ErrorContent } from '../../../../shared/models/error-content/error-content.model';
 import { ErrorModalService } from '../../../../shared/services/error-modal/error-modal.service';
