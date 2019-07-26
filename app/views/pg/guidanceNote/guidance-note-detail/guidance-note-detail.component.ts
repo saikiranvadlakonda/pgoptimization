@@ -35,7 +35,7 @@ import { PgAlertModalComponent } from '../../../../shared/components/pg-alert-mo
     styleUrls: ['./guidance-note-detail.component.css']
 })
 
-export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit {
+export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(CompileDirective) compile: CompileDirective;
     @ViewChild(ImageDirective) imagesrc: ImageDirective;
     @ViewChild(SaveToFolderModalComponent) saveToFolderModalComponent: SaveToFolderModalComponent;
@@ -188,7 +188,7 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit {
                     }, 500);
                 }
             } else {
-
+                this.guidanceDetail = PgMessages.constants.guidanceNoteDetail.error;
             }
         });
     }
@@ -292,8 +292,8 @@ export class GuidanceNoteDetailComponent implements OnInit, AfterViewInit {
             if (event) {
                 var tText = (event.currentTarget as HTMLElement).innerText;
                 this.jumpToString = tText;
-                if (tText != null && tText != undefined && tText != "") {
-                    if (tText.toLocaleLowerCase().indexOf("guidance note:") != -1) {
+                if (tText) {
+                    if (tText != "" && tText.toLocaleLowerCase().indexOf("guidance note:") != -1) {
                         this.isGuidanceNote = true;
                         (this.openGuidanceDetail(dpath.split('#')[0], hasChildren));
                     } else {
