@@ -103,6 +103,16 @@ export class EssentialComponent implements OnInit {
                         this.essentialsList = essentials;
                         this.setEssentialData(this.essentialsList);
                         this.error = undefined;
+                        let total = 0;
+                        this.documentType.forEach(doc => {
+                            this.topics.forEach(topic => {
+                                if (topic.isSelected && doc.isSelected && topic.topicData[doc.title]) {
+                                    total += topic.topicData[doc.title];
+                                }
+                            });
+                        });
+
+                        this.totalPages = total;
                     } else {
                         this.essentialsList = [];
                         this.error = PgMessages.constants.essentials.error;
@@ -143,7 +153,7 @@ export class EssentialComponent implements OnInit {
     numberOfPages(): number {
         let filteredEssentials = this._filterByPropertyPipe.transform(this.essentialsList, this.searchEssential, 'title');
         this.filteredEssentials = filteredEssentials;
-        if (this.searchEssential && this.searchEssential.trim().length == 0) {
+        if (this.searchEssential == "" && this.searchEssential.trim().length == 0) {
             let total = 0;
             this.documentType.forEach(doc => {
                 this.topics.forEach(topic => {
@@ -152,12 +162,10 @@ export class EssentialComponent implements OnInit {
                     }
                 });
             });
-
-            this.totalPages = total;
             return Math.ceil(total / this.pageSize);
         }
 
-        this.checkedEssential = [];
+        //this.checkedEssential = [];
         this.unSelectAllEssentials();
         this.pagesCount = Math.ceil(filteredEssentials.length / this.pageSize);
         return this.pagesCount;
@@ -296,7 +304,7 @@ export class EssentialComponent implements OnInit {
                 }
             });
         }
-        
+
 
         this.checkedEssential = [];
         this.unSelectAllEssentials();
@@ -385,7 +393,7 @@ export class EssentialComponent implements OnInit {
                         forceDownload: true
                     };
                     this.downloadContent(eventData);
-                
+
                 }
             });
             this.checkedEssential = [];
@@ -394,7 +402,7 @@ export class EssentialComponent implements OnInit {
     }
 
     validate() {
-        if (this.checkedEssential.length > 0 && this.fileTitle  && this.fileTitle.trim() != '') {
+        if (this.checkedEssential.length > 0 && this.fileTitle && this.fileTitle.trim() != '') {
             this.isValidFileTitle = true;
             var fileData = new RenderContentRequest();
             fileData.downloadContent = "true";
@@ -448,10 +456,11 @@ export class EssentialComponent implements OnInit {
     }
 
     unSelectAllEssentials(): void {
-        this.filteredEssentials = this.filteredEssentials.map(essential => {
+        let essentials = this.filteredEssentials.map(essential => {
             essential.isChecked = false;
             return essential;
         });
+        this.filteredEssentials = essentials;
     }
 
     scrollTop() {
@@ -477,10 +486,19 @@ export class EssentialComponent implements OnInit {
                         this.checkedEssential.forEach(chEss => {
                             this.filteredEssentials.filter(ess => ess.title == chEss.title).forEach(ess => {
                                 ess.isChecked = true;
-                                console.log(ess);
                             });
                         });
                     }
+                    let total = 0;
+                    this.documentType.forEach(doc => {
+                        this.topics.forEach(topic => {
+                            if (topic.isSelected && doc.isSelected && topic.topicData[doc.title]) {
+                                total += topic.topicData[doc.title];
+                            }
+                        });
+                    });
+
+                    this.totalPages = total;
                     this.pages = Array.from(new Array(this.numberOfPages()), (val, index) => index + 1);
                     this.scrollTop();
                     this.error = undefined;

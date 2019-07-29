@@ -12,7 +12,6 @@ export class BackToTopComponent implements OnInit {
     windowScrolled: boolean;
 
     constructor(@Inject(DOCUMENT) private document: Document) { }
-    //@HostListener("div#newpg:scroll", [])
     onWindowScroll() {
         if (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop > 100) {
             this.windowScrolled = true;
@@ -21,6 +20,7 @@ export class BackToTopComponent implements OnInit {
             this.windowScrolled = false;
         }
     }
+
     scrollToTop() {
         (function smoothscroll() {
             var currentScroll = document.getElementById('newpg').scrollTop;
@@ -30,6 +30,7 @@ export class BackToTopComponent implements OnInit {
             }
         })();
     }
+
     ngOnInit() {
     }
 
